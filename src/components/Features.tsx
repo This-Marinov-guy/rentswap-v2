@@ -112,7 +112,7 @@ const Features = () => {
                 homes with tenants who are moving out. No more competing with 50 other applicants. 
                 No more endless viewings. Just a direct connection to your next home.
               </p>
-              <Button variant="secondary" size="large" href="/about">
+              <Button variant="style1" size="large" href="/about">
                 Read Our Full Story
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path
@@ -186,7 +186,7 @@ const Features = () => {
                   <div className={styles.stepText}>Get paid €200 after success</div>
                 </div>
               </div>
-              <Button variant="primary" size="large" href="/help-earn">
+              <Button variant="style2" size="large" href="/help-earn">
                 Start Earning Now
               </Button>
             </div>
@@ -207,7 +207,7 @@ const Features = () => {
               <p className={styles.roommateSubtitle}>
                 Share your room details and we'll deliver roommate candidates straight to your inbox - completely free!
               </p>
-              <Button variant="primary" size="large" href="/roommate">
+              <Button variant="style2" size="large" href="/roommate">
                 Find a Roommate
               </Button>
             </div>

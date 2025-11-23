@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Button from './common/Button';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -36,25 +35,27 @@ const Header = () => {
           />
         </Link>
         
-        <nav className={`${styles.nav} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}>
-          <Link href="/find-home" className={styles.navLink}>
-            Find a home
-          </Link>
-          <Link href="/help-earn" className={styles.navLink}>
-            Help & Earn €200
-          </Link>
-          <Link href="/roommate" className={styles.navLink}>
-            Looking for a roommate?
-          </Link>
+        <nav className={`${styles.navContainer} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}>
+          <div className={styles.nav}>
+            <Link href="/" className={`${styles.navLink} ${styles.active}`}>
+              Home
+            </Link>
+            <Link href="/moving-out" className={styles.navLink}>
+              Moving Out?
+            </Link>
+            <Link href="/pricing" className={styles.navLink}>
+              Pricing
+            </Link>
+            <Link href="/resources" className={styles.navLink}>
+              Useful Resources
+            </Link>
+          </div>
         </nav>
 
         <div className={styles.authButtons}>
-          <Button variant="text" href="/signin" className={styles.signInBtn}>
-            Sign In
-          </Button>
-          <Button variant="primary" size="medium" href="/signup" className={styles.signUpBtn}>
+          <Link href="/signup" className={styles.signUpButton}>
             Sign Up
-          </Button>
+          </Link>
         </div>
 
         <button
@@ -91,22 +92,22 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className={styles.mobileMenuOverlay}>
             <nav className={styles.mobileNav}>
-              <Link href="/find-home" className={styles.mobileNavLink}>
-                Find a home
+              <Link href="/" className={styles.mobileNavLink}>
+                Home
               </Link>
-              <Link href="/help-earn" className={styles.mobileNavLink}>
-                Help & Earn €200
+              <Link href="/moving-out" className={styles.mobileNavLink}>
+                Moving Out?
               </Link>
-              <Link href="/roommate" className={styles.mobileNavLink}>
-                Looking for a roommate?
+              <Link href="/pricing" className={styles.mobileNavLink}>
+                Pricing
+              </Link>
+              <Link href="/resources" className={styles.mobileNavLink}>
+                Useful Resources
               </Link>
               <div className={styles.mobileAuthButtons}>
-                <Button variant="text" href="/signin" fullWidth>
-                  Sign In
-                </Button>
-                <Button variant="primary" size="medium" href="/signup" fullWidth>
+                <Link href="/signup" className={styles.mobileSignUpButton}>
                   Sign Up
-                </Button>
+                </Link>
               </div>
             </nav>
           </div>

@@ -1,3 +1,20 @@
+/* Font Face Declarations */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/assets/fonts/montserrat/Montserrat-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gordita';
+  src: url('/assets/fonts/gordita/Gordita-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Primary Colors */
   --primary-blue: #0066FF;
@@ -5,6 +22,12 @@
   --dark-navy: #0A1628;
   --light-blue: #E6F0FF;
   --success-green: #00C853;
+  
+  /* Button Style Colors */
+  --style1-bg: #003049;
+  --style1-bg-hover: #002538;
+  --style2-bg: #FA3C4C;
+  --style2-bg-hover: #E82E3E;
   
   /* Grays */
   --gray-900: #111827;
@@ -25,8 +48,9 @@
   --warning-yellow: #F59E0B;
   
   /* Typography */
-  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-montserrat: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', sans-serif;
+  --font-gordita: 'Gordita', sans-serif;
   
   /* Layout */
   --max-width: 1280px;
@@ -74,7 +98,8 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: var(--font-inter);
+  font-family: var(--font-montserrat);
+  font-weight: 500;
   font-size: 16px;
   line-height: 1.5;
   color: var(--gray-900);
@@ -85,19 +110,28 @@ body {
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
   line-height: 1.2;
   color: var(--gray-900);
 }
 
+/* Big headings use Gordita */
+h1, h2 {
+  font-family: var(--font-gordita);
+  font-weight: 700;
+}
+
 h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 700;
 }
 
 h2 {
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 700;
+}
+
+/* Smaller headings use Montserrat */
+h3, h4, h5, h6 {
+  font-family: var(--font-montserrat);
+  font-weight: 600;
 }
 
 h3 {
@@ -127,7 +161,8 @@ button {
   cursor: pointer;
   border: none;
   background: none;
-  font-family: inherit;
+  font-family: var(--font-montserrat);
+  font-weight: 500;
   font-size: inherit;
   transition: all var(--transition-base);
 }
@@ -140,6 +175,49 @@ button {
   padding: 0 var(--spacing-lg);
 }
 
+.panelBg {
+  background-color: var(--style1-bg);
+  color: var(--white);
+}
+
+/* Text Highlighting Styles */
+.highlight {
+  display: inline-block;
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.highlightStyle1 {
+  background-color: var(--style1-bg);
+  color: var(--white);
+}
+
+.highlightStyle2 {
+  background-color: var(--style2-bg);
+  color: var(--white);
+}
+
+/* Alternative highlighting with more padding for larger text */
+.highlightLarge {
+  display: inline-block;
+  padding: 0.2em 0.5em;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.highlightLarge.highlightStyle1 {
+  background-color: var(--style1-bg);
+  color: var(--white);
+}
+
+.highlightLarge.highlightStyle2 {
+  background-color: var(--style2-bg);
+  color: var(--white);
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0 var(--spacing-md);
@@ -150,7 +228,8 @@ button {
 input,
 textarea,
 select {
-  font-family: inherit;
+  font-family: var(--font-montserrat);
+  font-weight: 500;
   font-size: inherit;
   line-height: inherit;
 }

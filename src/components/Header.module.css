@@ -34,54 +34,68 @@
   transform: scale(1.05);
 }
 
+.navContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 var(--spacing-xl);
+}
+
 .nav {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xl);
-  flex: 1;
-  justify-content: center;
-  margin: 0 var(--spacing-xl);
+  gap: 0;
+  background-color: #F5F5F5;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xs);
+  box-shadow: var(--shadow-sm);
 }
 
 .navLink {
   font-size: var(--text-base);
   font-weight: 500;
   color: var(--gray-700);
-  transition: color var(--transition-base);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: calc(var(--radius-lg) - 4px);
+  transition: all var(--transition-base);
   position: relative;
+  white-space: nowrap;
 }
 
 .navLink:hover {
-  color: var(--primary-blue);
+  color: var(--gray-900);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
-.navLink::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--primary-blue);
-  transition: width var(--transition-base);
-}
-
-.navLink:hover::after {
-  width: 100%;
+.navLink.active {
+  color: #FF6B9D;
+  background-color: var(--white);
+  font-weight: 600;
 }
 
 .authButtons {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
 }
 
-.signInBtn {
-  padding: var(--spacing-sm) var(--spacing-lg) !important;
+.signUpButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  background-color: #FF6B9D;
+  color: var(--white);
+  font-weight: 600;
+  font-size: var(--text-base);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  white-space: nowrap;
 }
 
-.signUpBtn {
-  min-width: 100px;
+.signUpButton:hover {
+  background-color: #FF5A8A;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .mobileMenuButton {
@@ -125,7 +139,7 @@
 }
 
 .mobileNavLink:hover {
-  color: var(--primary-blue);
+  color: #FF6B9D;
 }
 
 .mobileAuthButtons {
@@ -133,6 +147,26 @@
   flex-direction: column;
   gap: var(--spacing-md);
   margin-top: var(--spacing-lg);
+}
+
+.mobileSignUpButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background-color: #FF6B9D;
+  color: var(--white);
+  font-weight: 600;
+  font-size: var(--text-base);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  text-align: center;
+}
+
+.mobileSignUpButton:hover {
+  background-color: #FF5A8A;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 @keyframes slideDown {
@@ -152,7 +186,7 @@
     padding: 0 var(--spacing-md);
   }
   
-  .nav {
+  .navContainer {
     display: none;
   }
   
@@ -168,19 +202,23 @@
     display: block;
   }
   
-  .nav.mobileOpen {
-    display: none; /* Still hidden on desktop */
+  .navContainer.mobileOpen {
+    display: none; /* Still hidden on mobile */
   }
 }
 
 /* Tablet Styles */
 @media (max-width: 1024px) {
+  .navContainer {
+    margin: 0 var(--spacing-md);
+  }
+  
   .nav {
-    gap: var(--spacing-lg);
-    margin: 0 var(--spacing-lg);
+    gap: 0;
   }
   
   .navLink {
     font-size: var(--text-sm);
+    padding: var(--spacing-xs) var(--spacing-md);
   }
 }

@@ -228,7 +228,7 @@
 /* Roommate Section */
 .roommateSection {
   margin-top: var(--spacing-4xl);
-  background: linear-gradient(135deg, var(--primary-blue), #0052CC);
+  background: var(--style1-bg);
   border-radius: var(--radius-xl);
   padding: var(--spacing-3xl);
   opacity: 0;

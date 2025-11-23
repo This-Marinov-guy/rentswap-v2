@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-sm);
-  font-family: var(--font-inter);
+  font-family: var(--font-montserrat);
   font-weight: 500;
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
@@ -89,6 +89,42 @@
 .text:hover:not(.disabled) {
   color: var(--primary-blue);
   background-color: var(--gray-50);
+}
+
+.style1 {
+  background-color: var(--style1-bg);
+  color: var(--white);
+  border: 2px solid var(--style1-bg);
+}
+
+.style1:hover:not(.disabled) {
+  background-color: var(--style1-bg-hover);
+  border-color: var(--style1-bg-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.style1:active:not(.disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.style2 {
+  background-color: var(--style2-bg);
+  color: var(--white);
+  border: 2px solid var(--style2-bg);
+}
+
+.style2:hover:not(.disabled) {
+  background-color: var(--style2-bg-hover);
+  border-color: var(--style2-bg-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.style2:active:not(.disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 /* States */

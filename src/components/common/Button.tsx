@@ -5,7 +5,7 @@ import styles from './Button.module.css';
 
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'text' | 'outline';
+  variant?: 'primary' | 'secondary' | 'text' | 'outline' | 'style1' | 'style2';
   size?: 'small' | 'medium' | 'large';
   fullWidth?: boolean;
   disabled?: boolean;
