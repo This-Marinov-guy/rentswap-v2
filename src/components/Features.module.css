@@ -1,4 +1,5 @@
 .section {
+  margin-top: 40px;
   padding: var(--spacing-4xl) 0;
   background: var(--white);
 }
@@ -68,17 +69,23 @@
 .card:hover {
   transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
-  background: var(--white);
+  background: #3572ee;
+  color: var(--white);
+}
+
+.card:hover .cardTitle,
+.card:hover .cardDescription {
+  color: var(--white);
 }
 
 .cardIcon {
   font-size: 3rem;
-  margin-bottom: var(--spacing-md);
+  margin: 0 auto var(--spacing-md);
 }
 
 .cardTitle {
   font-size: var(--font-xl);
-  font-weight: var(--font-semibold);
+  font-weight: 1000;
   color: var(--text-primary);
   margin-bottom: var(--spacing-sm);
 }
@@ -91,6 +98,7 @@
 
 /* Alternating Sections */
 .alternatingSection {
+  margin-top: 40px;
   padding: var(--spacing-4xl) 0;
   opacity: 0;
   transform: translateY(30px);
@@ -107,6 +115,10 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-4xl);
   align-items: center;
+}
+
+.storyGap {
+  gap: var(--spacing-5xl);
 }
 
 .alternatingSection.reversed .alternatingContent {
@@ -153,6 +165,43 @@
   font-size: var(--font-lg);
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+.davidCard {
+  position: relative;
+  width: 180px;
+  height: 220px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: var(--spacing-lg);
+  box-shadow: var(--shadow-xl);
+  border: 4px solid var(--white);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.davidCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.davidImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.arrowCircle {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: var(--white);
+  padding: 8px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .imageContent {

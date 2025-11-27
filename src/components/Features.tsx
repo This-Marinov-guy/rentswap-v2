@@ -1,35 +1,37 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import Button from './common/Button';
-import styles from './Features.module.css';
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import Button from "./common/Button";
+import styles from "./Features.module.css";
 
 const features = [
   {
-    icon: '🎯',
-    title: 'No Competition',
-    description: 'Skip the viewing wars. Connect directly with tenants who are moving out.',
+    icon: "/assets/images/features/house.png",
+    title: "Born from personal XP",
+    description: "We know the struggle and we want to help you evade it.",
   },
   {
-    icon: '⏰',
-    title: 'Save Time',
+    icon: "/assets/images/features/clock.png",
+    title: "Save Time",
     description: `Sign up once and we'll find offers for you. No endless searching required.`,
   },
   {
-    icon: '⚖️',
-    title: 'Fair Algorithm',
+    icon: "/assets/images/features/scale.png",
+    title: "Fair Algorithm",
     description: `Our system prioritizes those who've been waiting longest and those in urgent need.`,
   },
   {
-    icon: '💶',
-    title: 'Success-Based Pricing',
+    icon: "/assets/images/features/invoice.png",
+    title: "Success-Based Pricing",
     description: `No upfront costs. Pay only half a month's rent + VAT after you sign the lease.`,
   },
 ];
 
 const Features = () => {
-  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(
+    new Set()
+  );
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   useEffect(() => {
@@ -59,11 +61,13 @@ const Features = () => {
     <section className={styles.section}>
       <div className={styles.container}>
         {/* Features Grid */}
-        <div 
+        <div
           id="features-grid"
-          ref={(el) => (sectionRefs.current['features-grid'] = el)}
+          ref={(el) => {
+            sectionRefs.current["features-grid"] = el;
+          }}
           className={`${styles.featuresGrid} ${
-            visibleSections.has('features-grid') ? styles.visible : ''
+            visibleSections.has("features-grid") ? styles.visible : ""
           }`}
         >
           <div className={styles.gridHeader}>
@@ -72,7 +76,7 @@ const Features = () => {
               The smarter way to find your next rental home in the Netherlands
             </p>
           </div>
-          
+
           <div className={styles.cards}>
             {features.map((feature, index) => (
               <div
@@ -80,7 +84,13 @@ const Features = () => {
                 className={styles.card}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className={styles.cardIcon}>{feature.icon}</div>
+                <Image
+                  src={feature.icon}
+                  alt={feature.title}
+                  width={100}
+                  height={100}
+                  className={styles.cardIcon}
+                />
                 <h3 className={styles.cardTitle}>{feature.title}</h3>
                 <p className={styles.cardDescription}>{feature.description}</p>
               </div>
@@ -91,40 +101,14 @@ const Features = () => {
         {/* Story Section */}
         <div
           id="story-section"
-          ref={(el) => (sectionRefs.current['story-section'] = el)}
+          ref={(el) => {
+            sectionRefs.current["story-section"] = el;
+          }}
           className={`${styles.alternatingSection} ${
-            visibleSections.has('story-section') ? styles.visible : ''
+            visibleSections.has("story-section") ? styles.visible : ""
           }`}
         >
-          <div className={styles.alternatingContent}>
-            <div className={styles.textContent}>
-              <span className={styles.badge}>Our Story</span>
-              <h2 className={styles.sectionTitle}>
-                Born from personal experience
-              </h2>
-              <p className={styles.sectionText}>
-                Our founder moved to the Netherlands and faced the same challenges you're facing. 
-                Finding a rental felt impossible until a friend who was moving out helped secure 
-                their apartment.
-              </p>
-              <p className={styles.sectionText}>
-                That experience inspired RentSwap - a platform that connects people looking for 
-                homes with tenants who are moving out. No more competing with 50 other applicants. 
-                No more endless viewings. Just a direct connection to your next home.
-              </p>
-              <Button variant="style1" size="large" href="/about">
-                Read Our Full Story
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M7 13L12 8L7 3"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Button>
-            </div>
+          <div className={`${styles.alternatingContent} ${styles.storyGap}`}>
             <div className={styles.imageContent}>
               <Image
                 src="/assets/images/home/story-home.avif"
@@ -134,15 +118,35 @@ const Features = () => {
                 className={styles.sectionImage}
               />
             </div>
+
+            <div className={styles.textContent}>
+              <span className={styles.badge}>Our Story</span>
+              <h2 className={styles.sectionTitle}>
+                Born from personal experience
+              </h2>
+              <p className={styles.sectionText}>
+                Our founder moved to the Netherlands and faced the same
+                challenges you're facing. Finding a rental felt impossible until
+                a friend who was moving out helped secure their apartment.
+              </p>
+              <p className={styles.sectionText}>
+                That experience inspired RentSwap - a platform that connects
+                people looking for homes with tenants who are moving out. No
+                more competing with 50 other applicants. No more endless
+                viewings. Just a direct connection to your next home.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Earn Section */}
         <div
           id="earn-section"
-          ref={(el) => (sectionRefs.current['earn-section'] = el)}
+          ref={(el) => {
+            sectionRefs.current["earn-section"] = el;
+          }}
           className={`${styles.alternatingSection} ${styles.reversed} ${
-            visibleSections.has('earn-section') ? styles.visible : ''
+            visibleSections.has("earn-section") ? styles.visible : ""
           }`}
         >
           <div className={styles.alternatingContent}>
@@ -161,29 +165,36 @@ const Features = () => {
             </div>
             <div className={styles.textContent}>
               <span className={styles.badge}>Help & Earn</span>
-              <h2 className={styles.sectionTitle}>
-                Moving out? Earn €200
-              </h2>
+              <h2 className={styles.sectionTitle}>Moving out? Earn €200</h2>
               <p className={styles.sectionText}>
-                If you're moving out within a year, you can help someone else get your place 
-                and earn €200 when they successfully sign the lease.
+                If you're moving out within a year, you can help someone else
+                get your place and earn €200 when they successfully sign the
+                lease.
               </p>
               <div className={styles.earnSteps}>
                 <div className={styles.earnStep}>
                   <div className={styles.stepIcon}>1</div>
-                  <div className={styles.stepText}>List your apartment details</div>
+                  <div className={styles.stepText}>
+                    List your apartment details
+                  </div>
                 </div>
                 <div className={styles.earnStep}>
                   <div className={styles.stepIcon}>2</div>
-                  <div className={styles.stepText}>We match you with candidates</div>
+                  <div className={styles.stepText}>
+                    We match you with candidates
+                  </div>
                 </div>
                 <div className={styles.earnStep}>
                   <div className={styles.stepIcon}>3</div>
-                  <div className={styles.stepText}>Help them secure the place</div>
+                  <div className={styles.stepText}>
+                    Help them secure the place
+                  </div>
                 </div>
                 <div className={styles.earnStep}>
                   <div className={styles.stepIcon}>4</div>
-                  <div className={styles.stepText}>Get paid €200 after success</div>
+                  <div className={styles.stepText}>
+                    Get paid €200 after success
+                  </div>
                 </div>
               </div>
               <Button variant="style2" size="large" href="/help-earn">
@@ -196,16 +207,19 @@ const Features = () => {
         {/* Roommate Section */}
         <div
           id="roommate-section"
-          ref={(el) => (sectionRefs.current['roommate-section'] = el)}
+          ref={(el) => {
+            sectionRefs.current["roommate-section"] = el;
+          }}
           className={`${styles.roommateSection} ${
-            visibleSections.has('roommate-section') ? styles.visible : ''
+            visibleSections.has("roommate-section") ? styles.visible : ""
           }`}
         >
           <div className={styles.roommateContent}>
             <div className={styles.roommateText}>
               <h2 className={styles.roommateTitle}>Looking for a roommate?</h2>
               <p className={styles.roommateSubtitle}>
-                Share your room details and we'll deliver roommate candidates straight to your inbox - completely free!
+                Share your room details and we'll deliver roommate candidates
+                straight to your inbox - completely free!
               </p>
               <Button variant="style2" size="large" href="/roommate">
                 Find a Roommate

@@ -12,6 +12,7 @@
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  color: var(--white);
 }
 
 /* Sizes */
