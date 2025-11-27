@@ -47,7 +47,7 @@ const Header = () => {
   // Helper function to check if a link is active
   const isActive = (path: string, hash: string) => {
     if (path === "/") {
-      return pathname === "/" || (!currentHash || currentHash === hash);
+      return pathname === "/" && (!currentHash || currentHash === hash);
     }
     return pathname.startsWith(path) || currentHash === hash;
   };
