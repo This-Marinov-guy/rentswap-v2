@@ -198,8 +198,8 @@ export default function HowItWorksClient({ steps }: { steps: Step[] }) {
                   <Image
                     src={step.icon}
                     alt=""
-                    width={24}
-                    height={24}
+                    width={34}
+                    height={34}
                     className={styles.mobileNodeIcon}
                   />
                 </div>
