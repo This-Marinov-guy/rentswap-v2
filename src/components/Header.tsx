@@ -1,29 +1,39 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import styles from './Header.module.css';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import styles from "./Header.module.css";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  // Helper function to check if a link is active
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(path);
+  };
+
   return (
-    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
+    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ""}`}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
           <Image
@@ -34,19 +44,43 @@ const Header = () => {
             priority
           />
         </Link>
-        
-        <nav className={`${styles.navContainer} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}>
+
+        <nav
+          className={`${styles.navContainer} ${
+            isMobileMenuOpen ? styles.mobileOpen : ""
+          }`}
+        >
           <div className={styles.nav}>
-            <Link href="/" className={`${styles.navLink} ${styles.active}`}>
+            <Link
+              href="/"
+              className={`${styles.navLink} ${
+                isActive("/") ? styles.active : ""
+              }`}
+            >
               Home
             </Link>
-            <Link href="/moving-out" className={styles.navLink}>
+            <Link
+              href="/moving-out"
+              className={`${styles.navLink} ${
+                isActive("/moving-out") ? styles.active : ""
+              }`}
+            >
               Moving Out?
             </Link>
-            <Link href="/pricing" className={styles.navLink}>
+            <Link
+              href="/pricing"
+              className={`${styles.navLink} ${
+                isActive("/pricing") ? styles.active : ""
+              }`}
+            >
               Pricing
             </Link>
-            <Link href="/resources" className={styles.navLink}>
+            <Link
+              href="/resources"
+              className={`${styles.navLink} ${
+                isActive("/resources") ? styles.active : ""
+              }`}
+            >
               Useful Resources
             </Link>
           </div>
@@ -92,16 +126,36 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className={styles.mobileMenuOverlay}>
             <nav className={styles.mobileNav}>
-              <Link href="/" className={styles.mobileNavLink}>
+              <Link
+                href="/"
+                className={`${styles.mobileNavLink} ${
+                  isActive("/") ? styles.active : ""
+                }`}
+              >
                 Home
               </Link>
-              <Link href="/moving-out" className={styles.mobileNavLink}>
+              <Link
+                href="/moving-out"
+                className={`${styles.mobileNavLink} ${
+                  isActive("/moving-out") ? styles.active : ""
+                }`}
+              >
                 Moving Out?
               </Link>
-              <Link href="/pricing" className={styles.mobileNavLink}>
+              <Link
+                href="/pricing"
+                className={`${styles.mobileNavLink} ${
+                  isActive("/pricing") ? styles.active : ""
+                }`}
+              >
                 Pricing
               </Link>
-              <Link href="/resources" className={styles.mobileNavLink}>
+              <Link
+                href="/resources"
+                className={`${styles.mobileNavLink} ${
+                  isActive("/resources") ? styles.active : ""
+                }`}
+              >
                 Useful Resources
               </Link>
               <div className={styles.mobileAuthButtons}>
