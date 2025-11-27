@@ -9,6 +9,7 @@ import styles from "./Header.module.css";
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [currentHash, setCurrentHash] = useState("");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -16,8 +17,27 @@ const Header = () => {
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const handleHashChange = () => {
+      if (typeof window !== "undefined") {
+        setCurrentHash(window.location.hash);
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      // Initialize hash state asynchronously to avoid cascading renders
+      setTimeout(() => {
+        setCurrentHash(window.location.hash);
+      }, 0);
+      window.addEventListener("scroll", handleScroll);
+      window.addEventListener("hashchange", handleHashChange);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("hashchange", handleHashChange);
+      }
+    };
   }, []);
 
   const toggleMobileMenu = () => {
@@ -27,9 +47,9 @@ const Header = () => {
   // Helper function to check if a link is active
   const isActive = (path: string, hash: string) => {
     if (path === "/") {
-      return pathname === "/" || !window.location.hash;
+      return pathname === "/" || (!currentHash || currentHash === hash);
     }
-    return pathname.startsWith(path) || window.location.hash === hash;
+    return pathname.startsWith(path) || currentHash === hash;
   };
 
   return (
