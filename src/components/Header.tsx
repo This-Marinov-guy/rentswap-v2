@@ -25,11 +25,11 @@ const Header = () => {
   };
 
   // Helper function to check if a link is active
-  const isActive = (path: string) => {
+  const isActive = (path: string, hash: string) => {
     if (path === "/") {
-      return pathname === "/";
+      return pathname === "/" || !window.location.hash;
     }
-    return pathname.startsWith(path);
+    return pathname.startsWith(path) || window.location.hash === hash;
   };
 
   return (
@@ -52,17 +52,17 @@ const Header = () => {
         >
           <div className={styles.nav}>
             <Link
-              href="/"
+              href="/#how-it-works"
               className={`${styles.navLink} ${
-                isActive("/") ? styles.active : ""
+                isActive("/", "#how-it-works") ? styles.active : ""
               }`}
             >
-              Home
+              How it works
             </Link>
             <Link
-              href="/moving-out"
+              href="/#moving-out"
               className={`${styles.navLink} ${
-                isActive("/moving-out") ? styles.active : ""
+                isActive("/moving-out", "#moving-out") ? styles.active : ""
               }`}
             >
               Moving Out?
@@ -70,7 +70,7 @@ const Header = () => {
             <Link
               href="/pricing"
               className={`${styles.navLink} ${
-                isActive("/pricing") ? styles.active : ""
+                isActive("/pricing", "#pricing") ? styles.active : ""
               }`}
             >
               Pricing
@@ -78,7 +78,7 @@ const Header = () => {
             <Link
               href="/resources"
               className={`${styles.navLink} ${
-                isActive("/resources") ? styles.active : ""
+                isActive("/resources", "#resources") ? styles.active : ""
               }`}
             >
               Useful Resources
@@ -127,17 +127,17 @@ const Header = () => {
           <div className={styles.mobileMenuOverlay}>
             <nav className={styles.mobileNav}>
               <Link
-                href="/"
+                href="/#how-it-works"
                 className={`${styles.mobileNavLink} ${
-                  isActive("/") ? styles.active : ""
+                  isActive("/", "#how-it-works") ? styles.active : ""
                 }`}
               >
-                Home
+                How it works
               </Link>
               <Link
-                href="/moving-out"
+                href="/#moving-out"
                 className={`${styles.mobileNavLink} ${
-                  isActive("/moving-out") ? styles.active : ""
+                  isActive("/moving-out", "#moving-out") ? styles.active : ""
                 }`}
               >
                 Moving Out?
@@ -145,7 +145,7 @@ const Header = () => {
               <Link
                 href="/pricing"
                 className={`${styles.mobileNavLink} ${
-                  isActive("/pricing") ? styles.active : ""
+                  isActive("/pricing", "#pricing") ? styles.active : ""
                 }`}
               >
                 Pricing
@@ -153,7 +153,7 @@ const Header = () => {
               <Link
                 href="/resources"
                 className={`${styles.mobileNavLink} ${
-                  isActive("/resources") ? styles.active : ""
+                  isActive("/resources", "#resources") ? styles.active : ""
                 }`}
               >
                 Useful Resources
