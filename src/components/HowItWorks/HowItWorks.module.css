@@ -4,6 +4,11 @@
   position: relative;
 }
 
+.titleStep {
+  color: var(--white);
+  font-size: 18px !important;
+}
+
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -52,8 +57,8 @@
   top: 30px;
   left: 10%;
   right: 10%;
-  height: 2px;
-  background-color: var(--white);
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.3);
   z-index: 0;
 }
 
@@ -62,8 +67,8 @@
   top: 0;
   left: 0;
   height: 100%;
-  background-color: var(--primary-blue);
-  transition: width 0.5s ease-out;
+  background: linear-gradient(90deg, #0066ff, #00a1ff);
+  transition: width 4.8s ease-in-out;
 }
 
 .timelineStep {
@@ -87,6 +92,20 @@
   z-index: 1;
   transition: all var(--transition-base);
   font-size: var(--text-2xl);
+}
+
+.stepNumberHover {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--white);
+  box-shadow: 0 0 0 8px rgba(0, 102, 255, 0.25);
+}
+
+.stepNumberCompleted {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--white);
+  transition: background 0.5s ease;
 }
 
 .timelineStep.active .stepNumber {
@@ -114,7 +133,7 @@
 .step {
   background: var(--white);
   border-radius: var(--radius-lg);
-  overflow: hidden;
+  overflow: visible;
   transition: all var(--transition-base);
   cursor: pointer;
 }
@@ -126,9 +145,24 @@
   transform: translateY(-8px);
 }
 
+.pulsing {
+  animation: dropPulse 4.8s ease-in-out infinite;
+}
+
+.pulsing::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: inherit;
+  border: 1px solid rgba(0, 183, 255, 0.4);
+  box-shadow: 0 0 0 0 rgba(0, 183, 255, 0.25);
+  animation: waterDrop 4.8s ease-in-out infinite;
+}
+
 .stepImageWrapper {
   position: relative;
   width: 100%;
+  border-radius: var(--radius-lg);
   height: 250px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
@@ -156,6 +190,12 @@
   font-weight: 600;
   font-size: var(--text-sm);
   color: var(--primary-blue);
+}
+
+.stepBadgeActive {
+  background: #ff4b4b;
+  color: var(--white);
+  box-shadow: 0 0 12px rgba(255, 75, 75, 0.4);
 }
 
 .stepInfo {
@@ -200,6 +240,11 @@
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.mobileStep:hover {
+  border-color: var(--primary-blue);
+  box-shadow: var(--shadow-lg);
 }
 
 .mobileStepHeader {
@@ -281,6 +326,30 @@
   }
 }
 
+@keyframes dropPulse {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes waterDrop {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 183, 255, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 40px 40px rgba(0, 183, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 183, 255, 0);
+  }
+}
+
 /* Desktop Styles */
 @media (min-width: 1024px) {
   .timeline {
@@ -315,21 +384,76 @@
   .mobileSteps {
     display: block;
   }
-  
-  .title {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
+
+  .timeline {
+    display: block;
+    margin-bottom: var(--spacing-2xl);
   }
-  
-  .subtitle {
-    font-size: var(--text-lg);
+
+  .timelineLine {
+    left: 5%;
+    right: 5%;
   }
-  
-  .ctaText {
-    font-size: var(--text-lg);
+
+  .timelineStep {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: rgba(255, 255, 255, 0.05);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
   }
-  
-  .ctaButton {
-    font-size: var(--text-base);
-    padding: var(--spacing-sm) var(--spacing-lg);
-  }
+}
+.title {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+}
+
+.subtitle {
+  font-size: var(--text-lg);
+}
+
+.ctaText {
+  font-size: var(--text-lg);
+}
+
+.ctaButton {
+  font-size: var(--text-base);
+  padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+.timelineProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #0066ff, #00a1ff);
+  /* smoother, tied to activeStep changes */
+  transition: width 0.6s ease-in-out;
+}
+
+.stepBadge {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  background: var(--white);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-md);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--primary-blue);
+  /* 👇 smooth transitions */
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+
+.stepBadgeActive {
+  background: #ff4b4b;
+  color: var(--white);
+  box-shadow: 0 0 14px rgba(255, 75, 75, 0.45);
+  transform: translateY(-2px) scale(1.03);
 }

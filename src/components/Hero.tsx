@@ -32,10 +32,41 @@ const Hero = () => {
               </Highlight>{" "}
               <span className={styles.highlight}>the competition</span>
             </h1>
-            <p className={styles.subtitle}>
-              Connect directly with tenants who are moving out. Get their
-              apartment before it hits the market, with their help securing it.
-            </p>
+            <ul className={styles.featurePoints}>
+              {[
+                {
+                  label: "Skip the application race",
+                  detail: "get a fair chance!",
+                  icon: "/assets/svg/skip.svg",
+                },
+                {
+                  label: "No upfront cost",
+                  detail: "pay after signing the contract.",
+                  icon: "/assets/svg/money.svg",
+                },
+                {
+                  label: "Set up once",
+                  detail: "and just wait for your offer.",
+                  icon: "/assets/svg/offer.svg",
+                },
+              ].map((point) => (
+                <li key={point.label} className={styles.featurePoint}>
+                  <span className={styles.pointIcon} aria-hidden="true">
+                    <Image
+                      src={point.icon}
+                      alt=""
+                      width={26}
+                      height={26}
+                      priority
+                      className={styles.pointIconImage}
+                    />
+                  </span>
+                  <div>
+                    <strong>{point.label},</strong> <span>{point.detail}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
 
             {/* <div className={styles.signupWrapper}>
               <EmailSignup
