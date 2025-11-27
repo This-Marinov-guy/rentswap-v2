@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Button from "./common/Button";
+import Highlight from "./common/Highlight";
 import styles from "./Features.module.css";
 
 const features = [
@@ -165,7 +166,12 @@ const Features = () => {
             </div>
             <div className={styles.textContent}>
               <span className={styles.badge}>Help & Earn</span>
-              <h2 className={styles.sectionTitle}>Moving out? Earn €200</h2>
+              <h2 className={styles.sectionTitle}>
+                Moving out? Earn{" "}
+                <Highlight variant="style1" size="small">
+                  €200
+                </Highlight>
+              </h2>
               <p className={styles.sectionText}>
                 If you're moving out within a year, you can help someone else
                 get your place and earn €200 when they successfully sign the
@@ -197,7 +203,7 @@ const Features = () => {
                   </div>
                 </div>
               </div>
-              <Button variant="style2" size="large" href="/help-earn">
+              <Button variant="primary" className="mb-8">
                 Start Earning Now
               </Button>
             </div>
@@ -221,7 +227,7 @@ const Features = () => {
                 Share your room details and we'll deliver roommate candidates
                 straight to your inbox - completely free!
               </p>
-              <Button variant="style2" size="large" href="/roommate">
+              <Button variant="primary" size="large" href="/roommate">
                 Find a Roommate
               </Button>
             </div>

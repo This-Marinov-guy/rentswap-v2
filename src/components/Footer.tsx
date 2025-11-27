@@ -10,32 +10,73 @@ const Footer = () => {
           <Link href="/" className={styles.logo}>
             RentSwap
           </Link>
-          <p style={{ color: '#adb5bd', lineHeight: 1.6 }}>
-            The exclusive rental finder service. Get matched with your ideal home.
+          <p style={{ color: "#003049", lineHeight: 1.6 }}>
+            The exclusive rental finder service. Get matched with your ideal
+            home.
           </p>
           <div className={styles.socials}>
-            <Link href="#" className={styles.socialIcon}><Facebook size={20} /></Link>
-            <Link href="#" className={styles.socialIcon}><Twitter size={20} /></Link>
-            <Link href="#" className={styles.socialIcon}><Instagram size={20} /></Link>
-            <Link href="#" className={styles.socialIcon}><Linkedin size={20} /></Link>
+            <Link href="#" className={styles.socialIcon}>
+              <Facebook size={20} />
+            </Link>
+            <Link href="#" className={styles.socialIcon}>
+              <Twitter size={20} />
+            </Link>
+            <Link href="#" className={styles.socialIcon}>
+              <Instagram size={20} />
+            </Link>
+            <Link href="#" className={styles.socialIcon}>
+              <Linkedin size={20} />
+            </Link>
           </div>
         </div>
         <div className={styles.column}>
           <h4 className={styles.heading}>Company</h4>
           <ul className={styles.linkList}>
-            <li className={styles.linkItem}><Link href="#" className={styles.link}>About Us</Link></li>
-            <li className={styles.linkItem}><Link href="#" className={styles.link}>Careers</Link></li>
-            <li className={styles.linkItem}><Link href="#" className={styles.link}>Blog</Link></li>
-            <li className={styles.linkItem}><Link href="#" className={styles.link}>Contact</Link></li>
+            <li className={styles.linkItem}>
+              <Link href="#" className={styles.link}>
+                About Us
+              </Link>
+            </li>
+            <li className={styles.linkItem}>
+              <Link href="#" className={styles.link}>
+                Careers
+              </Link>
+            </li>
+            <li className={styles.linkItem}>
+              <Link href="#" className={styles.link}>
+                Blog
+              </Link>
+            </li>
+            <li className={styles.linkItem}>
+              <Link href="#" className={styles.link}>
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
         <div className={styles.column}>
           <h4 className={styles.heading}>Support</h4>
           <ul className={styles.linkList}>
-            <li className={styles.linkItem}><Link href="#" className={styles.link}>Help Center</Link></li>
-            <li className={styles.linkItem}><Link href="#" className={styles.link}>Terms of Service</Link></li>
-            <li className={styles.linkItem}><Link href="#" className={styles.link}>Privacy Policy</Link></li>
-            <li className={styles.linkItem}><Link href="#" className={styles.link}>Cookie Policy</Link></li>
+            <li className={styles.linkItem}>
+              <Link href="#" className={styles.link}>
+                Help Center
+              </Link>
+            </li>
+            <li className={styles.linkItem}>
+              <Link href="#" className={styles.link}>
+                Terms of Service
+              </Link>
+            </li>
+            <li className={styles.linkItem}>
+              <Link href="#" className={styles.link}>
+                Privacy Policy
+              </Link>
+            </li>
+            <li className={styles.linkItem}>
+              <Link href="#" className={styles.link}>
+                Cookie Policy
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
