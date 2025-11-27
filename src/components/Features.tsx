@@ -141,14 +141,14 @@ const Features = () => {
         </div>
 
         {/* Earn Section */}
-        <div
-          id="earn-section"
-          ref={(el) => {
-            sectionRefs.current["earn-section"] = el;
-          }}
-          className={`${styles.alternatingSection} ${styles.reversed} ${
-            visibleSections.has("earn-section") ? styles.visible : ""
-          }`}
+          <div
+            id="earn-section"
+            ref={(el) => {
+              sectionRefs.current["earn-section"] = el;
+            }}
+            className={`${styles.alternatingSection} ${styles.reversed} ${
+              visibleSections.has("earn-section") ? styles.visible : ""
+            }`}
         >
           <div className={styles.alternatingContent}>
             <div className={styles.imageContent}>

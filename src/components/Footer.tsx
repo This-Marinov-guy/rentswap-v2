@@ -33,23 +33,18 @@ const Footer = () => {
           <h4 className={styles.heading}>Company</h4>
           <ul className={styles.linkList}>
             <li className={styles.linkItem}>
-              <Link href="#" className={styles.link}>
-                About Us
+              <Link href="/#how-it-works" className={styles.link}>
+                How it work
               </Link>
             </li>
             <li className={styles.linkItem}>
-              <Link href="#" className={styles.link}>
-                Careers
+              <Link href="/#pricing" className={styles.link}>
+                Pricing
               </Link>
             </li>
             <li className={styles.linkItem}>
-              <Link href="#" className={styles.link}>
-                Blog
-              </Link>
-            </li>
-            <li className={styles.linkItem}>
-              <Link href="#" className={styles.link}>
-                Contact
+              <Link href="#pricing" className={styles.link}>
+                Help & Earn
               </Link>
             </li>
           </ul>

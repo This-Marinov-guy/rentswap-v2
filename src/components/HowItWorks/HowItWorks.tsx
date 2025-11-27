@@ -29,7 +29,7 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section className={styles.section}>
+    <section id="how-it-works" className={styles.section}>
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.title}>How it works</h2>

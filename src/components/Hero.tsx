@@ -83,7 +83,7 @@ const Hero = () => {
 
           <div className={styles.imageWrapper}>
             <div className={styles.imageContainer}>
-              <div className={styles.badges + " flex justify-center mb-4"}>
+              <div className={styles.badges + " flex justify-center"} style={{marginBottom: "60px"}}>
                 <div className={styles.badgeWrapper}>
                   <Highlight
                     variant="style1"
