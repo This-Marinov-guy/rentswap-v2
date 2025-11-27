@@ -43,7 +43,7 @@
   background: linear-gradient(135deg, var(--primary-blue) 0%, #0052cc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background-color: var(--primary-blue);
 }
 
 .subtitle {
@@ -51,6 +51,95 @@
   line-height: 1.6;
   color: var(--gray-600);
   margin-bottom: var(--spacing-xl);
+}
+
+.wordHighlight {
+  display: inline-flex;
+  margin-right: 0.25rem;
+}
+
+.badges {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.badgeWrapper {
+  position: relative;
+  transition: transform var(--transition-base);
+}
+
+.badgeWrapper:hover {
+  transform: scale(1.5);
+  z-index: 10;
+}
+
+.badge {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.arrowToHome,
+.arrowToEarn {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  pointer-events: none;
+  opacity: 0.8;
+  color: black;
+}
+
+.arrowToHome {
+  bottom: -270%;
+  right: 150px;
+  transform: rotate(-90deg);
+}
+
+.arrowToEarn {
+  bottom: 100%;
+  left: 120px;
+  transform: scaleX(-1) rotate(180deg);
+}
+
+.badgeWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.arrowFromPhone {
+  position: absolute;
+  width: 80px;
+  height: 2px;
+  top: 50%;
+  right: 100%;
+  transform-origin: right center;
+}
+
+.arrowFromPhone::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-top: 2px solid currentColor;
+}
+
+.arrowToHome {
+  transform: translateY(-8px) rotate(-90deg) scaleY(1) scaleX(1);
+  color: var(--style1-bg);
+}
+
+.arrowToEarn {
+  transform: translateY(80px) rotate(90deg) scaleX(-1);
+  color: var(--style2-bg);
 }
 
 .signupWrapper {

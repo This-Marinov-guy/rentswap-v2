@@ -4,7 +4,7 @@ import styles from './Highlight.module.css';
 interface HighlightProps {
   children: React.ReactNode;
   variant?: 'style1' | 'style2';
-  size?: 'normal' | 'large';
+  size?: 'normal' | 'small' | 'large';
   className?: string;
 }
 
@@ -14,9 +14,12 @@ const Highlight: React.FC<HighlightProps> = ({
   size = 'normal',
   className = '',
 }) => {
+  const sizeClass =
+    size === 'large' ? styles.large : size === 'small' ? styles.small : '';
+
   const highlightClasses = `
     ${styles.highlight}
-    ${size === 'large' ? styles.large : ''}
+    ${sizeClass}
     ${styles[variant]}
     ${className}
   `.trim();
@@ -29,3 +32,5 @@ const Highlight: React.FC<HighlightProps> = ({
 };
 
 export default Highlight;
+
+

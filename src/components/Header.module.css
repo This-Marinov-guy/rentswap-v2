@@ -68,7 +68,7 @@
 }
 
 .navLink.active {
-  color: #FF6B9D;
+  color: #FA3C4C;
   background-color: var(--white);
   font-weight: 600;
 }
@@ -83,7 +83,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-sm) var(--spacing-xl);
-  background-color: #FF6B9D;
+  background-color: #FA3C4C;
   color: var(--white);
   font-weight: 600;
   font-size: var(--text-base);
@@ -139,7 +139,7 @@
 }
 
 .mobileNavLink:hover {
-  color: #FF6B9D;
+  color: #FA3C4C;
 }
 
 .mobileAuthButtons {
@@ -154,7 +154,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-md) var(--spacing-xl);
-  background-color: #FF6B9D;
+  background-color: #FA3C4C;
   color: var(--white);
   font-weight: 600;
   font-size: var(--text-base);
