@@ -355,6 +355,13 @@
   background: var(--light-blue);
   padding: 4px 12px;
   border-radius: var(--radius-full);
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mobileStepActive .mobileStepLabel {
+  background: linear-gradient(135deg, #ff4b4b, #ff6b6b);
+  color: var(--white);
+  box-shadow: 0 4px 16px rgba(255, 75, 75, 0.35);
 }
 
 .mobileStepTitle {
