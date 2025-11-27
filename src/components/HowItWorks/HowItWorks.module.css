@@ -2,11 +2,7 @@
   padding: var(--spacing-3xl) 0;
   background: var(--primary-blue);
   position: relative;
-}
-
-.titleStep {
-  color: var(--white);
-  font-size: 18px !important;
+  overflow: hidden;
 }
 
 .container {
@@ -32,6 +28,7 @@
   color: var(--white);
   max-width: 600px;
   margin: 0 auto;
+  opacity: 0.9;
 }
 
 .content {
@@ -45,7 +42,9 @@
   transform: translateY(0);
 }
 
-/* Desktop Timeline */
+/* ===================== */
+/* Desktop Timeline      */
+/* ===================== */
 .timeline {
   display: none;
   position: relative;
@@ -57,9 +56,11 @@
   top: 30px;
   left: 10%;
   right: 10%;
-  height: 3px;
-  background-color: rgba(255, 255, 255, 0.3);
+  height: 6px;
+  background-color: var(--white);
+  border-radius: 3px;
   z-index: 0;
+  overflow: hidden;
 }
 
 .timelineProgress {
@@ -67,8 +68,10 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: linear-gradient(90deg, #0066ff, #00a1ff);
-  transition: width 4.8s ease-in-out;
+  background: linear-gradient(90deg, #00d4ff, #00a1ff, #0066ff);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(0, 164, 255, 0.6);
+  /* No CSS transition - animation handled by JS for smooth progressive loading */
 }
 
 .timelineStep {
@@ -76,6 +79,22 @@
   text-align: center;
   cursor: pointer;
   transition: all var(--transition-base);
+  z-index: 1;
+}
+
+.titleStep {
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 500;
+  max-width: 180px;
+  margin: 0 auto;
+  line-height: 1.4;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.timelineStep.active .titleStep {
+  opacity: 1;
 }
 
 .stepNumber {
@@ -83,46 +102,52 @@
   height: 60px;
   border-radius: 50%;
   background: var(--white);
-  border: 3px solid var(--white);
+  border: 4px solid var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto var(--spacing-md);
   position: relative;
   z-index: 1;
-  transition: all var(--transition-base);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: var(--text-2xl);
 }
 
-.stepNumberHover {
-  background: var(--primary-blue);
-  border-color: var(--primary-blue);
-  color: var(--white);
-  box-shadow: 0 0 0 8px rgba(0, 102, 255, 0.25);
+.stepFill {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #3572ee;
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stepNumberCompleted .stepFill {
+  transform: scale(1);
 }
 
 .stepNumberCompleted {
-  background: var(--primary-blue);
-  border-color: var(--primary-blue);
-  color: var(--white);
-  transition: background 0.5s ease;
+  border-color: #3572ee;
+}
+
+.stepIcon {
+  position: relative;
+  z-index: 2;
+  transition: filter 0.3s ease;
+}
+
+.stepNumberCompleted .stepIcon {
+  filter: brightness(0) invert(1);
 }
 
 .timelineStep.active .stepNumber {
-  border-color: var(--primary-blue);
-  background: var(--light-blue);
-  transform: scale(1.1);
+  transform: scale(1.15);
+  box-shadow: 0 0 0 8px rgba(0, 102, 255, 0.3);
 }
 
-.stepContent h3 {
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--white);
-  max-width: 200px;
-  margin: 0 auto;
-}
-
-/* Steps Grid */
+/* ===================== */
+/* Desktop Steps Grid    */
+/* ===================== */
 .stepsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -133,50 +158,36 @@
 .step {
   background: var(--white);
   border-radius: var(--radius-lg);
-  overflow: visible;
-  transition: all var(--transition-base);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  position: relative;
 }
 
 .step:hover,
 .step.activeStep {
-  background: var(--white);
-  box-shadow: var(--shadow-lg);
   transform: translateY(-8px);
-}
-
-.pulsing {
-  animation: dropPulse 4.8s ease-in-out infinite;
-}
-
-.pulsing::after {
-  content: "";
-  position: absolute;
-  inset: -12px;
-  border-radius: inherit;
-  border: 1px solid rgba(0, 183, 255, 0.4);
-  box-shadow: 0 0 0 0 rgba(0, 183, 255, 0.25);
-  animation: waterDrop 4.8s ease-in-out infinite;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .stepImageWrapper {
   position: relative;
   width: 100%;
-  border-radius: var(--radius-lg);
-  height: 250px;
+  height: 220px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
 }
 
-.stepImage {
+.stepImageWrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-slow);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.step:hover .stepImage {
-  transform: scale(1.05);
+.step:hover .stepImageWrapper img,
+.step.activeStep .stepImageWrapper img {
+  transform: scale(1.08);
 }
 
 .stepBadge {
@@ -186,31 +197,22 @@
   background: var(--white);
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-full);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-weight: 600;
   font-size: var(--text-sm);
   color: var(--primary-blue);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .stepBadgeActive {
-  background: #ff4b4b;
+  background: linear-gradient(135deg, #ff4b4b, #ff6b6b);
   color: var(--white);
-  box-shadow: 0 0 12px rgba(255, 75, 75, 0.4);
+  box-shadow: 0 4px 16px rgba(255, 75, 75, 0.4);
+  transform: translateY(-2px) scale(1.05);
 }
 
 .stepInfo {
   padding: var(--spacing-lg);
-}
-
-.stepHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-.stepIcon {
-  font-size: var(--text-2xl);
 }
 
 .stepTitle {
@@ -218,64 +220,154 @@
   font-weight: 600;
   color: var(--gray-900);
   line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
 }
 
-.stepDescription {
+.stepInfo p {
   font-size: var(--text-base);
   color: var(--gray-600);
   line-height: 1.6;
+  margin: 0;
 }
 
-/* Mobile Steps */
+/* ===================== */
+/* Mobile Steps Layout   */
+/* ===================== */
 .mobileSteps {
   display: none;
+  position: relative;
+}
+
+/* Centered Vertical Timeline */
+.mobileTimeline {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 8px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.mobileTimelineLine {
+  position: absolute;
+  top: 40px;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mobileTimelineProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, #00d4ff, #00a1ff, #0066ff);
+  border-radius: 4px;
+  box-shadow: 0 0 16px rgba(0, 164, 255, 0.5);
+  /* No transition - handled by JS */
+}
+
+/* Node dots on the timeline */
+.mobileTimelineNode {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+}
+
+.mobileNodeDot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 4px solid var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.mobileNodeDotActive {
+  background: #3572ee;
+  border-color: #3572ee;
+  box-shadow: 0 4px 16px #3572ee;
+}
+
+.mobileNodeIcon {
+  transition: filter 0.3s ease;
+}
+
+.mobileNodeDotActive .mobileNodeIcon {
+  filter: brightness(0) invert(1);
+}
+
+/* Mobile Cards Wrapper */
+.mobileCardsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  padding: 20px 0;
 }
 
 .mobileStep {
   background: var(--white);
-  border: 1px solid var(--white);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
+  margin: 0 auto;
+  width: calc(50% - 40px);
+  position: relative;
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.6s ease-out forwards;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-.mobileStep:hover {
-  border-color: var(--primary-blue);
-  box-shadow: var(--shadow-lg);
+.mobileStep:nth-child(odd) {
+  margin-right: auto;
+  margin-left: 0;
 }
 
-.mobileStepHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+.mobileStep:nth-child(even) {
+  margin-left: auto;
+  margin-right: 0;
 }
 
-.mobileStepNumber {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+.mobileStepActive {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px) scale(1.02);
+}
+
+.mobileStepLabel {
+  display: inline-block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--primary-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
   background: var(--light-blue);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--text-xl);
-  flex-shrink: 0;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
 }
 
 .mobileStepTitle {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 600;
   color: var(--gray-900);
   line-height: 1.3;
+  margin: 0 0 var(--spacing-md) 0;
 }
 
 .mobileStepImage {
   width: 100%;
-  height: 200px;
+  height: 140px;
   margin-bottom: var(--spacing-md);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -283,30 +375,34 @@
 }
 
 .mobileStepDescription {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--gray-600);
   line-height: 1.6;
+  margin: 0;
 }
 
-/* CTA Section */
+/* ===================== */
+/* CTA Section           */
+/* ===================== */
 .cta {
   text-align: center;
   padding: var(--spacing-2xl) 0;
-  border-top: 1px solid var(--white);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   margin-top: var(--spacing-2xl);
 }
 
 .ctaText {
   font-size: var(--text-xl);
-  color: var(--gray-700);
+  color: var(--white);
   margin-bottom: var(--spacing-lg);
+  opacity: 0.9;
 }
 
 .ctaButton {
   display: inline-block;
   padding: var(--spacing-md) var(--spacing-xl);
-  background: var(--primary-blue);
-  color: var(--white);
+  background: var(--white);
+  color: var(--primary-blue);
   border-radius: var(--radius-md);
   font-weight: 600;
   font-size: var(--text-lg);
@@ -314,11 +410,13 @@
 }
 
 .ctaButton:hover {
-  background: var(--primary-blue-hover);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
+/* ===================== */
+/* Animations            */
+/* ===================== */
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -326,134 +424,204 @@
   }
 }
 
-@keyframes dropPulse {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes waterDrop {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 183, 255, 0.6);
-  }
-  70% {
-    box-shadow: 0 0 40px 40px rgba(0, 183, 255, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 183, 255, 0);
-  }
-}
-
-/* Desktop Styles */
+/* ===================== */
+/* Responsive: Desktop   */
+/* ===================== */
 @media (min-width: 1024px) {
   .timeline {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     padding: 0 var(--spacing-xl);
   }
-  
+
   .mobileSteps {
     display: none;
   }
+
+  .stepsGrid {
+    display: grid;
+  }
 }
 
-/* Tablet Styles */
-@media (max-width: 1024px) {
+/* ===================== */
+/* Responsive: Tablet    */
+/* ===================== */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .section {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  .header {
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .subtitle {
+    font-size: var(--text-lg);
+  }
+
+  .timeline {
+    display: none;
+  }
+
   .stepsGrid {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
   }
-  
-  .timeline {
+
+  .step {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+  }
+
+  .stepImageWrapper {
+    height: 100%;
+    min-height: 200px;
+  }
+
+  .stepInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--spacing-xl);
+  }
+
+  .mobileSteps {
     display: none;
   }
 }
 
-/* Mobile Styles */
-@media (max-width: 640px) {
+/* ===================== */
+/* Responsive: Mobile    */
+/* ===================== */
+@media (max-width: 768px) {
+  .section {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+
+  .header {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .subtitle {
+    font-size: var(--text-base);
+  }
+
+  .timeline {
+    display: none;
+  }
+
   .stepsGrid {
     display: none;
   }
-  
+
   .mobileSteps {
     display: block;
   }
 
-  .timeline {
-    display: block;
-    margin-bottom: var(--spacing-2xl);
+  .mobileCardsWrapper {
+    gap: 60px;
   }
 
-  .timelineLine {
-    left: 5%;
-    right: 5%;
+  .mobileStep {
+    width: calc(50% - 30px);
   }
 
-  .timelineStep {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    background: rgba(255, 255, 255, 0.05);
-    padding: var(--spacing-sm);
-    border-radius: var(--radius-lg);
-    margin-bottom: var(--spacing-md);
+  .ctaText {
+    font-size: var(--text-lg);
+  }
+
+  .ctaButton {
+    font-size: var(--text-base);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    width: 100%;
   }
 }
-.title {
-  font-size: clamp(1.75rem, 5vw, 2.5rem);
+
+/* ===================== */
+/* Responsive: Small     */
+/* ===================== */
+@media (max-width: 540px) {
+  .mobileTimeline {
+    left: 24px;
+    transform: none;
+  }
+
+  .mobileCardsWrapper {
+    gap: 40px;
+    padding-left: 60px;
+  }
+
+  .mobileStep {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .mobileStep:nth-child(odd),
+  .mobileStep:nth-child(even) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .mobileNodeDot {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobileNodeIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobileTimelineLine {
+    top: 20px;
+    bottom: 20px;
+  }
+
+  .mobileStepImage {
+    height: 120px;
+  }
 }
 
-.subtitle {
-  font-size: var(--text-lg);
-}
+/* ===================== */
+/* Responsive: XSmall    */
+/* ===================== */
+@media (max-width: 380px) {
+  .mobileCardsWrapper {
+    padding-left: 52px;
+  }
 
-.ctaText {
-  font-size: var(--text-lg);
-}
+  .mobileTimeline {
+    left: 20px;
+    width: 6px;
+  }
 
-.ctaButton {
-  font-size: var(--text-base);
-  padding: var(--spacing-sm) var(--spacing-lg);
-}
+  .mobileNodeDot {
+    width: 36px;
+    height: 36px;
+  }
 
-.timelineProgress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: linear-gradient(90deg, #0066ff, #00a1ff);
-  /* smoother, tied to activeStep changes */
-  transition: width 0.6s ease-in-out;
-}
+  .mobileNodeIcon {
+    width: 18px;
+    height: 18px;
+  }
 
-.stepBadge {
-  position: absolute;
-  top: var(--spacing-md);
-  left: var(--spacing-md);
-  background: var(--white);
-  padding: var(--spacing-xs) var(--spacing-md);
-  border-radius: var(--radius-full);
-  box-shadow: var(--shadow-md);
-  font-weight: 600;
-  font-size: var(--text-sm);
-  color: var(--primary-blue);
-  /* 👇 smooth transitions */
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease,
-    box-shadow 0.35s ease,
-    transform 0.35s ease;
-}
+  .mobileStep {
+    padding: var(--spacing-md);
+  }
 
-.stepBadgeActive {
-  background: #ff4b4b;
-  color: var(--white);
-  box-shadow: 0 0 14px rgba(255, 75, 75, 0.45);
-  transform: translateY(-2px) scale(1.03);
+  .mobileStepImage {
+    height: 100px;
+  }
 }

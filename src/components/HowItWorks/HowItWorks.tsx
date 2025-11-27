@@ -36,7 +36,6 @@ export default function HowItWorks() {
           <p className={styles.subtitle}>Three simple steps to your new home</p>
         </div>
 
-        {/* Client island */}
         <HowItWorksClient steps={STEPS} />
       </div>
     </section>
