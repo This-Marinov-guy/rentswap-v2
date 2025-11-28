@@ -1,6 +1,20 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | RentSwap",
+  description: "Learn how RentSwap collects, uses, and protects your personal information in compliance with GDPR and Dutch data protection laws.",
+  openGraph: {
+    title: "Privacy Policy | RentSwap",
+    description: "Learn how RentSwap collects, uses, and protects your personal information in compliance with GDPR and Dutch data protection laws.",
+    url: "https://rentswap.nl/privacy-policy",
+    siteName: "RentSwap",
+    locale: "en_US",
+    type: "website",
+  },
+};
 
 export default function PrivacyPolicyPage() {
   return (

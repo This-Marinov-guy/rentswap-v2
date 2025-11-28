@@ -1,6 +1,5 @@
 .footer {
   background-color: var(--dark-blue);
-  color: var(--white);
   padding: 4rem 2rem;
 }
 
@@ -21,7 +20,6 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--white);
   text-decoration: none;
   display: block;
   margin-bottom: 1.5rem;
@@ -31,7 +29,6 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  color: var(--white);
 }
 
 .linkList {

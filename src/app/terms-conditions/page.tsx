@@ -1,6 +1,20 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms and Conditions | RentSwap",
+  description: "Read our Terms and Conditions to understand the rules and regulations governing the use of RentSwap's platform and services.",
+  openGraph: {
+    title: "Terms and Conditions | RentSwap",
+    description: "Read our Terms and Conditions to understand the rules and regulations governing the use of RentSwap's platform and services.",
+    url: "https://rentswap.nl/terms-conditions",
+    siteName: "RentSwap",
+    locale: "en_US",
+    type: "website",
+  },
+};
 
 export default function TermsConditionsPage() {
   return (

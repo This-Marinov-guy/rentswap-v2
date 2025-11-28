@@ -4,6 +4,20 @@ import Image from "next/image";
 import Highlight from "@/components/common/Highlight";
 import Button from "@/components/common/Button";
 import styles from "./page.module.css";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pricing | RentSwap",
+  description: "Fair success-based pricing. Pay nothing unless you successfully sign a rental contract. No upfront costs, no hidden fees.",
+  openGraph: {
+    title: "Pricing | RentSwap",
+    description: "Fair success-based pricing. Pay nothing unless you successfully sign a rental contract.",
+    url: "https://rentswap.nl/pricing",
+    siteName: "RentSwap",
+    locale: "en_US",
+    type: "website",
+  },
+};
 
 const benefits = [
   "Exclusive Access to Unlisted Rentals",
@@ -53,10 +67,10 @@ export default function PricingPage() {
                     {text === benefits[1]
                       ? "Sign up once, we’ll find an offer for you."
                       : text === benefits[2]
-                      ? "Our algorithms prioritize people who have been in the queue longer and need urgent help."
-                      : text === benefits[3]
-                      ? "If you successfully sign a contract with our help, our fee is half month’s rent plus 21% VAT."
-                      : "Find homes that are not on other platforms."}
+                        ? "Our algorithms prioritize people who have been in the queue longer and need urgent help."
+                        : text === benefits[3]
+                          ? "If you successfully sign a contract with our help, our fee is half month’s rent plus 21% VAT."
+                          : "Find homes that are not on other platforms."}
                   </p>
                 </div>
               </li>
