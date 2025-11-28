@@ -18,17 +18,13 @@ const BlogCard = ({ post }: BlogCardProps) => {
     return (
         <Link href={`/blog/${post.slug}`} className={styles.card}>
             <div className={styles.imageContainer}>
-                {post.post_thumbnail ? (
-                    <Image
-                        src={post.post_thumbnail.URL}
-                        alt={post.title}
-                        fill
-                        className={styles.image}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                ) : (
-                    <div className={styles.placeholderImage} />
-                )}
+                <Image
+                    src={post.post_thumbnail?.URL || "/assets/images/common/blog-thumbnail.jpg"}
+                    alt={post.title}
+                    fill
+                    className={styles.image}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
             </div>
             <div className={styles.content}>
                 <div className={styles.meta}>
@@ -37,7 +33,7 @@ const BlogCard = ({ post }: BlogCardProps) => {
                     </span>
                     {Object.values(post.categories).length > 0 && (
                         <span className={styles.category}>
-                            {Object.values(post.categories)[0].name}
+                            {Object.values(post.categories)[0].name === 'Uncategorized' ? '' : Object.values(post.categories)[0].name}
                         </span>
                     )}
                 </div>

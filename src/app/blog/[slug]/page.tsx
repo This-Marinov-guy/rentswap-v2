@@ -2,23 +2,38 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPostBySlug } from "@/lib/wordpress";
+import { getPostBySlug, getPosts } from "@/lib/wordpress";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
 
+// Generate static params for the first 20 posts
+export async function generateStaticParams() {
+  try {
+    const { posts } = await getPosts(1, 20);
+    return posts.map((post) => ({
+      slug: post.slug,
+    }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   try {
-    const post = await getPostBySlug(params.slug);
+    const { slug } = await params;
+    const post = await getPostBySlug(slug);
     return {
       title: `${post.title} - RentSwap Blog`,
       description: post.excerpt.replace(/<[^>]*>/g, "").slice(0, 160),
     };
   } catch (error) {
+    console.error("Error generating metadata for blog post:", error);
     return {
       title: "Blog Post Not Found - RentSwap",
     };
@@ -28,12 +43,14 @@ export async function generateMetadata({
 export default async function BlogPostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
   let post;
   try {
-    post = await getPostBySlug(params.slug);
+    const { slug } = await params;
+    post = await getPostBySlug(slug);
   } catch (error) {
+    console.error("Error fetching blog post:", error);
     notFound();
   }
 
@@ -54,34 +71,25 @@ export default async function BlogPostPage({
 
         <article className={styles.article}>
           <header className={styles.header}>
+            <h2
+              className={'highlight'}
+              dangerouslySetInnerHTML={{ __html: post.title }}
+            />
             <div className={styles.meta}>
               <span className={styles.date} suppressHydrationWarning>
                 {date}
               </span>
-              {Object.values(post.categories).length > 0 && (
-                <span className={styles.category}>
-                  {Object.values(post.categories)[0].name}
-                </span>
+              {Object.values(post.categories).length > 0 &&
+                Object.values(post.categories)[0].name !== 'Uncategorized' && (
+                <>
+                  <span className={styles.separator}>•</span>
+                  <span className={styles.category}>
+                    {Object.values(post.categories)[0].name}
+                  </span>
+                </>
               )}
             </div>
-            <h1
-              className={styles.title}
-              dangerouslySetInnerHTML={{ __html: post.title }}
-            />
           </header>
-
-          {post.post_thumbnail && (
-            <div className={styles.featuredImageContainer}>
-              <Image
-                src={post.post_thumbnail.URL}
-                alt={post.title}
-                fill
-                className={styles.featuredImage}
-                priority
-                sizes="(max-width: 800px) 100vw, 800px"
-              />
-            </div>
-          )}
 
           <div
             className={styles.content}

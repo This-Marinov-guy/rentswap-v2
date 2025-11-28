@@ -183,13 +183,20 @@ export async function getPostBySlug(slug: string): Promise<WordPressPost> {
     throw new Error("WORDPRESS_BLOG_ID is not defined");
   }
 
-  const res = await fetch(`${BASE_URL}/${WORDPRESS_BLOG_ID}/posts/slug:${slug}`, {
+  const url = `${BASE_URL}/${WORDPRESS_BLOG_ID}/posts/slug:${slug}`;
+  console.log(`Fetching post by slug: ${slug} from ${url}`);
+
+  const res = await fetch(url, {
     next: { revalidate: 3600 },
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch post");
+    const errorText = await res.text();
+    console.error(`Failed to fetch post by slug "${slug}":`, res.status, errorText);
+    throw new Error(`Failed to fetch post: ${res.status} ${res.statusText}`);
   }
 
-  return res.json();
+  const data = await res.json();
+  console.log(`Successfully fetched post: ${data.title} (ID: ${data.ID})`);
+  return data;
 }
