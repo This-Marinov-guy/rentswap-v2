@@ -6,10 +6,11 @@ import styles from "./BlogControls.module.css";
 interface BlogControlsProps {
     itemsPerPage: number;
     totalPosts: number;
-    currentPostsCount: number;
+    startPost: number;
+    endPost: number;
 }
 
-const BlogControls = ({ itemsPerPage, totalPosts, currentPostsCount }: BlogControlsProps) => {
+const BlogControls = ({ itemsPerPage, totalPosts, startPost, endPost }: BlogControlsProps) => {
     const router = useRouter();
 
     const handlePerPageChange = (newPerPage: number) => {
@@ -40,7 +41,7 @@ const BlogControls = ({ itemsPerPage, totalPosts, currentPostsCount }: BlogContr
                 </select>
             </div>
             <div className={styles.resultCount}>
-                Showing {currentPostsCount} of {totalPosts} posts
+                Showing {startPost}-{endPost} of {totalPosts} posts
             </div>
         </div>
     );

@@ -159,7 +159,10 @@ export interface WordPressPostResponse {
 const WORDPRESS_BLOG_ID = process.env.WORDPRESS_BLOG_ID;
 const BASE_URL = "https://public-api.wordpress.com/rest/v1.1/sites";
 
-export async function getPosts(page: number = 1, number: number = 20): Promise<WordPressPostResponse> {
+export async function getPosts(
+  page: number = 1,
+  number: number = 20
+): Promise<WordPressPostResponse> {
   if (!WORDPRESS_BLOG_ID) {
     throw new Error("WORDPRESS_BLOG_ID is not defined");
   }
@@ -175,7 +178,9 @@ export async function getPosts(page: number = 1, number: number = 20): Promise<W
     throw new Error("Failed to fetch posts");
   }
 
-  return res.json();
+  const data = await res.json();  
+
+  return data;
 }
 
 export async function getPostBySlug(slug: string): Promise<WordPressPost> {
@@ -192,7 +197,11 @@ export async function getPostBySlug(slug: string): Promise<WordPressPost> {
 
   if (!res.ok) {
     const errorText = await res.text();
-    console.error(`Failed to fetch post by slug "${slug}":`, res.status, errorText);
+    console.error(
+      `Failed to fetch post by slug "${slug}":`,
+      res.status,
+      errorText
+    );
     throw new Error(`Failed to fetch post: ${res.status} ${res.statusText}`);
   }
 

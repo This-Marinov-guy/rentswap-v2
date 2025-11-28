@@ -28,6 +28,10 @@ export default async function BlogPage({
     const { posts, found } = await getPosts(page, itemsPerPage);
     const totalPages = Math.ceil(found / itemsPerPage);
 
+    // Calculate the range of posts being displayed
+    const startPost = (page - 1) * itemsPerPage + 1;
+    const endPost = Math.min(page * itemsPerPage, found);
+
     // Generate page numbers to display
     const generatePageNumbers = () => {
         const pages: (number | string)[] = [];
@@ -91,7 +95,8 @@ export default async function BlogPage({
                 <BlogControls
                     itemsPerPage={itemsPerPage}
                     totalPosts={found}
-                    currentPostsCount={posts.length}
+                    startPost={startPost}
+                    endPost={endPost}
                 />
 
                 <div className={styles.grid}>
