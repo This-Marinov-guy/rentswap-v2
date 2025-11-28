@@ -28,14 +28,15 @@ const BlogCard = ({ post }: BlogCardProps) => {
             </div>
             <div className={styles.content}>
                 <div className={styles.meta}>
+                    {Object.values(post.categories).length > 0 &&
+                     Object.values(post.categories)[0].name !== 'Uncategorized' && (
+                        <span className={styles.category}>
+                            {Object.values(post.categories)[0].name}
+                        </span>
+                    )}
                     <span className={styles.date} suppressHydrationWarning>
                         {date}
                     </span>
-                    {Object.values(post.categories).length > 0 && (
-                        <span className={styles.category}>
-                            {Object.values(post.categories)[0].name === 'Uncategorized' ? '' : Object.values(post.categories)[0].name}
-                        </span>
-                    )}
                 </div>
                 <h3
                     className={styles.title}
@@ -45,7 +46,12 @@ const BlogCard = ({ post }: BlogCardProps) => {
                     className={styles.excerpt}
                     dangerouslySetInnerHTML={{ __html: post.excerpt }}
                 />
-                <span className={styles.readMore}>Read more &rarr;</span>
+                <span className={styles.readMore}>
+                    Read article
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                </span>
             </div>
         </Link>
     );
