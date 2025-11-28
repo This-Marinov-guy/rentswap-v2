@@ -1,0 +1,139 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: calc(var(--header-height) + var(--spacing-2xl)) var(--spacing-lg) var(--spacing-2xl);
+  min-height: 100vh;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--gray-600);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xl);
+  transition: color var(--transition-base);
+}
+
+.backLink:hover {
+  color: #FA3C4C;
+}
+
+.article {
+  background-color: var(--white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+}
+
+.category {
+  color: #FA3C4C;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.title {
+  font-size: var(--text-4xl);
+  font-weight: 800;
+  color: var(--gray-900);
+  line-height: 1.2;
+  margin-bottom: var(--spacing-lg);
+}
+
+.featuredImageContainer {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  margin-bottom: var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--gray-50);
+}
+
+.featuredImage {
+  object-fit: cover;
+}
+
+.content {
+  font-size: var(--text-lg);
+  line-height: 1.8;
+  color: var(--gray-800);
+}
+
+/* Typography for content */
+.content h2 {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-top: var(--spacing-2xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.content h3 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+.content p {
+  margin-bottom: var(--spacing-lg);
+}
+
+.content ul, .content ol {
+  margin-bottom: var(--spacing-lg);
+  padding-left: var(--spacing-xl);
+}
+
+.content li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.content a {
+  color: #FA3C4C;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.content a:hover {
+  color: #D92B3B;
+}
+
+.content blockquote {
+  border-left: 4px solid #FA3C4C;
+  padding-left: var(--spacing-lg);
+  margin: var(--spacing-xl) 0;
+  font-style: italic;
+  color: var(--gray-700);
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin: var(--spacing-lg) 0;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: var(--text-3xl);
+  }
+  
+  .content {
+    font-size: var(--text-base);
+  }
+}
