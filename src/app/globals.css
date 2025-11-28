@@ -308,3 +308,19 @@ select:focus {
   outline: 2px solid var(--primary-blue);
   outline-offset: 2px;
 }
+
+.highlight {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #0052cc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-color: var(--primary-blue);
+}
+
+.highlight-2 {
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-color: var(--primary-red);
+}
