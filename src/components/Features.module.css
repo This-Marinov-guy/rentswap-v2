@@ -18,7 +18,9 @@
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.featuresGrid.visible {
+.featuresGrid:global(.visible),
+.alternatingSection:global(.visible),
+.roommateSection:global(.visible) {
   opacity: 1;
   transform: translateY(0);
 }
@@ -103,11 +105,6 @@
   opacity: 0;
   transform: translateY(30px);
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.alternatingSection.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .alternatingContent {
@@ -291,10 +288,7 @@
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.roommateSection.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+
 
 .roommateContent {
   display: flex;

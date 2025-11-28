@@ -1,9 +1,7 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Button from "./common/Button";
 import Highlight from "./common/Highlight";
+import ScrollReveal from "./common/ScrollReveal";
 import styles from "./Features.module.css";
 
 const features = [
@@ -30,46 +28,13 @@ const features = [
 ];
 
 const Features = () => {
-  const [visibleSections, setVisibleSections] = useState<Set<string>>(
-    new Set()
-  );
-  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleSections((prev) => new Set(prev).add(entry.target.id));
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    Object.values(sectionRefs.current).forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => {
-      Object.values(sectionRefs.current).forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
-
   return (
     <section className={styles.section}>
       <div className={styles.container}>
         {/* Features Grid */}
-        <div
+        <ScrollReveal
           id="features-grid"
-          ref={(el) => {
-            sectionRefs.current["features-grid"] = el;
-          }}
-          className={`${styles.featuresGrid} ${
-            visibleSections.has("features-grid") ? styles.visible : ""
-          }`}
+          className={styles.featuresGrid}
         >
           <div className={styles.gridHeader}>
             <h2 className={styles.gridTitle}>Why choose RentSwap?</h2>
@@ -97,17 +62,12 @@ const Features = () => {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Story Section */}
-        <div
+        <ScrollReveal
           id="story-section"
-          ref={(el) => {
-            sectionRefs.current["story-section"] = el;
-          }}
-          className={`${styles.alternatingSection} ${
-            visibleSections.has("story-section") ? styles.visible : ""
-          }`}
+          className={styles.alternatingSection}
         >
           <div className={`${styles.alternatingContent} ${styles.storyGap}`}>
             <div className={styles.imageContent}>
@@ -138,17 +98,12 @@ const Features = () => {
               </p>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Earn Section */}
-          <div
-            id="moving-out"
-            ref={(el) => {
-              sectionRefs.current["moving-out"] = el;
-            }}
-            className={`${styles.alternatingSection} ${styles.reversed} ${
-              visibleSections.has("moving-out") ? styles.visible : ""
-            }`}
+        <ScrollReveal
+          id="moving-out"
+          className={`${styles.alternatingSection} ${styles.reversed}`}
         >
           <div className={styles.alternatingContent}>
             <div className={styles.imageContent}>
@@ -208,17 +163,12 @@ const Features = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Roommate Section */}
-        <div
+        <ScrollReveal
           id="roommate-section"
-          ref={(el) => {
-            sectionRefs.current["roommate-section"] = el;
-          }}
-          className={`${styles.roommateSection} ${
-            visibleSections.has("roommate-section") ? styles.visible : ""
-          }`}
+          className={styles.roommateSection}
         >
           <div className={styles.roommateContent}>
             <div className={styles.roommateText}>
@@ -241,7 +191,7 @@ const Features = () => {
               />
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );
