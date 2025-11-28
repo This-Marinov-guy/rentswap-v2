@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import CookieBanner from "@/components/CookieBanner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -55,7 +56,9 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body style={{ paddingTop: '72px' }}>
         {children}
+        <CookieBanner />
       </body>
     </html>
   );
 }
+

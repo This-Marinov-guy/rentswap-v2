@@ -53,23 +53,23 @@ const Footer = () => {
           <h4 className={styles.heading}>Support</h4>
           <ul className={styles.linkList}>
             <li className={styles.linkItem}>
-              <Link href="#" className={styles.link}>
-                Help Center
+              <Link href="/faq" className={styles.link}>
+                FAQ
               </Link>
             </li>
             <li className={styles.linkItem}>
-              <Link href="#" className={styles.link}>
-                Terms of Service
+              <Link href="/terms-conditions" className={styles.link}>
+                Terms & Conditions
               </Link>
             </li>
             <li className={styles.linkItem}>
-              <Link href="#" className={styles.link}>
+              <Link href="/privacy-policy" className={styles.link}>
                 Privacy Policy
               </Link>
             </li>
             <li className={styles.linkItem}>
-              <Link href="#" className={styles.link}>
-                Cookie Policy
+              <Link href="mailto:support@rentswap.nl" className={styles.link}>
+                Contact Us
               </Link>
             </li>
           </ul>

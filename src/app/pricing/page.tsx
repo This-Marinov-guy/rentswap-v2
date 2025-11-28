@@ -39,7 +39,7 @@ export default function PricingPage() {
             />
             <div>
               <p className={styles.subTitle}>Our Success Fee</p>
-              <p className={styles.title}>½ Month's Rent (+21% VAT)</p>
+              <p className={styles.title}>1 Month's Rent (+21% VAT)</p>
             </div>
           </div>
 
