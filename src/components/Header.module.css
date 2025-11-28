@@ -142,6 +142,11 @@
   color: #FA3C4C;
 }
 
+.mobileNavLink.active {
+  color: #FA3C4C;
+  font-weight: 600;
+}
+
 .mobileAuthButtons {
   display: flex;
   flex-direction: column;

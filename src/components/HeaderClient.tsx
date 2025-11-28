@@ -9,6 +9,7 @@ export default function HeaderClient() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [currentHash, setCurrentHash] = useState("");
+    const [activeSection, setActiveSection] = useState("");
     const pathname = usePathname();
 
     useEffect(() => {
@@ -39,6 +40,59 @@ export default function HeaderClient() {
         };
     }, []);
 
+    // Track which section is currently in view
+    useEffect(() => {
+        if (pathname !== "/") return; // Only track sections on homepage
+
+        const observerOptions = {
+            root: null,
+            rootMargin: "-20% 0px -60% 0px", // Trigger when section is in the middle of viewport
+            threshold: [0, 0.25, 0.5, 0.75, 1],
+        };
+
+        let intersectingSections = new Map<string, number>();
+
+        const observerCallback = (entries: IntersectionObserverEntry[]) => {
+            entries.forEach((entry) => {
+                const sectionId = entry.target.id;
+                if (entry.isIntersecting && sectionId) {
+                    intersectingSections.set(sectionId, entry.intersectionRatio);
+                } else if (sectionId) {
+                    intersectingSections.delete(sectionId);
+                }
+            });
+
+            // Find the section with the highest intersection ratio
+            let maxRatio = 0;
+            let mostVisibleSection = "";
+
+            intersectingSections.forEach((ratio, id) => {
+                if (ratio > maxRatio) {
+                    maxRatio = ratio;
+                    mostVisibleSection = id;
+                }
+            });
+
+            if (mostVisibleSection) {
+                setActiveSection(`#${mostVisibleSection}`);
+                // Update hash without scrolling
+                if (window.history.replaceState) {
+                    window.history.replaceState(null, "", `#${mostVisibleSection}`);
+                }
+            }
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+        // Observe all sections
+        const sections = document.querySelectorAll("[id='how-it-works'], [id='moving-out']");
+        sections.forEach((section) => observer.observe(section));
+
+        return () => {
+            sections.forEach((section) => observer.unobserve(section));
+        };
+    }, [pathname]);
+
     // Update parent header class based on scroll
     useEffect(() => {
         const header = document.getElementById("main-header");
@@ -59,14 +113,15 @@ export default function HeaderClient() {
     const isActive = (path: string, hash?: string) => {
         // For hash-only links on the home page
         if (path === "/" && hash) {
-            return pathname === "/" && currentHash === hash;
+            // Check both the current hash and the active section from scroll
+            return pathname === "/" && (currentHash === hash || activeSection === hash);
         }
         // For regular page routes
         if (!hash) {
             return pathname === path || pathname.startsWith(path + "/");
         }
         // For links that could be either a path or hash
-        return pathname === path || currentHash === hash;
+        return pathname === path || currentHash === hash || activeSection === hash;
     };
 
     return (
@@ -108,7 +163,7 @@ export default function HeaderClient() {
             </nav>
 
             <div className={styles.authButtons}>
-                <Link href="/signup" className={styles.signUpButton}>
+                <Link href="/sign-up" className={styles.signUpButton}>
                     Sign Up
                 </Link>
             </div>
@@ -180,7 +235,7 @@ export default function HeaderClient() {
                             Useful Resources
                         </Link>
                         <div className={styles.mobileAuthButtons}>
-                            <Link href="/signup" className={styles.mobileSignUpButton} onClick={toggleMobileMenu}>
+                            <Link href="/sign-up" className={styles.mobileSignUpButton} onClick={toggleMobileMenu}>
                                 Sign Up
                             </Link>
                         </div>
