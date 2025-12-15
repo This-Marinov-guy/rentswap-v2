@@ -152,6 +152,13 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--transition-base);
+}
+
+.badgeWrapper:hover {
+  transform: scale(1.05);
 }
 
 .arrowFromPhone {

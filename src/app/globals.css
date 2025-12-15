@@ -19,6 +19,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* React Hot Toast Custom Styles */
+:global(.react-hot-toast) {
+  font-family: var(--font-montserrat) !important;
+}
+
+:global(.react-hot-toast-success) {
+  background: var(--success-green) !important;
+  color: var(--white) !important;
+}
+
+:global(.react-hot-toast-error) {
+  background: var(--style2-bg) !important;
+  color: var(--white) !important;
+}
+
 :root {
   /* Primary Colors */
   --primary-blue: #003049;
