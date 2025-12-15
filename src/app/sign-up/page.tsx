@@ -4,6 +4,7 @@ import Link from "next/link";
 import SignUpForm from "@/components/SignUpForm";
 import styles from "./page.module.css";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Sign Up | RentSwap",
@@ -34,7 +35,9 @@ export default function SignUpPage() {
             </p>
           </div>
 
-          <SignUpForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <SignUpForm />
+          </Suspense>
         </div>
       </main>
       <Footer />
