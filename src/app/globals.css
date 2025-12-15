@@ -20,18 +20,27 @@
 @tailwind utilities;
 
 /* React Hot Toast Custom Styles */
-:global(.react-hot-toast) {
+.react-hot-toast {
   font-family: var(--font-montserrat) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-lg) !important;
+  font-weight: 500 !important;
 }
 
-:global(.react-hot-toast-success) {
-  background: var(--success-green) !important;
-  color: var(--white) !important;
+/* Success toast - Green */
+[data-sonner-toast][data-type="success"],
+.react-hot-toast[data-type="success"],
+.react-hot-toast-success {
+  background: #00C853 !important;
+  color: #ffffff !important;
 }
 
-:global(.react-hot-toast-error) {
-  background: var(--style2-bg) !important;
-  color: var(--white) !important;
+/* Error toast - Red */
+[data-sonner-toast][data-type="error"],
+.react-hot-toast[data-type="error"],
+.react-hot-toast-error {
+  background: #FA3C4C !important;
+  color: #ffffff !important;
 }
 
 :root {
