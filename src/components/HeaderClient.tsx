@@ -157,6 +157,14 @@ export default function HeaderClient() {
             >
               Pricing
             </Link>
+            <Link
+              href="/blog"
+              className={`${styles.navLink} ${
+                isActive("/blog") ? styles.active : ""
+              }`}
+            >
+              Blog
+            </Link>
             <div
               className={styles.dropdownContainer}
               onMouseEnter={() => setIsResourcesDropdownOpen(true)}
@@ -165,7 +173,6 @@ export default function HeaderClient() {
               <button
                 className={`${styles.navLink} ${styles.dropdownTrigger} ${
                   pathname === "/faq" ||
-                  pathname === "/blog" ||
                   pathname === "/application-guide" ||
                   pathname === "/whatsapp-netherlands" ||
                   pathname === "/roommate-finder"
@@ -297,7 +304,9 @@ export default function HeaderClient() {
               <div className={styles.mobileDropdown}>
                 <button
                   className={styles.mobileDropdownTrigger}
-                  onClick={() => setIsResourcesDropdownOpen(!isResourcesDropdownOpen)}
+                  onClick={() =>
+                    setIsResourcesDropdownOpen(!isResourcesDropdownOpen)
+                  }
                 >
                   Useful Resources
                   <svg
@@ -308,7 +317,9 @@ export default function HeaderClient() {
                     style={{
                       marginLeft: "4px",
                       transition: "transform 0.2s",
-                      transform: isResourcesDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      transform: isResourcesDropdownOpen
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
                     }}
                   >
                     <path
@@ -322,7 +333,6 @@ export default function HeaderClient() {
                 </button>
                 {isResourcesDropdownOpen && (
                   <div className={styles.mobileDropdownMenu}>
-                    
                     <Link
                       href="/faq"
                       className={styles.mobileDropdownItem}

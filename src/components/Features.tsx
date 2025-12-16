@@ -175,7 +175,7 @@ const Features = () => {
               <Button
                 variant="primary"
                 size="large"
-                href="/sign-up?type=leaving"
+                href="/roommate-finder"
               >
                 Find a Roommate
               </Button>

@@ -4,6 +4,7 @@ import SignUpForm from "@/components/SignUpForm";
 import styles from "./page.module.css";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import DomakinPromo from "@/components/DomakinPromo";
 
 export const metadata: Metadata = {
   title: "Roommate Finder | RentSwap",
@@ -47,8 +48,7 @@ export default function RoommateFinderPage() {
                   <div className={styles.stepContent}>
                     <h3 className={styles.stepTitle}>Share Your Room Details</h3>
                     <p>
-                      Fill out the form below with information about your room,
-                      location, price, and preferences.
+                      Fill out the form in our partner's platform.
                     </p>
                   </div>
                 </div>
@@ -90,7 +90,7 @@ export default function RoommateFinderPage() {
 
             <div className={styles.formSection}>
               <Suspense fallback={<div>Loading...</div>}>
-                <SignUpFormWrapper />
+                <DomakinPromo/>
               </Suspense>
             </div>
           </div>
