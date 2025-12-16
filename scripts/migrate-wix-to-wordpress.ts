@@ -26,6 +26,7 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import * as path from "path";
 import FormData from "form-data";
+import sharp from "sharp";
 
 // Load environment variables
 import * as dotenv from "dotenv";
@@ -298,7 +299,21 @@ async function uploadImageToWordPress(
   filename: string
 ): Promise<number | null> {
   try {
-    console.log(`  📸 Uploading image: ${filename}`);
+    const fileExtension = filename.toLowerCase().substring(filename.lastIndexOf('.'));
+    const needsConversion = ['.avif', '.heic', '.heif'].includes(fileExtension);
+    
+    // For unsupported formats that we can't convert, skip them
+    const unsupportedExtensions = ['.heic', '.heif']; // .avif will be converted
+    if (unsupportedExtensions.includes(fileExtension)) {
+      console.log(`  ⏭️  Skipping ${filename} - WordPress.com doesn't support ${fileExtension} format`);
+      return null;
+    }
+
+    if (needsConversion) {
+      console.log(`  🔄 Converting ${filename} from ${fileExtension} to .jpg...`);
+    } else {
+      console.log(`  📸 Uploading image: ${filename}`);
+    }
 
     // Download image as buffer
     const imageResponse = await axios.get(imageUrl, {
@@ -306,13 +321,33 @@ async function uploadImageToWordPress(
       timeout: 30000,
     });
 
+    let imageBuffer = Buffer.from(imageResponse.data);
+    let finalFilename = filename;
+    let contentType = imageResponse.headers["content-type"] || "image/jpeg";
+
+    // Convert .avif to JPEG if needed
+    if (needsConversion && fileExtension === '.avif') {
+      try {
+        imageBuffer = await sharp(imageBuffer)
+          .jpeg({ quality: 90, mozjpeg: true })
+          .toBuffer();
+        finalFilename = filename.replace(/\.avif$/i, '.jpg');
+        contentType = "image/jpeg";
+        console.log(`  ✅ Converted to JPEG: ${finalFilename}`);
+      } catch (conversionError: any) {
+        console.error(`  ⚠️  Error converting ${filename}:`, conversionError.message);
+        console.log(`  ⏭️  Skipping ${filename} - conversion failed`);
+        return null;
+      }
+    }
+
     // Create form-data instance
     const formData = new FormData();
     
     // Append buffer to form data
-    formData.append("media[]", Buffer.from(imageResponse.data), {
-      filename: filename,
-      contentType: imageResponse.headers["content-type"] || "image/jpeg",
+    formData.append("media[]", imageBuffer, {
+      filename: finalFilename,
+      contentType: contentType,
     });
 
     const uploadResponse = await axios.post(
@@ -338,10 +373,23 @@ async function uploadImageToWordPress(
     return null;
   } catch (error: any) {
     // Check if it's a permission error
-    if (error.response?.data?.error === "unauthorized") {
+    if (error.response?.data?.error === "unauthorized" || error.response?.data?.error === "invalid_token") {
       console.log(`  ⚠️  No permission to upload media. Keeping original image URL.`);
       return null;
     }
+    
+    // Check if it's an unsupported file type error
+    if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+      const fileError = error.response.data.errors.find((e: any) => 
+        e.file === filename || e.message?.includes("not allowed to upload this file type")
+      );
+      if (fileError && (fileError.error === "upload_error" || fileError.message?.includes("not allowed to upload this file type"))) {
+        const ext = filename.toLowerCase().substring(filename.lastIndexOf('.'));
+        console.log(`  ⏭️  Skipping ${filename} - WordPress.com doesn't support this file type: ${ext || 'unknown'}`);
+        return null;
+      }
+    }
+    
     console.error(`  ⚠️  Error uploading image ${filename}:`, error.response?.data || error.message);
     return null;
   }
