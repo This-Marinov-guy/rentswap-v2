@@ -21,6 +21,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "rentswap5.wordpress.com",
+      },
+      {
+        protocol: "https",
         hostname: "platform-lookaside.fbsbx.com",
       },
     ],
