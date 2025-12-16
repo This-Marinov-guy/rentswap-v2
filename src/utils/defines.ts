@@ -5,6 +5,14 @@ export interface Country {
   flag: string;
 }
 
+export const MAIL_SUPPORT = "support@rentswap.nl";
+export const MAIL_BLOG = "blog@rentswap.nl";
+export const MAIL_HELP = "help@rentswap.nl";
+export const MAIL_INFO = "info@rentswap.nl";
+
+export const INSTAGRAM_URL = "https://www.instagram.com/rentswap.nl";
+export const TIKTOK_URL = "https://www.tiktok.com/@rentswap.nl/";
+
 export const COUNTRIES: Country[] = [
   { name: "Afghanistan", code: "AF", dialCode: "+93", flag: "🇦🇫" },
   { name: "Albania", code: "AL", dialCode: "+355", flag: "🇦🇱" },

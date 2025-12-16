@@ -1,6 +1,7 @@
-import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-import styles from './Footer.module.css';
+import Link from "next/link";
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import styles from "./Footer.module.css";
+import { INSTAGRAM_URL, MAIL_INFO } from "@/utils/defines";
 
 const Footer = () => {
   return (
@@ -15,18 +16,13 @@ const Footer = () => {
             home.
           </p>
           <div className={styles.socials}>
-            <Link href="#" className={styles.socialIcon}>
-              <Facebook size={20} />
-            </Link>
-            <Link href="#" className={styles.socialIcon}>
-              <Twitter size={20} />
-            </Link>
-            <Link href="#" className={styles.socialIcon}>
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              className={styles.socialIcon}
+            >
               <Instagram size={20} />
-            </Link>
-            <Link href="#" className={styles.socialIcon}>
-              <Linkedin size={20} />
-            </Link>
+            </a>
           </div>
         </div>
         <div className={styles.column}>
@@ -38,13 +34,18 @@ const Footer = () => {
               </Link>
             </li>
             <li className={styles.linkItem}>
-              <Link href="/#pricing" className={styles.link}>
+              <Link href="/pricing" className={styles.link}>
                 Pricing
               </Link>
             </li>
             <li className={styles.linkItem}>
               <Link href="#pricing" className={styles.link}>
                 Help & Earn
+              </Link>
+            </li>
+            <li className={styles.linkItem}>
+              <Link href="/blog" className={styles.link}>
+                Blog
               </Link>
             </li>
           </ul>
@@ -68,7 +69,7 @@ const Footer = () => {
               </Link>
             </li>
             <li className={styles.linkItem}>
-              <Link href="mailto:support@rentswap.nl" className={styles.link}>
+              <Link href={`mailto:${MAIL_INFO}`} className={styles.link}>
                 Contact Us
               </Link>
             </li>
