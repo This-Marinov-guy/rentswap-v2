@@ -13,6 +13,13 @@ export const metadata: Metadata = {
   title: "RentSwap - Find your next home without the competition",
   description: "Connect with tenants who are moving out and secure your perfect rental home in the Netherlands. No competition, fair algorithm, success-based pricing.",
   keywords: "rent, apartment, housing, Netherlands, Amsterdam, Rotterdam, The Hague, Utrecht, rental, tenant",
+  manifest: "/manifest.json",
+  themeColor: "#FA3C4C",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "RentSwap",
+  },
   openGraph: {
     title: "RentSwap - Find your next home without the competition",
     description: "Connect with tenants who are moving out and secure your perfect rental home",
@@ -44,6 +51,12 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    themeColor: "#FA3C4C",
   },
 };
 
