@@ -32,10 +32,7 @@ const Features = () => {
     <section className={styles.section}>
       <div className={styles.container}>
         {/* Features Grid */}
-        <ScrollReveal
-          id="features-grid"
-          className={styles.featuresGrid}
-        >
+        <ScrollReveal id="features-grid" className={styles.featuresGrid}>
           <div className={styles.gridHeader}>
             <h2 className={styles.gridTitle}>Why choose RentSwap?</h2>
             <p className={styles.gridSubtitle}>
@@ -65,10 +62,7 @@ const Features = () => {
         </ScrollReveal>
 
         {/* Story Section */}
-        <ScrollReveal
-          id="story-section"
-          className={styles.alternatingSection}
-        >
+        <ScrollReveal id="story-section" className={styles.alternatingSection}>
           <div className={`${styles.alternatingContent} ${styles.storyGap}`}>
             <div className={styles.imageContent}>
               <Image
@@ -158,7 +152,11 @@ const Features = () => {
                   </div>
                 </div>
               </div>
-              <Button variant="primary" className="mb-8">
+              <Button
+                href="/sign-up?type=leaving"
+                variant="primary"
+                className="mb-8"
+              >
                 Start Earning Now
               </Button>
             </div>
@@ -166,10 +164,7 @@ const Features = () => {
         </ScrollReveal>
 
         {/* Roommate Section */}
-        <ScrollReveal
-          id="roommate-section"
-          className={styles.roommateSection}
-        >
+        <ScrollReveal id="roommate-section" className={styles.roommateSection}>
           <div className={styles.roommateContent}>
             <div className={styles.roommateText}>
               <h2 className={styles.roommateTitle}>Looking for a roommate?</h2>
@@ -177,7 +172,11 @@ const Features = () => {
                 Share your room details and we'll deliver roommate candidates
                 straight to your inbox - completely free!
               </p>
-              <Button variant="primary" size="large" href="/roommate">
+              <Button
+                variant="primary"
+                size="large"
+                href="/sign-up?type=leaving"
+              >
                 Find a Roommate
               </Button>
             </div>

@@ -5,6 +5,7 @@ import Highlight from "@/components/common/Highlight";
 import Button from "@/components/common/Button";
 import styles from "./page.module.css";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Pricing | RentSwap",
@@ -77,7 +78,7 @@ export default function PricingPage() {
             ))}
           </ul>
 
-          <Button variant="style1" className={styles.action}>
+          <Button href="/sign-up" variant="style1" className={styles.action}>
             Sign Up for Free
           </Button>
           <p className={styles.note}>

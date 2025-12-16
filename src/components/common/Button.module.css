@@ -61,6 +61,10 @@
   box-shadow: var(--shadow-md);
 }
 
+a:hover {
+  color: white;
+}
+
 /* ========================= */
 /* ✅ STYLE 1 (Dark Blue) */
 /* ========================= */
