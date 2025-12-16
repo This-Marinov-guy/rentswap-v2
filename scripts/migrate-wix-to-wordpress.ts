@@ -3,27 +3,151 @@
  * 
  * This script migrates blog posts from Wix (via RSS feed) to WordPress.com
  * 
- * Requirements:
+ * Requirements (OAuth Method):
  * - WORDPRESS_BLOG_ID: Your WordPress.com blog ID
- * - WORDPRESS_API_TOKEN: WordPress.com API token (Application Password)
+ * - WORDPRESS_CLIENT_ID: Your OAuth Client ID
+ * - WORDPRESS_CLIENT_SECRET: Your OAuth Client Secret
+ * - WORDPRESS_ACCESS_TOKEN: OAuth access token (get via OAuth flow)
+ * - WORDPRESS_REDIRECT_URI: OAuth redirect URI (default: https://rentswap.nl)
  * - RSS_FEED_URL: URL to the RSS feed (default: https://www.rentswap.nl/blog-feed.xml)
+ * 
+ * Alternative (Application Password Method):
+ * - WORDPRESS_BLOG_ID: Your WordPress.com blog ID
+ * - WORDPRESS_API_TOKEN: WordPress.com Application Password
  * 
  * Usage:
  *   npm run migrate-blog
  *   or
- *   tsx scripts/migrate-wix-to-wordpress.ts
+ *   npx tsx scripts/migrate-wix-to-wordpress.ts
  */
 
 import Parser from "rss-parser";
 import * as cheerio from "cheerio";
 import axios from "axios";
-import * as fs from "fs";
 import * as path from "path";
-import * as crypto from "crypto";
 import FormData from "form-data";
 
 // Load environment variables
-require("dotenv").config({ path: path.join(__dirname, "../.env.local") });
+import * as dotenv from "dotenv";
+dotenv.config({ path: path.join(__dirname, "../.env.local") });
+
+const WORDPRESS_BLOG_ID = process.env.WORDPRESS_BLOG_ID;
+const WORDPRESS_API_TOKEN = process.env.WORDPRESS_API_TOKEN; // Application Password (legacy)
+const WORDPRESS_CLIENT_ID = process.env.WORDPRESS_CLIENT_ID;
+const WORDPRESS_CLIENT_SECRET = process.env.WORDPRESS_CLIENT_SECRET;
+const WORDPRESS_ACCESS_TOKEN = process.env.WORDPRESS_ACCESS_TOKEN; // OAuth access token
+const WORDPRESS_REDIRECT_URI = process.env.WORDPRESS_REDIRECT_URI || "https://rentswap.nl";
+const RSS_FEED_URL = process.env.RSS_FEED_URL || "https://www.rentswap.nl/blog-feed.xml";
+
+const WORDPRESS_API_BASE = `https://public-api.wordpress.com/rest/v1.1/sites/${WORDPRESS_BLOG_ID}`;
+const WORDPRESS_OAUTH_BASE = "https://public-api.wordpress.com/oauth2";
+
+// Determine authentication method
+// Allow OAuth flow if credentials are present (even without access token yet)
+const HAS_OAUTH_CREDENTIALS = !!(WORDPRESS_CLIENT_ID && WORDPRESS_CLIENT_SECRET);
+const USE_OAUTH = !!(HAS_OAUTH_CREDENTIALS && WORDPRESS_ACCESS_TOKEN);
+const USE_BASIC_AUTH = !!(WORDPRESS_API_TOKEN);
+
+if (!WORDPRESS_BLOG_ID) {
+  console.error("❌ Missing required environment variable: WORDPRESS_BLOG_ID");
+  process.exit(1);
+}
+
+// Only exit if we have no authentication method AND no OAuth credentials to start the flow
+if (!USE_OAUTH && !USE_BASIC_AUTH && !HAS_OAUTH_CREDENTIALS) {
+  console.error("❌ Missing authentication credentials!");
+  console.error("   Either provide:");
+  console.error("   - WORDPRESS_CLIENT_ID + WORDPRESS_CLIENT_SECRET (to start OAuth flow)");
+  console.error("   - WORDPRESS_ACCESS_TOKEN (OAuth method - after completing OAuth flow)");
+  console.error("   - WORDPRESS_API_TOKEN (Application Password method)");
+  process.exit(1);
+}
+
+// Helper function to get auth headers
+function getAuthHeaders() {
+  if (USE_OAUTH) {
+    return {
+      Authorization: `Bearer ${WORDPRESS_ACCESS_TOKEN}`,
+    };
+  } else {
+    return {}; // Basic auth is handled in axios auth config
+  }
+}
+
+// Helper function to get auth config for axios
+function getAuthConfig() {
+  if (USE_OAUTH) {
+    return {
+      headers: getAuthHeaders(),
+    };
+  } else {
+    return {
+      auth: {
+        username: WORDPRESS_BLOG_ID!,
+        password: WORDPRESS_API_TOKEN!,
+      },
+    };
+  }
+}
+
+// Helper function to get OAuth access token (one-time setup)
+// This function helps you get an access token via OAuth flow
+async function getOAuthAccessToken(): Promise<string | null> {
+  if (!WORDPRESS_CLIENT_ID || !WORDPRESS_CLIENT_SECRET) {
+    console.error("❌ Missing WORDPRESS_CLIENT_ID or WORDPRESS_CLIENT_SECRET");
+    return null;
+  }
+
+  console.log("🔐 OAuth Authorization Flow\n");
+  console.log("Step 1: Visit this URL to authorize the application:");
+  console.log(
+    `\n${WORDPRESS_OAUTH_BASE}/authorize?client_id=${WORDPRESS_CLIENT_ID}&redirect_uri=${encodeURIComponent(WORDPRESS_REDIRECT_URI)}&response_type=code&scope=global\n`
+  );
+  console.log("Step 2: After authorization, you'll be redirected to:");
+  console.log(`   ${WORDPRESS_REDIRECT_URI}?code=AUTHORIZATION_CODE\n`);
+  console.log("Step 3: Copy the 'code' parameter from the URL");
+  console.log("Step 4: Run this script with the code as an argument:");
+  console.log("   npx tsx scripts/migrate-wix-to-wordpress.ts <authorization_code>\n");
+
+  // If code is provided as argument, exchange it for token
+  const authCode = process.argv[2];
+  if (authCode) {
+    try {
+      console.log("🔄 Exchanging authorization code for access token...\n");
+      const tokenResponse = await axios.post(
+        `${WORDPRESS_OAUTH_BASE}/token`,
+        new URLSearchParams({
+          client_id: WORDPRESS_CLIENT_ID!,
+          client_secret: WORDPRESS_CLIENT_SECRET!,
+          redirect_uri: WORDPRESS_REDIRECT_URI,
+          grant_type: "authorization_code",
+          code: authCode,
+        }).toString(),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+
+      if (tokenResponse.data?.access_token) {
+        console.log("✅ Access token obtained!\n");
+        console.log("Add this to your .env.local file:");
+        console.log(`WORDPRESS_ACCESS_TOKEN=${tokenResponse.data.access_token}\n`);
+        if (tokenResponse.data.refresh_token) {
+          console.log("Refresh token (for future use):");
+          console.log(`WORDPRESS_REFRESH_TOKEN=${tokenResponse.data.refresh_token}\n`);
+        }
+        return tokenResponse.data.access_token;
+      }
+    } catch (error: any) {
+      console.error("❌ Error exchanging code for token:", error.response?.data || error.message);
+      return null;
+    }
+  }
+
+  return null;
+}
 
 interface RSSItem {
   title: string;
@@ -50,18 +174,6 @@ interface PostData {
   author?: string;
 }
 
-const WORDPRESS_BLOG_ID = process.env.WORDPRESS_BLOG_ID;
-const WORDPRESS_API_TOKEN = process.env.WORDPRESS_API_TOKEN;
-const RSS_FEED_URL = process.env.RSS_FEED_URL || "https://www.rentswap.nl/blog-feed.xml";
-const WORDPRESS_API_BASE = `https://public-api.wordpress.com/rest/v1.1/sites/${WORDPRESS_BLOG_ID}`;
-
-if (!WORDPRESS_BLOG_ID || !WORDPRESS_API_TOKEN) {
-  console.error("❌ Missing required environment variables:");
-  console.error("   - WORDPRESS_BLOG_ID");
-  console.error("   - WORDPRESS_API_TOKEN");
-  console.error("\nPlease add them to your .env.local file");
-  process.exit(1);
-}
 
 // Create slug from title
 function createSlug(title: string): string {
@@ -169,12 +281,7 @@ async function postExists(slug: string): Promise<boolean> {
   try {
     const response = await axios.get(
       `${WORDPRESS_API_BASE}/posts/slug:${slug}`,
-      {
-        auth: {
-          username: WORDPRESS_BLOG_ID!,
-          password: WORDPRESS_API_TOKEN!,
-        },
-      }
+      getAuthConfig()
     );
     return response.status === 200;
   } catch (error: any) {
@@ -212,11 +319,9 @@ async function uploadImageToWordPress(
       `${WORDPRESS_API_BASE}/media/new`,
       formData,
       {
-        auth: {
-          username: WORDPRESS_BLOG_ID!,
-          password: WORDPRESS_API_TOKEN!,
-        },
+        ...getAuthConfig(),
         headers: {
+          ...getAuthHeaders(),
           ...formData.getHeaders(),
         },
         maxContentLength: Infinity,
@@ -268,12 +373,7 @@ async function processImagesInContent(
         if (mediaId) {
           // Get media URL from WordPress
           return axios
-            .get(`${WORDPRESS_API_BASE}/media/${mediaId}`, {
-              auth: {
-                username: WORDPRESS_BLOG_ID!,
-                password: WORDPRESS_API_TOKEN!,
-              },
-            })
+            .get(`${WORDPRESS_API_BASE}/media/${mediaId}`, getAuthConfig())
             .then((mediaResponse) => {
               const wpImageUrl = mediaResponse.data?.URL;
               if (wpImageUrl) {
@@ -347,11 +447,9 @@ async function createWordPressPost(postData: PostData): Promise<boolean> {
         `${WORDPRESS_API_BASE}/posts/new`,
         wpPostData,
         {
-          auth: {
-            username: WORDPRESS_BLOG_ID!,
-            password: WORDPRESS_API_TOKEN!,
-          },
+          ...getAuthConfig(),
           headers: {
+            ...getAuthHeaders(),
             "Content-Type": "application/json",
           },
         }
@@ -384,11 +482,9 @@ async function createWordPressPost(postData: PostData): Promise<boolean> {
             `${WORDPRESS_API_BASE}/posts/${response.data.ID}`,
             { status: "publish" },
             {
-              auth: {
-                username: WORDPRESS_BLOG_ID!,
-                password: WORDPRESS_API_TOKEN!,
-              },
+              ...getAuthConfig(),
               headers: {
+                ...getAuthHeaders(),
                 "Content-Type": "application/json",
               },
             }
@@ -420,12 +516,7 @@ async function checkAPIPermissions(): Promise<boolean> {
     // Try to get site info to verify authentication
     const siteResponse = await axios.get(
       `${WORDPRESS_API_BASE}`,
-      {
-        auth: {
-          username: WORDPRESS_BLOG_ID!,
-          password: WORDPRESS_API_TOKEN!,
-        },
-      }
+      getAuthConfig()
     );
     
     console.log(`✅ Connected to WordPress.com site: ${siteResponse.data?.name || WORDPRESS_BLOG_ID}\n`);
@@ -440,11 +531,9 @@ async function checkAPIPermissions(): Promise<boolean> {
           status: "draft",
         },
         {
-          auth: {
-            username: WORDPRESS_BLOG_ID!,
-            password: WORDPRESS_API_TOKEN!,
-          },
+          ...getAuthConfig(),
           headers: {
+            ...getAuthHeaders(),
             "Content-Type": "application/json",
           },
         }
@@ -455,12 +544,7 @@ async function checkAPIPermissions(): Promise<boolean> {
         await axios.post(
           `${WORDPRESS_API_BASE}/posts/${testPost.data.ID}/delete`,
           {},
-          {
-            auth: {
-              username: WORDPRESS_BLOG_ID!,
-              password: WORDPRESS_API_TOKEN!,
-            },
-          }
+          getAuthConfig()
         );
       }
       
@@ -594,8 +678,33 @@ async function migrateBlog() {
   console.log("=".repeat(50));
 }
 
-// Run migration
-migrateBlog().catch((error) => {
+// Main execution
+async function main() {
+  // If OAuth is configured but no access token, help user get one
+  if (WORDPRESS_CLIENT_ID && WORDPRESS_CLIENT_SECRET && !WORDPRESS_ACCESS_TOKEN) {
+    console.log("🔐 OAuth credentials found but no access token.\n");
+    const token = await getOAuthAccessToken();
+    if (!token) {
+      console.log("\n⚠️  Please complete the OAuth flow:");
+      console.log("   1. Visit the authorization URL shown above");
+      console.log("   2. Authorize the application");
+      console.log("   3. Copy the 'code' from the redirect URL");
+      console.log("   4. Run: npx tsx scripts/migrate-wix-to-wordpress.ts <code>");
+      console.log("   5. Add the access token to .env.local and run the script again");
+      process.exit(0);
+    } else {
+      // Token was obtained from command line argument
+      console.log("\n✅ Access token obtained! Please add it to .env.local and run the script again.");
+      console.log("   The migration will start automatically once the token is in your .env.local file.\n");
+      process.exit(0);
+    }
+  }
+
+  // Run migration
+  await migrateBlog();
+}
+
+main().catch((error) => {
   console.error("❌ Migration failed:", error);
   process.exit(1);
 });

@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "generate-sitemap": "tsx scripts/generate-sitemap.ts",
-    "migrate-blog": "tsx scripts/migrate-wix-to-wordpress.ts"
+    "migrate-blog": "npx tsx scripts/migrate-wix-to-wordpress.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.84.0",
@@ -24,7 +24,7 @@
     "react-hot-toast": "^2.6.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.19.27",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.22",
