@@ -15,15 +15,32 @@ const BlogCard = ({ post }: BlogCardProps) => {
         timeZone: "UTC",
     });
 
+    // Get the best quality image URL
+    // WordPress.com URLs can have size parameters - try to get full size
+    let imageUrl = post.post_thumbnail?.URL || "/assets/images/common/blog-thumbnail.jpg";
+    if (imageUrl.includes("i0.wp.com") || imageUrl.includes("i1.wp.com") || imageUrl.includes("i2.wp.com") || imageUrl.includes(".wp.com")) {
+        // Remove size parameters to get full resolution
+        const urlObj = new URL(imageUrl);
+        urlObj.searchParams.delete('w');
+        urlObj.searchParams.delete('h');
+        urlObj.searchParams.delete('resize');
+        urlObj.searchParams.set('quality', '90');
+        imageUrl = urlObj.toString();
+    }
+
     return (
         <Link href={`/blog/${post.slug}`} className={styles.card}>
             <div className={styles.imageContainer}>
                 <Image
-                    src={post.post_thumbnail?.URL || "/assets/images/common/blog-thumbnail.jpg"}
+                    src={imageUrl}
                     alt={post.title}
                     fill
                     className={styles.image}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    quality={90}
+                    priority={false}
+                    placeholder="empty"
+                    unoptimized={false}
                 />
             </div>
             <div className={styles.content}>
@@ -44,7 +61,7 @@ const BlogCard = ({ post }: BlogCardProps) => {
                 />
                 <div
                     className={styles.excerpt}
-                    dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                    dangerouslySetInnerHTML={{ __html: post.excerpt.slice(0, 100) + '...' }}
                 />
                 <span className={styles.readMore}>
                     Read article

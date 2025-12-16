@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getPostBySlug, getPosts } from "@/lib/wordpress";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import styles from "./page.module.css";
+import styles from "../../blog/[slug]/page.module.css";
 import Button from "@/components/common/Button";
 
 // Generate static params for the first 20 posts
@@ -146,3 +146,4 @@ export default async function BlogPostPage({
     </main>
   );
 }
+
