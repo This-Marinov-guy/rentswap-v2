@@ -75,13 +75,6 @@ export const metadata: Metadata = {
     description: "Connect with tenants who are moving out and secure your perfect rental home in the Netherlands. No competition, fair algorithm, success-based pricing.",
     images: [
       {
-        url: "https://rentswap.nl/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "RentSwap - Find your next home without the competition",
-        type: "image/png",
-      },
-      {
         url: "https://rentswap.nl/android-chrome-512x512.png",
         width: 512,
         height: 512,
@@ -96,9 +89,9 @@ export const metadata: Metadata = {
     description: "Connect with tenants who are moving out and secure your perfect rental home in the Netherlands.",
     images: [
       {
-        url: "https://rentswap.nl/twitter-image.png",
-        width: 1200,
-        height: 630,
+        url: "https://rentswap.nl/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
         alt: "RentSwap - Find your next home without the competition",
       },
     ],
