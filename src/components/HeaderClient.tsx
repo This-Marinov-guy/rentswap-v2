@@ -194,13 +194,6 @@ export default function HeaderClient() {
               {isResourcesDropdownOpen && (
                 <div className={styles.dropdownMenu}>
                   <Link
-                    href="/blog"
-                    className={styles.dropdownItem}
-                    onClick={() => setIsResourcesDropdownOpen(false)}
-                  >
-                    Blog
-                  </Link>
-                  <Link
                     href="/faq"
                     className={styles.dropdownItem}
                     onClick={() => setIsResourcesDropdownOpen(false)}
@@ -214,16 +207,6 @@ export default function HeaderClient() {
                   >
                     Housing WhatsApp Groups
                   </Link>
-                  <a
-                    href="#"
-                    className={styles.dropdownItem}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsResourcesDropdownOpen(false);
-                    }}
-                  >
-                    How to Avoid Housing Scams
-                  </a>
                   <Link
                     href="/application-guide"
                     className={styles.dropdownItem}
