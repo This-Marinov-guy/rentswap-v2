@@ -212,6 +212,103 @@
   }
 }
 
+/* Dropdown Styles */
+.dropdownContainer {
+  position: relative;
+}
+
+.dropdownTrigger {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropdownTrigger svg {
+  transition: transform var(--transition-base);
+}
+
+.dropdownTrigger .rotate {
+  transform: rotate(180deg);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + var(--spacing-xs));
+  left: 0;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 220px;
+  padding: var(--spacing-xs);
+  z-index: 1000;
+  animation: slideDown 0.2s ease;
+}
+
+.dropdownItem {
+  display: block;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  color: var(--gray-700);
+  font-size: var(--text-base);
+  font-weight: 500;
+  border-radius: calc(var(--radius-md) - 2px);
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.dropdownItem:hover {
+  background: var(--gray-50);
+  color: var(--gray-900);
+}
+
+/* Mobile Dropdown Styles */
+.mobileDropdown {
+  width: 100%;
+}
+
+.mobileDropdownTrigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--gray-700);
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--gray-100);
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  cursor: pointer;
+  transition: color var(--transition-base);
+}
+
+.mobileDropdownTrigger:hover {
+  color: #FA3C4C;
+}
+
+.mobileDropdownMenu {
+  padding-left: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mobileDropdownItem {
+  display: block;
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--gray-600);
+  font-size: var(--text-base);
+  font-weight: 400;
+  text-decoration: none;
+  border-bottom: 1px solid var(--gray-100);
+  transition: color var(--transition-base);
+}
+
+.mobileDropdownItem:hover {
+  color: #FA3C4C;
+}
+
 /* Tablet Styles */
 @media (max-width: 1024px) {
   .navContainer {

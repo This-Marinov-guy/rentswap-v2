@@ -10,6 +10,7 @@ export default function HeaderClient() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [currentHash, setCurrentHash] = useState("");
     const [activeSection, setActiveSection] = useState("");
+    const [isResourcesDropdownOpen, setIsResourcesDropdownOpen] = useState(false);
     const pathname = usePathname();
 
     useEffect(() => {
@@ -50,7 +51,7 @@ export default function HeaderClient() {
             threshold: [0, 0.25, 0.5, 0.75, 1],
         };
 
-        let intersectingSections = new Map<string, number>();
+        const intersectingSections = new Map<string, number>();
 
         const observerCallback = (entries: IntersectionObserverEntry[]) => {
             entries.forEach((entry) => {
@@ -156,22 +157,90 @@ export default function HeaderClient() {
             >
               Pricing
             </Link>
-            <Link
-              href="/blog"
-              className={`${styles.navLink} ${
-                isActive("/blog") ? styles.active : ""
-              }`}
+            <div
+              className={styles.dropdownContainer}
+              onMouseEnter={() => setIsResourcesDropdownOpen(true)}
+              onMouseLeave={() => setIsResourcesDropdownOpen(false)}
             >
-              Blog
-            </Link>
-            <Link
-              href="/resources"
-              className={`${styles.navLink} ${
-                isActive("/resources") ? styles.active : ""
-              }`}
-            >
-              Useful Resources
-            </Link>
+              <button
+                className={`${styles.navLink} ${styles.dropdownTrigger} ${
+                  pathname === "/faq" ||
+                  pathname === "/blog" ||
+                  pathname === "/application-guide" ||
+                  pathname === "/whatsapp-netherlands" ||
+                  pathname === "/roommate-finder"
+                    ? styles.active
+                    : ""
+                }`}
+              >
+                Useful Resources
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  style={{ marginLeft: "4px", transition: "transform 0.2s" }}
+                  className={isResourcesDropdownOpen ? styles.rotate : ""}
+                >
+                  <path
+                    d="M3 4.5L6 7.5L9 4.5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              {isResourcesDropdownOpen && (
+                <div className={styles.dropdownMenu}>
+                  <Link
+                    href="/blog"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsResourcesDropdownOpen(false)}
+                  >
+                    Blog
+                  </Link>
+                  <Link
+                    href="/faq"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsResourcesDropdownOpen(false)}
+                  >
+                    FAQ
+                  </Link>
+                  <Link
+                    href="/whatsapp-netherlands"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsResourcesDropdownOpen(false)}
+                  >
+                    Housing WhatsApp Groups
+                  </Link>
+                  <a
+                    href="#"
+                    className={styles.dropdownItem}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsResourcesDropdownOpen(false);
+                    }}
+                  >
+                    How to Avoid Housing Scams
+                  </a>
+                  <Link
+                    href="/application-guide"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsResourcesDropdownOpen(false)}
+                  >
+                    Rental Application Guide
+                  </Link>
+                  <Link
+                    href="/roommate-finder"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsResourcesDropdownOpen(false)}
+                  >
+                    Roommate Finder
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </nav>
 
@@ -242,24 +311,89 @@ export default function HeaderClient() {
               >
                 Pricing
               </Link>
-              <Link
-                href="/resources"
-                className={`${styles.mobileNavLink} ${
-                  isActive("/resources") ? styles.active : ""
-                }`}
-                onClick={toggleMobileMenu}
-              >
-                Useful Resources
-              </Link>
-              <Link
-                href="/blog"
-                className={`${styles.mobileNavLink} ${
-                  isActive("/blog") ? styles.active : ""
-                }`}
-                onClick={toggleMobileMenu}
-              >
-                Blog
-              </Link>
+              <div className={styles.mobileDropdown}>
+                <button
+                  className={styles.mobileDropdownTrigger}
+                  onClick={() => setIsResourcesDropdownOpen(!isResourcesDropdownOpen)}
+                >
+                  Useful Resources
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    style={{
+                      marginLeft: "4px",
+                      transition: "transform 0.2s",
+                      transform: isResourcesDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    }}
+                  >
+                    <path
+                      d="M3 4.5L6 7.5L9 4.5"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+                {isResourcesDropdownOpen && (
+                  <div className={styles.mobileDropdownMenu}>
+                    
+                    <Link
+                      href="/faq"
+                      className={styles.mobileDropdownItem}
+                      onClick={() => {
+                        setIsResourcesDropdownOpen(false);
+                        toggleMobileMenu();
+                      }}
+                    >
+                      FAQ
+                    </Link>
+                    <Link
+                      href="/whatsapp-netherlands"
+                      className={styles.mobileDropdownItem}
+                      onClick={() => {
+                        setIsResourcesDropdownOpen(false);
+                        toggleMobileMenu();
+                      }}
+                    >
+                      Housing WhatsApp Groups
+                    </Link>
+                    <a
+                      href="#"
+                      className={styles.mobileDropdownItem}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsResourcesDropdownOpen(false);
+                        toggleMobileMenu();
+                      }}
+                    >
+                      How to Avoid Housing Scams
+                    </a>
+                    <Link
+                      href="/application-guide"
+                      className={styles.mobileDropdownItem}
+                      onClick={() => {
+                        setIsResourcesDropdownOpen(false);
+                        toggleMobileMenu();
+                      }}
+                    >
+                      Rental Application Guide
+                    </Link>
+                    <Link
+                      href="/roommate-finder"
+                      className={styles.mobileDropdownItem}
+                      onClick={() => {
+                        setIsResourcesDropdownOpen(false);
+                        toggleMobileMenu();
+                      }}
+                    >
+                      Roommate Finder
+                    </Link>
+                  </div>
+                )}
+              </div>
               <div className={styles.mobileAuthButtons}>
                 <Link
                   href="/sign-up"

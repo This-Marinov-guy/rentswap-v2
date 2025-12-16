@@ -32,11 +32,18 @@ export default function FAQPage() {
           <FAQList />
 
           <div className={styles.contactSection}>
-            <h2>Still have questions?</h2>
+            <h2>Have a Question?</h2>
             <p>
-              We're here to help! Reach out to our support team at{" "}
-              <a href="mailto:support@rentswap.nl">support@rentswap.nl</a>
+              Let us know, and we'll make sure it's added to the FAQ!
             </p>
+            <div className={styles.contactForm}>
+              <a
+                href="mailto:info@rentswap.nl?subject=FAQ Question"
+                className={styles.contactButton}
+              >
+                Contact Us
+              </a>
+            </div>
           </div>
         </div>
       </main>

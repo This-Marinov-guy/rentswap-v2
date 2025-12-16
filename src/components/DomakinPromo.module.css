@@ -1,0 +1,126 @@
+.section {
+  margin-bottom: var(--spacing-3xl);
+  padding-bottom: var(--spacing-3xl);
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.revealSection {
+  animation: slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: forwards;
+}
+
+.formExtend {
+  animation: formExtend 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.domakinPromo {
+  background: rgb(0, 74, 173);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl) var(--spacing-3xl);
+  margin-bottom: var(--spacing-xl);
+  border-bottom: none;
+  box-shadow: 0 4px 12px rgba(0, 48, 73, 0.2);
+}
+
+.domakinContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  text-align: center;
+}
+
+.domakinTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.domakinTitle u {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.domakinMessage {
+  font-size: 1rem;
+  color: var(--white);
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.domakinButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-3xl);
+  background: #FF8C42;
+  color: var(--white);
+  border-radius: var(--radius-lg);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all var(--transition-base);
+  border: none;
+  cursor: pointer;
+  min-width: 200px;
+  box-shadow: 0 2px 8px rgba(255, 140, 66, 0.3);
+}
+
+.domakinButton:hover {
+  background: #FF7A2E;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 140, 66, 0.4);
+}
+
+.domakinButton svg {
+  transition: transform var(--transition-base);
+  flex-shrink: 0;
+}
+
+.domakinButton:hover svg {
+  transform: translate(4px, -4px);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes formExtend {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 1000px;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .domakinPromo {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+
+  .domakinTitle {
+    font-size: 1.25rem;
+  }
+
+  .domakinButton {
+    font-size: 1rem;
+    padding: var(--spacing-sm) var(--spacing-xl);
+    min-width: 180px;
+  }
+}
+

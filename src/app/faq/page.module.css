@@ -106,6 +106,30 @@
   margin: 0;
 }
 
+.answer ul {
+  color: var(--gray-700);
+  line-height: 1.8;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.answer li {
+  margin-bottom: 0.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-lg);
+  margin-top: var(--spacing-2xl);
+  font-family: var(--font-gordita);
+}
+
+.sectionTitle:first-of-type {
+  margin-top: 0;
+}
+
 .contactSection {
   background: var(--primary-blue);
   color: var(--white);
@@ -138,6 +162,34 @@
   opacity: 0.8;
 }
 
+.contactForm {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-lg);
+}
+
+.contactButton {
+  display: inline-block;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  background: var(--white);
+  color: var(--primary-blue) !important;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: var(--font-montserrat);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.contactButton:hover {
+  background: var(--gray-50);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
 @media (max-width: 768px) {
   .page {
     padding: var(--spacing-xl) 0;
@@ -166,5 +218,10 @@
 
   .contactSection p {
     font-size: 1rem;
+  }
+
+  .contactButton {
+    width: 100%;
+    max-width: 300px;
   }
 }
