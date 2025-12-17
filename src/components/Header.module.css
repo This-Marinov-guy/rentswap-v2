@@ -68,7 +68,7 @@
 }
 
 .navLink.active {
-  color: #FA3C4C;
+  color: #fa3c4c;
   background-color: var(--white);
   font-weight: 600;
 }
@@ -83,7 +83,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-sm) var(--spacing-xl);
-  background-color: #FA3C4C;
+  background-color: #fa3c4c;
   color: var(--white);
   font-weight: 600;
   font-size: var(--text-base);
@@ -139,11 +139,11 @@
 }
 
 .mobileNavLink:hover {
-  color: #FA3C4C;
+  color: #fa3c4c;
 }
 
 .mobileNavLink.active {
-  color: #FA3C4C;
+  color: #fa3c4c;
   font-weight: 600;
 }
 
@@ -159,7 +159,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-md) var(--spacing-xl);
-  background-color: #FA3C4C;
+  background-color: #fa3c4c;
   color: var(--white);
   font-weight: 600;
   font-size: var(--text-base);
@@ -284,7 +284,7 @@
 }
 
 .mobileDropdownTrigger:hover {
-  color: #FA3C4C;
+  color: #fa3c4c;
 }
 
 .mobileDropdownMenu {
@@ -306,7 +306,7 @@
 }
 
 .mobileDropdownItem:hover {
-  color: #FA3C4C;
+  color: #fa3c4c;
 }
 
 /* Tablet Styles */

@@ -538,7 +538,7 @@ export default function SignUpForm() {
           },
           error: {
             style: {
-              background: "#FA3C4C",
+              background: "#fa3c4c",
               color: "#FFFFFF",
             },
             iconTheme: {

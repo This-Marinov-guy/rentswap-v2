@@ -68,8 +68,8 @@
 }
 
 .paginationButton:hover:not(.disabled) {
-  background-color: #FA3C4C;
-  border-color: #FA3C4C;
+  background-color: #fa3c4c;
+  border-color: #fa3c4c;
   color: var(--white);
 }
 
@@ -109,15 +109,15 @@
 }
 
 .activePage {
-  background-color: #FA3C4C;
-  border-color: #FA3C4C;
+  background-color: #fa3c4c;
+  border-color: #fa3c4c;
   color: var(--white);
   font-weight: 600;
 }
 
 .activePage:hover {
-  background-color: #D92B3B;
-  border-color: #D92B3B;
+  background-color: #fa3c4c;
+  border-color: #fa3c4c;
   color: var(--white);
 }
 

@@ -11,7 +11,7 @@ const Footer = () => {
           <Link href="/" className={styles.logo}>
             RentSwap
           </Link>
-          <p style={{ color: "#003049", lineHeight: 1.6 }}>
+          <p style={{ color: "#1d3557", lineHeight: 1.6 }}>
             The exclusive rental finder service. Get matched with your ideal
             home.
           </p>

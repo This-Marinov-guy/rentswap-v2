@@ -34,13 +34,13 @@ export default function Error({ error, reset }: ErrorProps) {
                 cx="40"
                 cy="40"
                 r="38"
-                stroke="#FA3C4C"
+                stroke="#fa3c4c"
                 strokeWidth="4"
                 fill="none"
               />
               <path
                 d="M40 24V44M40 56H40.04"
-                stroke="#FA3C4C"
+                stroke="#fa3c4c"
                 strokeWidth="4"
                 strokeLinecap="round"
               />

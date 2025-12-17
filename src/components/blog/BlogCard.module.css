@@ -77,7 +77,7 @@
 }
 
 .category {
-  color: #FA3C4C;
+  color: #fa3c4c;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -98,7 +98,7 @@
 }
 
 .card:hover .title {
-  color: #FA3C4C;
+  color: #fa3c4c;
 }
 
 .excerpt {
@@ -120,7 +120,7 @@
 .readMore {
   font-weight: 600;
   font-size: 0.9375rem;
-  color: #FA3C4C;
+  color: #fa3c4c;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;

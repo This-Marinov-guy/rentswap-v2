@@ -40,13 +40,13 @@
 }
 
 .link {
-  color: #000;
+  color: #282828;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .link:hover {
-  color: #ff4b4b;
+  color: #fa3c4c;
 }
 
 .socials {
@@ -56,12 +56,12 @@
 }
 
 .socialIcon {
-  color: #000;
+  color: #282828;
   transition: color 0.2s;
 }
 
 .socialIcon:hover {
-  color: #ff4b4b;
+  color: #fa3c4c;
 }
 
 .copyright {

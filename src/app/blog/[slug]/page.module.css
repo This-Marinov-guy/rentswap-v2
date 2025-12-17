@@ -16,7 +16,7 @@
 }
 
 .backLink:hover {
-  color: #FA3C4C;
+  color: #fa3c4c;
 }
 
 .article {
@@ -175,13 +175,13 @@
 }
 
 .content a {
-  color: #FA3C4C;
+  color: #fa3c4c;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .content a:hover {
-  color: #D92B3B;
+  color: #fa3c4c;
 }
 
 .content blockquote {

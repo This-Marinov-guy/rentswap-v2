@@ -67,7 +67,7 @@ export const metadata: Metadata = {
       { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
     ],
   },
-  themeColor: "#FA3C4C",
+  themeColor: "#fa3c4c",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

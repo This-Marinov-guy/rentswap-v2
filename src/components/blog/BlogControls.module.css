@@ -32,12 +32,12 @@
 }
 
 .perPageSelect:hover {
-  border-color: #FA3C4C;
+  border-color: #fa3c4c;
 }
 
 .perPageSelect:focus {
   outline: none;
-  border-color: #FA3C4C;
+  border-color: #fa3c4c;
   box-shadow: 0 0 0 3px rgba(250, 60, 76, 0.1);
 }
 
