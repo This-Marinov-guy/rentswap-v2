@@ -4,7 +4,7 @@ import SignUpForm from "@/components/SignUpForm";
 import styles from "./page.module.css";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import DomakinPromo from "@/components/DomakinPromo";
+import RoomListingForm from "@/components/RoomListingForm";
 
 export const metadata: Metadata = {
   title: "Roommate Finder | RentSwap",
@@ -90,7 +90,7 @@ export default function RoommateFinderPage() {
 
             <div className={styles.formSection}>
               <Suspense fallback={<div>Loading...</div>}>
-                <DomakinPromo/>
+                <RoomListingForm/>
               </Suspense>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import styles from "./Hero.module.css";
 import Highlight from "./common/Highlight";
+import HeroBadges from "./Hero/HeroBadges.client";
 
 const Hero = () => {
   return (
@@ -59,40 +59,7 @@ const Hero = () => {
 
           <div className={styles.imageWrapper}>
             <div className={styles.imageContainer}>
-              <div className={styles.badges + " flex justify-center"} style={{ marginBottom: "60px" }}>
-                <Link href="/sign-up?type=looking" className={styles.badgeWrapper}>
-                  <Highlight
-                    variant="style1"
-                    size="small"
-                    className={styles.badge}
-                  >
-                    Earn a home
-                  </Highlight>
-                  <Image
-                    src="/assets/images/common/arrow.avif"
-                    alt=""
-                    width={60}
-                    height={60}
-                    className={styles.arrowToHome}
-                  />
-                </Link>
-                <Link href="/sign-up?type=leaving" className={styles.badgeWrapper}>
-                  <Highlight
-                    variant="style2"
-                    size="small"
-                    className={styles.badge}
-                  >
-                    Earn €200
-                  </Highlight>
-                  <Image
-                    src="/assets/images/common/arrow.avif"
-                    alt=""
-                    width={60}
-                    height={60}
-                    className={styles.arrowToEarn}
-                  />
-                </Link>
-              </div>
+              <HeroBadges />
 
               <Image
                 src="/assets/images/home/home-phone.avif"

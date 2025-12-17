@@ -4,7 +4,7 @@ import { useState, useEffect, FormEvent, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import styles from "@/app/sign-up/page.module.css";
-import DomakinPromo from "./DomakinPromo";
+import RoomListingForm from "./RoomListingForm";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
@@ -673,7 +673,7 @@ export default function SignUpForm() {
             </section>
           ) : (
             <>
-              {(formData.userType as UserType) !== "leaving" && (
+              {(
                 <section className={styles.section}>
                   <h2 className={styles.sectionTitle}>Basic Information</h2>
 
@@ -899,8 +899,6 @@ export default function SignUpForm() {
                 <section
                   className={`${styles.section} ${styles.revealSection} ${styles.formExtend}`}
                 >
-                  <h2 className={styles.sectionTitle}>Room Preferences</h2>
-
                   <div className={styles.formGroup}>
                     <label htmlFor="city" className={styles.label}>
                       City <span className={styles.required}>*</span>
@@ -1241,7 +1239,7 @@ export default function SignUpForm() {
               )}
 
               {/* Conditional Fields - Leaving My Room - extends form */}
-              {(formData.userType as UserType) === "leaving" && <DomakinPromo />}
+              {(formData.userType as UserType) === "leaving" && <RoomListingForm />}
 
               {/* Actions - show at the end of form */}
               {mode === "signup" &&
