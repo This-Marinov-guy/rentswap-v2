@@ -301,6 +301,15 @@ export default function HeaderClient() {
               >
                 Pricing
               </Link>
+                <Link
+                href="/blog"
+                className={`${styles.mobileNavLink} ${
+                  isActive("/blog") ? styles.active : ""
+                }`}
+                onClick={toggleMobileMenu}
+              >
+                Blog
+              </Link>
               <div className={styles.mobileDropdown}>
                 <button
                   className={styles.mobileDropdownTrigger}
@@ -402,3 +411,4 @@ export default function HeaderClient() {
       </>
     );
 }
+
