@@ -68,7 +68,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: linear-gradient(90deg, #1d3557, #1d3557, #1d3557);
+  background: linear-gradient(90deg, #00d4ff, #00a1ff, #0066ff);
   border-radius: 3px;
   box-shadow: 0 0 12px rgba(0, 164, 255, 0.6);
   /* No CSS transition - animation handled by JS for smooth progressive loading */
@@ -117,7 +117,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: #1d3557;
+  background: #3572ee;
   transform: scale(0);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -127,7 +127,7 @@
 }
 
 .stepNumberCompleted {
-  border-color: #1d3557;
+  border-color: #3572ee;
 }
 
 .stepIcon {
@@ -205,7 +205,7 @@
 }
 
 .stepBadgeActive {
-  background: linear-gradient(135deg, #fa3c4c, #fa3c4c);
+  background: linear-gradient(135deg, #ff4b4b, #ff6b6b);
   color: var(--white);
   box-shadow: 0 4px 16px rgba(255, 75, 75, 0.4);
   transform: translateY(-2px) scale(1.05);
@@ -266,7 +266,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(180deg, #1d3557, #1d3557, #1d3557);
+  background: linear-gradient(180deg, #00d4ff, #00a1ff, #0066ff);
   border-radius: 4px;
   box-shadow: 0 0 16px rgba(0, 164, 255, 0.5);
   /* No transition - handled by JS */
@@ -294,9 +294,9 @@
 }
 
 .mobileNodeDotActive {
-  background: #1d3557;
-  border-color: #1d3557;
-  box-shadow: 0 4px 16px #1d3557;
+  background: #3572ee;
+  border-color: #3572ee;
+  box-shadow: 0 4px 16px #3572ee;
 }
 
 .mobileNodeIcon {
@@ -359,7 +359,7 @@
 }
 
 .mobileStepActive .mobileStepLabel {
-  background: linear-gradient(135deg, #fa3c4c, #fa3c4c);
+  background: linear-gradient(135deg, #ff4b4b, #ff6b6b);
   color: var(--white);
   box-shadow: 0 4px 16px rgba(255, 75, 75, 0.35);
 }
