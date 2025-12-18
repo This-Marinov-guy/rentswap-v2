@@ -422,7 +422,7 @@ export default function SignUpForm() {
       // Submit to API
       let response: Response;
       try {
-        response = await fetch("/api/submit-form", {
+        response = await fetch("/api/submit-room-searching", {
           method: "POST",
           body: submitFormData,
         });
@@ -527,23 +527,15 @@ export default function SignUpForm() {
         position="top-right"
         toastOptions={{
           success: {
-            style: {
-              background: "#00C853",
-              color: "#FFFFFF",
-            },
             iconTheme: {
               primary: "#FFFFFF",
               secondary: "#00C853",
             },
           },
           error: {
-            style: {
-              background: "#fa3c4c",
-              color: "#FFFFFF",
-            },
             iconTheme: {
               primary: "#FFFFFF",
-              secondary: "#FA3C4C",
+              secondary: "#fa3c4c",
             },
           },
         }}
@@ -1239,7 +1231,16 @@ export default function SignUpForm() {
               )}
 
               {/* Conditional Fields - Leaving My Room - extends form */}
-              {(formData.userType as UserType) === "leaving" && <RoomListingForm />}
+              {(formData.userType as UserType) === "leaving" && (
+                <RoomListingForm
+                  personalData={{
+                    name: formData.name,
+                    surname: formData.surname,
+                    email: formData.email,
+                    phone: `${formData.countryCode} ${formData.phone}`,
+                  }}
+                />
+              )}
 
               {/* Actions - show at the end of form */}
               {mode === "signup" &&

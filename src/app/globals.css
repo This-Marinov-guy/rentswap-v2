@@ -27,7 +27,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* React Hot Toast Custom Styles */
+/* React Hot Toast Custom Styles - Global */
 .react-hot-toast {
   font-family: var(--font-montserrat) !important;
   border-radius: var(--radius-md) !important;
@@ -36,18 +36,28 @@
 }
 
 /* Success toast - Green */
-[data-sonner-toast][data-type="success"],
-.react-hot-toast[data-type="success"],
-.react-hot-toast-success {
+.react-hot-toast[data-type="success"] {
   background: #00C853 !important;
   color: #FFFFFF !important;
 }
 
+.react-hot-toast[data-type="success"] svg {
+  color: #FFFFFF !important;
+}
+
 /* Error toast - Red */
-[data-sonner-toast][data-type="error"],
-.react-hot-toast[data-type="error"],
-.react-hot-toast-error {
+.react-hot-toast[data-type="error"] {
   background: #fa3c4c !important;
+  color: #FFFFFF !important;
+}
+
+.react-hot-toast[data-type="error"] svg {
+  color: #FFFFFF !important;
+}
+
+/* Default toast (info, loading, etc.) */
+.react-hot-toast:not([data-type="success"]):not([data-type="error"]) {
+  background: var(--gray-900) !important;
   color: #FFFFFF !important;
 }
 

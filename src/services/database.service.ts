@@ -19,6 +19,12 @@ interface PropertyData {
   payment_link?: string | null;
 }
 
+interface PersonalData {
+  name: string;
+  surname: string;
+  email: string;
+  phone: string;
+}
 export class DatabaseService {
   private supabase;
 
@@ -36,12 +42,56 @@ export class DatabaseService {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  async createRoomListing(propertyData: PropertyData) {
+  async createRoomListing(propertyData: PropertyData, personalData: PersonalData) {
     try {
-      const { data, error } = await this.supabase
+      // Step 1: Create the property record first
+      const { data: property, error: propertyError } = await this.supabase
         .from('properties')
         .insert([
           {
+            interface: 'rentswap',
+          },
+        ])
+        .select()
+        .single();
+
+      if (propertyError) {
+        throw new Error(`Database error creating property: ${propertyError.message}`);
+      }
+
+      if (!property || !property.id) {
+        throw new Error('Failed to create property: No ID returned');
+      }
+
+      const propertyId = property.id;
+
+      // Step 2: Create personal_data record with foreign key to property
+      const { data: personalDataRecord, error: personalDataError } = await this.supabase
+        .from('personal_data')
+        .insert([
+          {
+            property_id: propertyId,
+            name: personalData.name,
+            surname: personalData.surname,
+            email: personalData.email,
+            phone: personalData.phone,
+          },
+        ])
+        .select()
+        .single();
+
+      if (personalDataError) {
+        // Rollback: delete the property if personal_data creation fails
+        await this.supabase.from('properties').delete().eq('id', propertyId);
+        throw new Error(`Database error creating personal_data: ${personalDataError.message}`);
+      }
+
+      // Step 3: Create property_data record with foreign key to property
+      const { data: propertyDataRecord, error: propertyDataError } = await this.supabase
+        .from('property_data')
+        .insert([
+          {
+            property_id: propertyId,
             city: propertyData.city,
             address: propertyData.address,
             postcode: propertyData.postcode || null,
@@ -58,21 +108,27 @@ export class DatabaseService {
             folder: propertyData.folder || null,
             images: propertyData.images || null,
             payment_link: propertyData.payment_link || null,
-            interface: 'rentswap',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
           },
         ])
         .select()
         .single();
 
-      if (error) {
-        throw new Error(`Database error: ${error.message}`);
+      if (propertyDataError) {
+        // Rollback: delete the property and personal_data if property_data creation fails
+        await this.supabase.from('personal_data').delete().eq('property_id', propertyId);
+        await this.supabase.from('properties').delete().eq('id', propertyId);
+        throw new Error(`Database error creating property_data: ${propertyDataError.message}`);
       }
 
-      return data;
-    } catch (error: any) {
-      throw new Error(`Failed to create room listing: ${error.message}`);
+      // Return the property with related data
+      return {
+        ...property,
+        personal_data: personalDataRecord,
+        property_data: propertyDataRecord,
+      };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create room listing';
+      throw new Error(errorMessage);
     }
   }
 }

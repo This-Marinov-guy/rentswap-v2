@@ -1,10 +1,9 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import SignUpForm from "@/components/SignUpForm";
 import styles from "./page.module.css";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import RoomListingForm from "@/components/RoomListingForm";
+import RoommateFinderForm from "./RoommateFinderForm.client";
 
 export const metadata: Metadata = {
   title: "Roommate Finder | RentSwap",
@@ -21,10 +20,6 @@ export const metadata: Metadata = {
   },
 };
 
-function SignUpFormWrapper() {
-  return <SignUpForm />;
-}
-
 export default function RoommateFinderPage() {
   return (
     <>
@@ -34,7 +29,7 @@ export default function RoommateFinderPage() {
           <div className={styles.header}>
             <h1 className={styles.title}>Roommate Finder</h1>
             <p className={styles.subtitle}>
-              Looking for a roommate? Share your room details and we'll deliver
+              Looking for a roommate? Share your room details and we&apos;ll deliver
               roommate candidates straight to your inbox - completely free!
             </p>
           </div>
@@ -48,7 +43,7 @@ export default function RoommateFinderPage() {
                   <div className={styles.stepContent}>
                     <h3 className={styles.stepTitle}>Share Your Room Details</h3>
                     <p>
-                      Fill out the form in our partner's platform.
+                      Fill out the form in our partner&apos;s platform.
                     </p>
                   </div>
                 </div>
@@ -81,7 +76,7 @@ export default function RoommateFinderPage() {
                     <h3 className={styles.stepTitle}>Connect & Earn</h3>
                     <p>
                       Connect with your chosen candidate, and if your landlord
-                      approves them, you'll earn €200!
+                      approves them, you&apos;ll earn €200!
                     </p>
                   </div>
                 </div>
@@ -90,7 +85,7 @@ export default function RoommateFinderPage() {
 
             <div className={styles.formSection}>
               <Suspense fallback={<div>Loading...</div>}>
-                <RoomListingForm/>
+                <RoommateFinderForm />
               </Suspense>
             </div>
           </div>

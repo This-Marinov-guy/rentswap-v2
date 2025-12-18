@@ -18,29 +18,29 @@ interface PropertyData {
 }
 
 export class PropertyService {
-  private getDefaultLocalesObject(): Record<string, string> {
-    const languages = ['en', 'nl', 'de', 'fr', 'es', 'it', 'pt', 'pl'];
-    return Object.fromEntries(languages.map(lang => [lang, '']));
-  }
-
   modifyPropertyDataWithTranslations(data: PropertyData): PropertyData {
-    const defaultTranslations = this.getDefaultLocalesObject();
-    const values = ['title', 'period', 'bills', 'flatmates', 'description'];
+    const values = ['title', 'period', 'bills', 'flatmates', 'description'] as const;
 
     for (const key of values) {
       if (data[key as keyof PropertyData]) {
         const value = data[key as keyof PropertyData];
         if (typeof value === 'string') {
-          (data as any)[key] = JSON.stringify({
-            ...defaultTranslations,
+          // Create JSON object with en value and empty strings for other languages
+          const translationObject = {
             en: value,
-          });
+            bg: '',
+            gr: '',
+          };
+          (data as unknown as Record<string, string | boolean | undefined>)[key] = JSON.stringify(translationObject);
         }
       } else if (key === 'title') {
-        (data as any).title = JSON.stringify({
-          ...defaultTranslations,
+        // Create JSON object with default title
+        const translationObject = {
           en: 'Available room',
-        });
+          bg: '',
+          gr: '',
+        };
+        (data as unknown as Record<string, string | boolean | undefined>).title = JSON.stringify(translationObject);
       }
     }
 

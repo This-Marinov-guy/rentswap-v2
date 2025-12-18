@@ -1,0 +1,248 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.personalInfoSection {
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-lg);
+  font-family: var(--font-gordita);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
+}
+
+.label {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--gray-700);
+  font-family: var(--font-montserrat);
+}
+
+.required {
+  color: var(--error-red);
+}
+
+.input {
+  padding: var(--spacing-sm) 0;
+  border: none;
+  border-bottom: 1px solid var(--gray-300);
+  border-radius: 0;
+  font-size: var(--text-base);
+  font-family: var(--font-montserrat);
+  color: var(--gray-900);
+  background: transparent;
+  transition: border-color var(--transition-base);
+  width: 100%;
+}
+
+.input::placeholder {
+  color: var(--gray-400);
+}
+
+.input:focus {
+  outline: none;
+  border-bottom-color: var(--primary-blue);
+  border-bottom-width: 2px;
+}
+
+.inputError {
+  border-bottom-color: var(--error-red) !important;
+}
+
+.error {
+  color: var(--error-red);
+  font-size: var(--text-sm);
+  margin-top: var(--spacing-xs);
+}
+
+.phoneInputContainer {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: stretch;
+}
+
+.countryDropdown {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.countrySelector {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-bottom: 1px solid var(--gray-300);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color var(--transition-base);
+  font-family: var(--font-montserrat);
+  font-size: var(--text-base);
+  color: var(--gray-900);
+  min-width: 100px;
+}
+
+.countrySelector:focus {
+  outline: none;
+  border-bottom-color: var(--primary-blue);
+  border-bottom-width: 2px;
+}
+
+.countryFlag {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.countryCode {
+  font-weight: 500;
+}
+
+.dropdownArrow {
+  margin-left: auto;
+  transition: transform var(--transition-base);
+}
+
+.dropdownArrowOpen {
+  transform: rotate(180deg);
+}
+
+.countryDropdownBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: transparent;
+}
+
+.countryDropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  max-height: 300px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--spacing-xs);
+}
+
+.countrySearch {
+  padding: var(--spacing-sm);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.countrySearchInput {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-family: var(--font-montserrat);
+}
+
+.countryList {
+  overflow-y: auto;
+  max-height: 250px;
+}
+
+.countryOption {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--transition-base);
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-montserrat);
+  font-size: var(--text-sm);
+  color: var(--gray-900);
+}
+
+.countryOption:hover {
+  background: var(--gray-50);
+}
+
+.countryOptionSelected {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.countryName {
+  flex: 1;
+}
+
+.countryDialCode {
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.phoneInput {
+  flex: 1;
+  padding: var(--spacing-sm) 0;
+  border: none;
+  border-bottom: 1px solid var(--gray-300);
+  border-radius: 0;
+  font-size: var(--text-base);
+  font-family: var(--font-montserrat);
+  color: var(--gray-900);
+  background: transparent;
+  transition: border-color var(--transition-base);
+}
+
+.phoneInput:focus {
+  outline: none;
+  border-bottom-color: var(--primary-blue);
+  border-bottom-width: 2px;
+}
+
+@media (max-width: 768px) {
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .countryDropdownMenu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 400px;
+    max-height: 70vh;
+  }
+
+  .countryDropdownBackdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .countrySelector {
+    min-width: 80px;
+  }
+}
+

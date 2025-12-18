@@ -22,7 +22,18 @@ interface RoomListingFormData {
   smoking_allowed: boolean;
 }
 
-export default function RoomListingForm() {
+interface PersonalData {
+  name: string;
+  surname: string;
+  email: string;
+  phone: string;
+}
+
+interface RoomListingFormProps {
+  personalData?: PersonalData;
+}
+
+export default function RoomListingForm({ personalData }: RoomListingFormProps = {}) {
   const [formData, setFormData] = useState<RoomListingFormData>({
     city: "",
     address: "",
@@ -210,8 +221,10 @@ export default function RoomListingForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) {
       toast.error("Please fix the errors in the form");
@@ -221,8 +234,19 @@ export default function RoomListingForm() {
     setIsSubmitting(true);
 
     try {
+      // Validate personal data
+      if (!personalData || !personalData.name || !personalData.surname || !personalData.email || !personalData.phone) {
+        toast.error("Personal information is required. Please fill in the Basic Information section first.");
+        setIsSubmitting(false);
+        return;
+      }
+
       // Create FormData for multipart/form-data
       const submitData = new FormData();
+      submitData.append("name", personalData.name);
+      submitData.append("surname", personalData.surname);
+      submitData.append("email", personalData.email);
+      submitData.append("phone", personalData.phone);
       submitData.append("city", formData.city);
       submitData.append("address", formData.address);
       submitData.append("size", formData.size);
@@ -239,7 +263,7 @@ export default function RoomListingForm() {
       if (formData.description.trim()) submitData.append("description", formData.description);
 
       // Add images
-      formData.images.forEach((image, index) => {
+      formData.images.forEach((image) => {
         submitData.append(`images`, image);
       });
 
@@ -277,9 +301,10 @@ export default function RoomListingForm() {
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error submitting form:", error);
-      toast.error(error.message || "Failed to submit listing. Please try again.");
+      const errorMessage = error instanceof Error ? error.message : "Failed to submit listing. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -290,7 +315,7 @@ export default function RoomListingForm() {
       <Toaster position="top-right" />
       <section className={styles.section}>
         <div className={styles.container}>
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.form}>
             {/* City */}
             <div className={styles.formGroup}>
               <label htmlFor="city" className={styles.label}>
@@ -634,7 +659,8 @@ export default function RoomListingForm() {
             {/* Submit Button */}
             <div className={styles.formActions}>
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 className={styles.submitButton}
                 disabled={isSubmitting || isResizing}
               >
@@ -645,7 +671,7 @@ export default function RoomListingForm() {
                   : "Submit Listing"}
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </section>
     </>
