@@ -28,7 +28,7 @@ export class ValidationService {
     
     if (!result.success) {
       const errors: Record<string, string[]> = {};
-      for (const error of result.error.errors) {
+      for (const error of result.error.issues) {
         const path = error.path.join('.');
         if (!errors[path]) {
           errors[path] = [];
