@@ -6,7 +6,7 @@ export class PaymentLinkService {
   constructor() {
     if (process.env.STRIPE_SECRET_KEY) {
       this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-        apiVersion: '2024-11-20.academy',
+        apiVersion: '2025-12-15.clover' as Stripe.LatestApiVersion,
       });
     }
   }

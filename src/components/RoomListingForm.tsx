@@ -204,18 +204,20 @@ export default function RoomListingForm({ personalData }: RoomListingFormProps =
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof RoomListingFormData, string>> = {};
 
+    // Required fields marked with *
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.postcode.trim()) newErrors.postcode = "Postcode is required";
     if (!formData.size.trim()) newErrors.size = "Size is required";
     if (!formData.rent.trim()) newErrors.rent = "Rent is required";
+    if (!formData.bills.trim()) newErrors.bills = "Bills is required";
+    if (!formData.flatmates.trim()) newErrors.flatmates = "Flatmates is required";
+    if (!formData.period.trim()) newErrors.period = "Period is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
+    
+    // Images validation
     if (formData.images.length < 3) newErrors.images = "At least 3 images are required";
     if (formData.images.length > 10) newErrors.images = "Maximum 10 images allowed";
-
-    // Description is required
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -374,9 +376,14 @@ export default function RoomListingForm({ personalData }: RoomListingFormProps =
                   name="postcode"
                   value={formData.postcode}
                   onChange={handleChange}
-                  className={styles.input}
+                  className={`${styles.input} ${
+                    errors.postcode ? styles.inputError : ""
+                  }`}
                   placeholder="e.g., 1234 AB"
                 />
+                {errors.postcode && (
+                  <span className={styles.error}>{errors.postcode}</span>
+                )}
               </div>
             </div>
 
