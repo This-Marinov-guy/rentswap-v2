@@ -236,32 +236,59 @@ ${data.peopleToAccommodate ? `People to Accommodate: ${data.peopleToAccommodate}
     type: 'room_listing' | 'room_searching',
     data: RoomListingData | RoomSearchingData
   ): Promise<void> {
+    console.log(`[NotificationService] Attempting to send ${type} notification`);
+    console.log(`[NotificationService] APP_ENV: ${process.env.APP_ENV}`);
+    console.log(`[NotificationService] MAIL_NOTIFICATIONS_ENABLED: ${process.env.MAIL_NOTIFICATIONS_ENABLED}`);
+
     // Skip in development if configured
     if (
       process.env.APP_ENV === "dev" &&
       process.env.MAIL_NOTIFICATIONS_ENABLED !== "1"
     ) {
+      console.log(`[NotificationService] Skipping notification - dev mode and MAIL_NOTIFICATIONS_ENABLED is not "1"`);
       return;
     }
 
     if (!this.transporter) {
-      console.warn('Email transporter not configured. Skipping notification.');
+      console.warn('[NotificationService] Email transporter not configured. Skipping notification.');
+      console.warn('[NotificationService] Check GMAIL_HOST, GMAIL_PORT, GMAIL_USERNAME, GMAIL_PASSWORD, GMAIL_FROM_ADDRESS env vars');
       return;
     }
 
     const notificationEmail = process.env.NOTIFICATION_EMAIL || 'admin@rentswap.nl';
     const fromAddress = process.env.GMAIL_FROM_ADDRESS || 'notification@domakin.nl';
 
+    console.log(`[NotificationService] Sending email from ${fromAddress} to ${notificationEmail}`);
+
     let emailContent: { subject: string; html: string; text: string };
 
     if (type === 'room_listing') {
-      emailContent = this.formatRoomListingEmail(data as RoomListingData);
+      const listingData = data as RoomListingData;
+      console.log(`[NotificationService] Room listing data:`, {
+        propertyId: listingData.propertyId,
+        city: listingData.city,
+        address: listingData.address,
+        hasName: !!listingData.name,
+        hasEmail: !!listingData.email,
+      });
+      
+      // Validate required fields
+      if (!listingData.propertyId || !listingData.city || !listingData.address) {
+        console.error('[NotificationService] Missing required fields for room listing notification:', {
+          hasPropertyId: !!listingData.propertyId,
+          hasCity: !!listingData.city,
+          hasAddress: !!listingData.address,
+        });
+        return;
+      }
+      
+      emailContent = this.formatRoomListingEmail(listingData);
     } else {
       emailContent = this.formatRoomSearchingEmail(data as RoomSearchingData);
     }
 
     try {
-      await this.transporter.sendMail({
+      const result = await this.transporter.sendMail({
         from: fromAddress,
         to: notificationEmail,
         subject: emailContent.subject,
@@ -269,15 +296,20 @@ ${data.peopleToAccommodate ? `People to Accommodate: ${data.peopleToAccommodate}
         text: emailContent.text,
       });
 
-      console.log(`Email notification sent successfully: ${type}`);
+      console.log(`[NotificationService] Email notification sent successfully: ${type}`);
+      console.log(`[NotificationService] Message ID: ${result.messageId}`);
     } catch (error) {
-      console.error('Email notification error:', error);
+      console.error('[NotificationService] Email notification error:', error);
+      if (error instanceof Error) {
+        console.error('[NotificationService] Error message:', error.message);
+        console.error('[NotificationService] Error stack:', error.stack);
+      }
       // Don't throw - email failures shouldn't break the request
     }
   }
 
   // Legacy method for backward compatibility
-  async sendNotificationLegacy(subject: string, templateUuid: string, data: any): Promise<void> {
+  async sendNotificationLegacy(subject: string, templateUuid: string, data: RoomListingData | RoomSearchingData): Promise<void> {
     // Map template UUIDs to notification types
     if (templateUuid === 'room_listing') {
       await this.sendNotification('room_listing', data);
