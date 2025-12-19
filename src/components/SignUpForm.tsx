@@ -1218,7 +1218,7 @@ export default function SignUpForm() {
                     />
                   </div>
 
-                  <div className={styles.domakinLink}>
+                  {/* <div className={styles.domakinLink}>
                     <p>
                       To search properties check{" "}
                       <a
@@ -1230,7 +1230,7 @@ export default function SignUpForm() {
                         Domakin.nl
                       </a>
                     </p>
-                  </div>
+                  </div> */}
                 </section>
               )}
 

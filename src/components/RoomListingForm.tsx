@@ -170,7 +170,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
             processedFiles.push(resizedFile);
           } catch (error) {
             console.error(`Error resizing ${file.name}:`, error);
-            toast.error(`Error processing ${file.name}`);
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            toast.error(`Error processing ${file.name}: ${errorMessage}`);
           }
         } else {
           // Videos are added as-is (no resizing)

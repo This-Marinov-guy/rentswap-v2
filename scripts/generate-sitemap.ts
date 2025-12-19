@@ -39,7 +39,7 @@ async function getPosts(
 }
 
 async function generateSitemap() {
-  const baseUrl = 'https://rentswap.com';
+  const baseUrl = 'https://rentswap.nl';
   const currentDate = new Date().toISOString();
 
   console.log('🚀 Starting sitemap generation...');
@@ -48,12 +48,15 @@ async function generateSitemap() {
   const staticRoutes = [
     { url: baseUrl, priority: '1.0', changefreq: 'daily' },
     { url: `${baseUrl}/pricing`, priority: '0.8', changefreq: 'weekly' },
-    { url: `${baseUrl}/resources`, priority: '0.8', changefreq: 'weekly' },
-    { url: `${baseUrl}/faq`, priority: '0.7', changefreq: 'monthly' },
-    { url: `${baseUrl}/terms-conditions`, priority: '0.5', changefreq: 'monthly' },
-    { url: `${baseUrl}/privacy-policy`, priority: '0.5', changefreq: 'monthly' },
     { url: `${baseUrl}/sign-up`, priority: '0.9', changefreq: 'weekly' },
     { url: `${baseUrl}/blog`, priority: '0.9', changefreq: 'daily' },
+    { url: `${baseUrl}/blog-1`, priority: '0.8', changefreq: 'daily' },
+    { url: `${baseUrl}/faq`, priority: '0.7', changefreq: 'monthly' },
+    { url: `${baseUrl}/application-guide`, priority: '0.7', changefreq: 'monthly' },
+    { url: `${baseUrl}/whatsapp-netherlands`, priority: '0.7', changefreq: 'monthly' },
+    { url: `${baseUrl}/roommate-finder`, priority: '0.8', changefreq: 'weekly' },
+    { url: `${baseUrl}/terms-conditions`, priority: '0.5', changefreq: 'monthly' },
+    { url: `${baseUrl}/privacy-policy`, priority: '0.5', changefreq: 'monthly' },
   ];
 
   // Fetch all blog posts
@@ -89,11 +92,22 @@ async function generateSitemap() {
       xml += '  </url>\n';
     });
 
-    // Add blog post routes
+    // Add blog post routes (both /blog/[slug] and /post/[slug])
     allPosts.forEach((post) => {
+      const modifiedDate = post.modified ? new Date(post.modified).toISOString() : currentDate;
+      
+      // /blog/[slug] route
       xml += '  <url>\n';
       xml += `    <loc>${baseUrl}/blog/${post.slug}</loc>\n`;
-      xml += `    <lastmod>${new Date(post.modified).toISOString()}</lastmod>\n`;
+      xml += `    <lastmod>${modifiedDate}</lastmod>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
+      xml += `    <priority>0.7</priority>\n`;
+      xml += '  </url>\n';
+      
+      // /post/[slug] route (alias)
+      xml += '  <url>\n';
+      xml += `    <loc>${baseUrl}/post/${post.slug}</loc>\n`;
+      xml += `    <lastmod>${modifiedDate}</lastmod>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.7</priority>\n`;
       xml += '  </url>\n';
@@ -119,9 +133,9 @@ async function generateSitemap() {
 
     console.log(`✅ Sitemap generated successfully at ${sitemapPath}`);
     console.log(`💾 Backup saved at ${backupPath}`);
-    console.log(`📊 Total URLs: ${staticRoutes.length + allPosts.length}`);
+    console.log(`📊 Total URLs: ${staticRoutes.length + (allPosts.length * 2)}`);
     console.log(`   - Static routes: ${staticRoutes.length}`);
-    console.log(`   - Blog posts: ${allPosts.length}`);
+    console.log(`   - Blog posts: ${allPosts.length} (${allPosts.length * 2} URLs including /blog and /post routes)`);
   } catch (error) {
     console.error('❌ Error generating sitemap:', error);
     process.exit(1);
