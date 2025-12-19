@@ -55,7 +55,7 @@ export class NotificationService {
   }
 
   private formatRoomListingEmail(data: RoomListingData): { subject: string; html: string; text: string } {
-    const subject = 'New Room Listing Uploaded';
+    const subject = 'New Rentswap Room Listing Uploaded';
     const html = `
       <!DOCTYPE html>
       <html>
@@ -135,7 +135,7 @@ ${data.phone ? `Phone: ${data.phone}` : ''}
   }
 
   private formatRoomSearchingEmail(data: RoomSearchingData): { subject: string; html: string; text: string } {
-    const subject = 'New Rental Search Submission';
+    const subject = "New Rentswap Rental Search Submission";
     const html = `
       <!DOCTYPE html>
       <html>
@@ -237,7 +237,10 @@ ${data.peopleToAccommodate ? `People to Accommodate: ${data.peopleToAccommodate}
     data: RoomListingData | RoomSearchingData
   ): Promise<void> {
     // Skip in development if configured
-    if (process.env.APP_ENV === 'dev' && process.env.MAIL_NOTIFICATIONS_ENABLED !== 'true') {
+    if (
+      process.env.APP_ENV === "dev" &&
+      process.env.MAIL_NOTIFICATIONS_ENABLED !== "1"
+    ) {
       return;
     }
 
