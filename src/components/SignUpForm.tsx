@@ -9,7 +9,8 @@ import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { COUNTRIES, CITIES } from "@/utils/defines";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import ToastProvider from "./common/ToastProvider";
 
 type UserType = "looking" | "leaving" | "";
 
@@ -247,6 +248,15 @@ export default function SignUpForm() {
       newErrors.email = "Please enter a valid email address";
     }
 
+    // Phone validation
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone is required";
+    } else if (!/^[\d\s\-+()]+$/.test(formData.phone)) {
+      newErrors.phone = "Invalid phone";
+    } else if (formData.phone.replace(/\D/g, "").length < 5) {
+      newErrors.phone = "Invalid phone";
+    }
+
     // User type validation
     if (!formData.userType) {
       newErrors.userType =
@@ -290,6 +300,16 @@ export default function SignUpForm() {
     }
 
     setErrors(newErrors);
+    
+    // Show validation errors as toasts
+    if (Object.keys(newErrors).length > 0) {
+      Object.values(newErrors).forEach((error) => {
+        if (error) {
+          toast.error(error);
+        }
+      });
+    }
+    
     return Object.keys(newErrors).length === 0;
   };
 
@@ -523,23 +543,7 @@ export default function SignUpForm() {
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          success: {
-            iconTheme: {
-              primary: "#FFFFFF",
-              secondary: "#00C853",
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: "#FFFFFF",
-              secondary: "#fa3c4c",
-            },
-          },
-        }}
-      />
+      <ToastProvider />
       <div className={styles.formWrapper}>
         <form
           onSubmit={mode === "login" ? handleLogin : handleSubmit}

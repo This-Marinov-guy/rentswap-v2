@@ -43,7 +43,7 @@ export default function RoommateFinderPage() {
                   <div className={styles.stepContent}>
                     <h3 className={styles.stepTitle}>Share Your Room Details</h3>
                     <p>
-                      Fill out the form in our partner&apos;s platform.
+                      Fill out the form in this page with accurate information.
                     </p>
                   </div>
                 </div>

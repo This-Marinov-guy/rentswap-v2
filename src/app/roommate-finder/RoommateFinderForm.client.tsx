@@ -22,6 +22,7 @@ export default function RoommateFinderForm() {
 
   const [countryCode, setCountryCode] = useState("+31");
   const [errors, setErrors] = useState<Partial<Record<keyof PersonalData, string>>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof PersonalData, boolean>>>({});
   
   // Country dropdown state
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
@@ -64,6 +65,55 @@ export default function RoommateFinderForm() {
     }
   };
 
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    validateField(name as keyof PersonalData);
+  };
+
+  const validateField = (fieldName: keyof PersonalData) => {
+    const newErrors: Partial<Record<keyof PersonalData, string>> = { ...errors };
+
+    switch (fieldName) {
+      case "name":
+        if (!personalData.name.trim()) {
+          newErrors.name = "Name is required";
+        } else {
+          delete newErrors.name;
+        }
+        break;
+      case "surname":
+        if (!personalData.surname.trim()) {
+          newErrors.surname = "Surname is required";
+        } else {
+          delete newErrors.surname;
+        }
+        break;
+      case "email":
+        if (!personalData.email.trim()) {
+          newErrors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalData.email)) {
+          newErrors.email = "Please enter a valid email address";
+        } else {
+          delete newErrors.email;
+        }
+        break;
+      case "phone":
+        if (!personalData.phone.trim()) {
+          newErrors.phone = "Phone is required";
+        } else if (!/^[\d\s\-+()]+$/.test(personalData.phone)) {
+          newErrors.phone = "Invalid phone";
+        } else if (personalData.phone.replace(/\D/g, "").length < 5) {
+          newErrors.phone = "Invalid phone";
+        } else {
+          delete newErrors.phone;
+        }
+        break;
+    }
+
+    setErrors(newErrors);
+  };
+
   const validatePersonalData = (): boolean => {
     const newErrors: Partial<Record<keyof PersonalData, string>> = {};
 
@@ -80,9 +130,20 @@ export default function RoommateFinderForm() {
     }
     if (!personalData.phone.trim()) {
       newErrors.phone = "Phone is required";
+    } else if (!/^[\d\s\-+()]+$/.test(personalData.phone)) {
+      newErrors.phone = "Please enter a valid phone number";
+    } else if (personalData.phone.replace(/\D/g, "").length < 6) {
+      newErrors.phone = "Phone number must be at least 6 digits";
     }
 
     setErrors(newErrors);
+    // Mark all fields as touched when validating
+    setTouched({
+      name: true,
+      surname: true,
+      email: true,
+      phone: true,
+    });
     return Object.keys(newErrors).length === 0;
   };
 
@@ -110,10 +171,11 @@ export default function RoommateFinderForm() {
               name="name"
               value={personalData.name}
               onChange={handleChange}
+              onBlur={handleBlur}
               className={`${styles.input} ${errors.name ? styles.inputError : ""}`}
               placeholder="John"
             />
-            {errors.name && <span className={styles.error}>{errors.name}</span>}
+            {touched.name && errors.name && <span className={styles.error}>{errors.name}</span>}
           </div>
 
           <div className={styles.formGroup}>
@@ -126,10 +188,11 @@ export default function RoommateFinderForm() {
               name="surname"
               value={personalData.surname}
               onChange={handleChange}
+              onBlur={handleBlur}
               className={`${styles.input} ${errors.surname ? styles.inputError : ""}`}
               placeholder="Doe"
             />
-            {errors.surname && <span className={styles.error}>{errors.surname}</span>}
+            {touched.surname && errors.surname && <span className={styles.error}>{errors.surname}</span>}
           </div>
         </div>
 
@@ -143,17 +206,18 @@ export default function RoommateFinderForm() {
             name="email"
             value={personalData.email}
             onChange={handleChange}
+            onBlur={handleBlur}
             className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
             placeholder="john@example.com"
           />
-          {errors.email && <span className={styles.error}>{errors.email}</span>}
+          {touched.email && errors.email && <span className={styles.error}>{errors.email}</span>}
         </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="phone" className={styles.label}>
             Phone Number <span className={styles.required}>*</span>
           </label>
-          <div className={styles.phoneInputContainer}>
+          <div className={`${styles.phoneInputContainer} ${errors.phone ? styles.phoneInputContainerError : ""}`}>
             <div
               ref={countryDropdownRef}
               className={styles.countryDropdown}
@@ -244,13 +308,14 @@ export default function RoommateFinderForm() {
               name="phone"
               value={personalData.phone}
               onChange={handleChange}
+              onBlur={handleBlur}
               className={`${styles.phoneInput} ${
                 errors.phone ? styles.inputError : ""
               }`}
               placeholder="6 12345678"
             />
           </div>
-          {errors.phone && <span className={styles.error}>{errors.phone}</span>}
+          {touched.phone && errors.phone && <span className={styles.error}>{errors.phone}</span>}
         </div>
       </section>
 
@@ -262,6 +327,7 @@ export default function RoommateFinderForm() {
           email: personalData.email,
           phone: personalData.phone ? `${countryCode} ${personalData.phone}` : "",
         }}
+        onValidatePersonalData={validatePersonalData}
       />
     </div>
   );

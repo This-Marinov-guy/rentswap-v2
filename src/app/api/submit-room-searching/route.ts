@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { v2 as cloudinary } from "cloudinary";
+import { ValidationService } from "@/services/validation.service";
+import { addCorsHeaders, handleOptionsRequest } from "@/utils/cors";
 
 // Configure Cloudinary from CLOUDINARY_URL env var
 // Format: cloudinary://api_key:api_secret@cloud_name
@@ -50,6 +52,10 @@ interface DatabaseFormData {
   interface: string; // Should be "rentswap"
 }
 
+export async function OPTIONS() {
+  return handleOptionsRequest();
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -70,32 +76,39 @@ export async function POST(request: NextRequest) {
     const referral_code = formData.get("referral_code") as string | null;
     const coverLetterFile = formData.get("letter") as File | null;
 
-    // Validation - Required fields (excluding letter and note)
-    const errors: Record<string, string> = {};
+    // Prepare data object for validation
+    const validationData = {
+      name,
+      surname,
+      email,
+      phone,
+      type,
+      city,
+      budget,
+      move_in,
+      period,
+      registration,
+      people,
+      letter: coverLetterFile || undefined,
+      note: note || undefined,
+      referral_code: referral_code || undefined,
+    };
 
-    if (!name?.trim()) errors.name = "Name is required";
-    if (!surname?.trim()) errors.surname = "Surname is required";
-    if (!email?.trim()) errors.email = "Email is required";
-    if (!phone?.trim()) errors.phone = "Phone is required";
-    if (!type?.trim()) errors.type = "Type is required";
-    if (!city?.trim()) errors.city = "City is required";
-    if (!budget?.trim()) errors.budget = "Budget is required";
-    if (!move_in?.trim()) errors.move_in = "Move in date is required";
-    if (!period?.trim()) errors.period = "Period is required";
-    if (!registration?.trim()) errors.registration = "Registration is required";
-    if (!people?.trim()) errors.people = "People is required";
-
-    // Email validation
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = "Please enter a valid email address";
-    }
-
-    // If there are validation errors, return them
-    if (Object.keys(errors).length > 0) {
-      return NextResponse.json(
-        { success: false, errors },
+    // Validate data using ValidationService
+    const validation = ValidationService.validateRoomSearching(validationData);
+    if (!validation.success) {
+      // Convert errors from array format to single message format for compatibility
+      const formattedErrors: Record<string, string> = {};
+      if (validation.errors) {
+        for (const [key, messages] of Object.entries(validation.errors)) {
+          formattedErrors[key] = messages[0]; // Take first error message
+        }
+      }
+      const errorResponse = NextResponse.json(
+        { success: false, errors: formattedErrors },
         { status: 400 }
       );
+      return addCorsHeaders(errorResponse, request.headers.get('origin'));
     }
 
     // Upload cover letter to Cloudinary if provided
@@ -104,7 +117,7 @@ export async function POST(request: NextRequest) {
       // Validate file size (3MB = 3 * 1024 * 1024 bytes)
       const maxSize = 3 * 1024 * 1024;
       if (coverLetterFile.size > maxSize) {
-        return NextResponse.json(
+        const errorResponse = NextResponse.json(
           {
             success: false,
             errors: {
@@ -113,6 +126,7 @@ export async function POST(request: NextRequest) {
           },
           { status: 400 }
         );
+        return addCorsHeaders(errorResponse, request.headers.get('origin'));
       }
 
       // Validate file type
@@ -128,7 +142,7 @@ export async function POST(request: NextRequest) {
         allowedExtensions.some((ext) => fileName.endsWith(ext));
 
       if (!isValidType) {
-        return NextResponse.json(
+        const errorResponse = NextResponse.json(
           {
             success: false,
             errors: {
@@ -137,11 +151,12 @@ export async function POST(request: NextRequest) {
           },
           { status: 400 }
         );
+        return addCorsHeaders(errorResponse, request.headers.get('origin'));
       }
 
       // Check if Cloudinary is configured
       if (!cloudinaryUrl) {
-        return NextResponse.json(
+        const errorResponse = NextResponse.json(
           {
             success: false,
             errors: {
@@ -150,6 +165,7 @@ export async function POST(request: NextRequest) {
           },
           { status: 500 }
         );
+        return addCorsHeaders(errorResponse, request.headers.get('origin'));
       }
 
       try {
@@ -179,7 +195,7 @@ export async function POST(request: NextRequest) {
         letterUrl = uploadResult.secure_url;
       } catch (uploadError) {
         console.error("Cloudinary upload error:", uploadError);
-        return NextResponse.json(
+        const errorResponse = NextResponse.json(
           {
             success: false,
             errors: {
@@ -190,6 +206,7 @@ export async function POST(request: NextRequest) {
           },
           { status: 500 }
         );
+        return addCorsHeaders(errorResponse, request.headers.get('origin'));
       }
     }
 
@@ -197,7 +214,7 @@ export async function POST(request: NextRequest) {
     // Validate and format move_in as date (YYYY-MM-DD format for Supabase date type)
     const moveInDateString = move_in.trim();
     if (!moveInDateString) {
-      return NextResponse.json(
+      const errorResponse = NextResponse.json(
         {
           success: false,
           errors: {
@@ -206,12 +223,13 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+      return addCorsHeaders(errorResponse, request.headers.get('origin'));
     }
 
     // Validate date format (should be YYYY-MM-DD)
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateRegex.test(moveInDateString)) {
-      return NextResponse.json(
+      const errorResponse = NextResponse.json(
         {
           success: false,
           errors: {
@@ -220,12 +238,13 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+      return addCorsHeaders(errorResponse, request.headers.get('origin'));
     }
 
     // Validate it's a valid date
     const moveInDate = new Date(moveInDateString + 'T00:00:00');
     if (isNaN(moveInDate.getTime())) {
-      return NextResponse.json(
+      const errorResponse = NextResponse.json(
         {
           success: false,
           errors: {
@@ -234,6 +253,7 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+      return addCorsHeaders(errorResponse, request.headers.get('origin'));
     }
 
     const dbData: DatabaseFormData = {
@@ -285,7 +305,7 @@ export async function POST(request: NextRequest) {
         errorMessage = "A record with this information already exists.";
       }
       
-      return NextResponse.json(
+      const errorResponse = NextResponse.json(
         {
           success: false,
           errors: {
@@ -294,48 +314,33 @@ export async function POST(request: NextRequest) {
         },
         { status: 500 }
       );
+      return addCorsHeaders(errorResponse, request.headers.get('origin'));
     }
 
     // Send email notification
     try {
-      // You can use a service like Resend, SendGrid, or Supabase Edge Functions
-      // For now, we'll use a simple fetch to your email service
-      const emailResponse = await fetch(
-        process.env.EMAIL_SERVICE_URL || "",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.EMAIL_SERVICE_API_KEY}`,
-          },
-          body: JSON.stringify({
-            to: process.env.NOTIFICATION_EMAIL || "admin@rentswap.nl",
-            subject: "New Rental Search Submission",
-            template: "new-rental-search",
-            data: {
-              name,
-              surname,
-              email,
-              phone,
-              city,
-              budget,
-              move_in,
-              period,
-            },
-          }),
-        }
-      );
-
-      if (!emailResponse.ok) {
-        console.error("Email notification failed:", await emailResponse.text());
-        // Don't fail the request if email fails
-      }
+      const { NotificationService } = await import("@/services/notification.service");
+      const notificationService = new NotificationService();
+      
+      await notificationService.sendNotification("room_searching", {
+        name,
+        surname,
+        email,
+        phone,
+        city,
+        budget,
+        move_in,
+        period,
+        registration: registration || undefined,
+        accommodationType: type || undefined,
+        peopleToAccommodate: people || undefined,
+      });
     } catch (emailError) {
       console.error("Email notification error:", emailError);
       // Don't fail the request if email fails
     }
 
-    return NextResponse.json(
+    const successResponse = NextResponse.json(
       {
         success: true,
         message: "Your information has been submitted successfully!",
@@ -343,9 +348,10 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     );
+    return addCorsHeaders(successResponse, request.headers.get('origin'));
   } catch (error) {
     console.error("Form submission error:", error);
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       {
         success: false,
         errors: {
@@ -357,6 +363,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     );
+    return addCorsHeaders(errorResponse, request.headers.get('origin'));
   }
 }
 

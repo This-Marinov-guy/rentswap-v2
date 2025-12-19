@@ -4,7 +4,8 @@ import { useState, useRef, FormEvent } from "react";
 import { CITIES } from "@/utils/defines";
 import { resizeImage } from "@/utils/imageResizer";
 import styles from "./RoomListingForm.module.css";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import ToastProvider from "./common/ToastProvider";
 
 interface RoomListingFormData {
   city: string;
@@ -31,21 +32,22 @@ interface PersonalData {
 
 interface RoomListingFormProps {
   personalData?: PersonalData;
+  onValidatePersonalData?: () => boolean;
 }
 
-export default function RoomListingForm({ personalData }: RoomListingFormProps = {}) {
+export default function RoomListingForm({ personalData, onValidatePersonalData }: RoomListingFormProps = {}) {
   const [formData, setFormData] = useState<RoomListingFormData>({
     city: "",
     address: "",
     size: "",
     rent: "",
-    registration: false,
     bills: "",
     flatmates: "",
     period: "",
     description: "",
     images: [],
     postcode: "",
+    registration: true,
     pets_allowed: false,
     smoking_allowed: false,
   });
@@ -233,6 +235,16 @@ export default function RoomListingForm({ personalData }: RoomListingFormProps =
       return;
     }
 
+    // Validate personal data if validation function is provided
+    if (onValidatePersonalData) {
+      const isPersonalDataValid = onValidatePersonalData();
+      if (!isPersonalDataValid) {
+        toast.error("Please fix the errors in the Basic Information section first.");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -314,7 +326,7 @@ export default function RoomListingForm({ personalData }: RoomListingFormProps =
 
   return (
     <>
-      <Toaster position="top-right" />
+      <ToastProvider />
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.form}>
@@ -625,7 +637,10 @@ export default function RoomListingForm({ personalData }: RoomListingFormProps =
                   </p>
                 </div>
               </div>
-              <ul className={styles.fileDescription} style={{ fontSize: "0.8rem" }}>
+              <ul
+                className={styles.fileDescription}
+                style={{ fontSize: "0.8rem" }}
+              >
                 <li>
                   Allowed formats: JPG, PNG, JPEG, WebP, HEIC, HEIF, and video
                   types (MP4, MPEG, QuickTime, AVI, WebM)

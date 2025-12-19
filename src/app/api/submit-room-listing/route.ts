@@ -5,6 +5,11 @@ import { NotificationService } from "@/services/notification.service";
 import { ApiResponseService } from "@/services/api-response.service";
 import { ValidationService } from "@/services/validation.service";
 import { DatabaseService } from "@/services/database.service";
+import { addCorsHeaders, handleOptionsRequest } from "@/utils/cors";
+
+export async function OPTIONS() {
+  return handleOptionsRequest();
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -60,7 +65,8 @@ export async function POST(request: NextRequest) {
     // Validate data
     const validation = ValidationService.validateRoomListing(data);
     if (!validation.success) {
-      return ApiResponseService.sendInvalidFields(validation.errors!, {});
+      const response = ApiResponseService.sendInvalidFields(validation.errors!, {});
+      return addCorsHeaders(response, request.headers.get('origin'));
     }
 
     // Create folder name
@@ -133,39 +139,46 @@ export async function POST(request: NextRequest) {
 
       // Send notifications (non-blocking)
       notificationService
-        .sendNotification("New room listing uploaded", "room_listing", {
+        .sendNotification("room_listing", {
           propertyId: createdProperty.id,
           city,
           address,
+          name,
+          surname,
+          email,
+          phone,
         })
         .catch((error) => {
           console.error("Notification error:", error);
         });
 
-      return ApiResponseService.sendSuccess(
+      const successResponse = ApiResponseService.sendSuccess(
         { propertyId: createdProperty.id },
         "Room listing created successfully",
         "property:create.success"
       );
+      return addCorsHeaders(successResponse, request.headers.get('origin'));
     } catch (error: unknown) {
       console.error("Property creation error:", error);
       const errorMessage =
         error instanceof Error
           ? error.message
           : "Failed to create room listing";
-      return ApiResponseService.sendError(
+      const errorResponse = ApiResponseService.sendError(
         errorMessage,
         "property:create.error"
       );
+      return addCorsHeaders(errorResponse, request.headers.get('origin'));
     }
   } catch (error: unknown) {
     console.error("API error:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Internal server error";
-    return ApiResponseService.sendError(
+    const errorResponse = ApiResponseService.sendError(
       errorMessage,
       "account:authentication.errors.general",
       500
     );
+    return addCorsHeaders(errorResponse, request.headers.get('origin'));
   }
 }

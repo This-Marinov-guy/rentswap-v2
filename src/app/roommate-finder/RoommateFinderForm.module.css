@@ -221,6 +221,10 @@
   border-bottom-width: 2px;
 }
 
+.phoneInputContainerError .phoneInput {
+  border-bottom-color: var(--error-red) !important;
+}
+
 @media (max-width: 768px) {
   .formRow {
     grid-template-columns: 1fr;
