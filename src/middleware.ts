@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
     pathname: request.nextUrl.pathname,
     searchParams: Object.fromEntries(request.nextUrl.searchParams),
     headers: Object.fromEntries(request.headers.entries()),
-    ip: request.ip || request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+    ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
     userAgent: request.headers.get('user-agent') || 'unknown',
     timestamp: new Date().toISOString(),
     type: 'http_request',
