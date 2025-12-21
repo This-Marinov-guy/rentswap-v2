@@ -7,13 +7,13 @@ interface PropertyData {
   pets_allowed: boolean;
   smoking_allowed: boolean;
   size: string;
-  period: string;
+  period: string | { en: string; bg: string; gr: string };
   rent: string;
-  bills: string;
-  flatmates: string;
+  bills: string | { en: string; bg: string; gr: string };
+  flatmates: string | { en: string; bg: string; gr: string };
   registration: boolean;
-  description: string;
-  title?: string;
+  description: string | { en: string; bg: string; gr: string };
+  title?: string | { en: string; bg: string; gr: string };
   folder?: string;
   images?: string;
   payment_link?: string | null;

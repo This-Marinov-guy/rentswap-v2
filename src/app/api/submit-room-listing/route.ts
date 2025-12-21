@@ -121,13 +121,13 @@ export async function POST(request: NextRequest) {
       registration: boolean;
       pets_allowed: boolean;
       smoking_allowed: boolean;
-      bills: string;
-      flatmates: string;
-      period: string;
-      description: string;
+      bills: string | { en: string; bg: string; gr: string };
+      flatmates: string | { en: string; bg: string; gr: string };
+      period: string | { en: string; bg: string; gr: string };
+      description: string | { en: string; bg: string; gr: string };
       folder?: string;
       images?: string;
-      title?: string;
+      title?: string | { en: string; bg: string; gr: string };
       payment_link?: string | null;
     } = {
       city,

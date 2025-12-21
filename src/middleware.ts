@@ -5,6 +5,7 @@ export async function middleware(request: NextRequest) {
   const startTime = Date.now();
   const logger = getAxiomLogger();
   const requestId = crypto.randomUUID();
+  const isGetRequest = request.method === 'GET';
 
   // Extract request information
   const requestInfo = {
@@ -20,13 +21,12 @@ export async function middleware(request: NextRequest) {
     type: 'http_request',
   };
 
-  // Log request
-  if (logger) {
+  // Log request (only to console for GET requests, to Axiom for others)
+  if (logger && !isGetRequest) {
     logger.info('Incoming request', requestInfo);
+    // Log to Axiom directly for non-GET requests
+    await logToAxiom(requestInfo);
   }
-
-  // Also log to Axiom directly for better tracking
-  await logToAxiom(requestInfo);
 
   // Continue with the request
   const response = NextResponse.next();
@@ -44,12 +44,14 @@ export async function middleware(request: NextRequest) {
     url: request.url,
     pathname: request.nextUrl.pathname,
     statusCode: response.status,
+    status: response.status, // Also include as 'status' for clarity
     duration,
     timestamp: new Date().toISOString(),
     type: 'http_response',
   };
 
-  if (logger) {
+  // Only log to Axiom for non-GET requests
+  if (logger && !isGetRequest) {
     // Use setTimeout to log after response is sent
     setTimeout(() => {
       logger?.info('Outgoing response', responseInfo);

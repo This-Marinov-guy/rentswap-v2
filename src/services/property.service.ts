@@ -5,13 +5,13 @@ interface PropertyData {
   pets_allowed: boolean;
   smoking_allowed: boolean;
   size: string;
-  period: string;
+  period: string | { en: string; bg: string; gr: string };
   rent: string;
-  bills: string;
-  flatmates: string;
+  bills: string | { en: string; bg: string; gr: string };
+  flatmates: string | { en: string; bg: string; gr: string };
   registration: boolean;
-  description: string;
-  title?: string;
+  description: string | { en: string; bg: string; gr: string };
+  title?: string | { en: string; bg: string; gr: string };
   folder?: string;
   images?: string;
   payment_link?: string | null;
@@ -31,7 +31,7 @@ export class PropertyService {
             bg: '',
             gr: '',
           };
-          (data as unknown as Record<string, string | boolean | undefined>)[key] = JSON.stringify(translationObject);
+          (data as unknown as Record<string, string | boolean | { en: string; bg: string; gr: string } | undefined>)[key] = translationObject;
         }
       } else if (key === 'title') {
         // Create JSON object with default title
@@ -40,7 +40,7 @@ export class PropertyService {
           bg: '',
           gr: '',
         };
-        (data as unknown as Record<string, string | boolean | undefined>).title = JSON.stringify(translationObject);
+        (data as unknown as Record<string, string | boolean | { en: string; bg: string; gr: string } | undefined>).title = translationObject;
       }
     }
 
