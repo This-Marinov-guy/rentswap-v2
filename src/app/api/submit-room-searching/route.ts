@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     const surname = formData.get("surname") as string;
     const email = formData.get("email") as string;
     const phone = formData.get("phone") as string;
-    const type = formData.get("type") as string;
+    const accommodationType = formData.get("accommodationType") as string; // "Any", "Shared", "Private"
     const city = formData.get("city") as string;
     const budget = formData.get("budget") as string;
     const move_in = formData.get("move_in") as string;
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       surname,
       email,
       phone,
-      type,
+      type: accommodationType || "Any", // Use accommodationType for validation
       city,
       budget,
       move_in,
@@ -261,7 +261,7 @@ export async function POST(request: NextRequest) {
       surname: surname.trim(),
       email: email.trim(),
       phone: phone.trim(),
-      type: type.trim(),
+      type: (accommodationType || "Any").trim(), // Save accommodationType to the type column
       city: city.trim(),
       budget: parseInt(budget, 10),
       move_in: moveInDateString, // Keep as YYYY-MM-DD string - Supabase date columns accept this format
@@ -332,7 +332,7 @@ export async function POST(request: NextRequest) {
         move_in,
         period,
         registration: registration || undefined,
-        accommodationType: type || undefined,
+        accommodationType: accommodationType || undefined,
         peopleToAccommodate: people || undefined,
       });
     } catch (emailError) {

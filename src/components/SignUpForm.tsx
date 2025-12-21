@@ -420,6 +420,7 @@ export default function SignUpForm() {
         `${formData.countryCode} ${formData.phone}`
       );
       submitFormData.append("type", formData.userType);
+      submitFormData.append("accommodationType", formData.accommodationType);
       submitFormData.append("city", formData.city);
       submitFormData.append("budget", formData.budget);
       submitFormData.append("move_in", formData.moveInDate);
