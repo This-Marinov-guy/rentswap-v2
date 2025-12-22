@@ -13,8 +13,6 @@ export const metadata: Metadata = {
         "Read the latest news, tips, and guides about renting in the Netherlands. Find out how to swap your rental home easily.",
 };
 
-export const revalidate = 10 * 60; // Revalidate every 10 mins
-
 export default async function BlogPage({
     searchParams,
 }: {
@@ -164,4 +162,5 @@ export default async function BlogPage({
         </main>
     );
 }
+
 
