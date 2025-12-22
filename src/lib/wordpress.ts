@@ -170,7 +170,7 @@ export async function getPosts(
   const res = await fetch(
     `${BASE_URL}/${WORDPRESS_BLOG_ID}/posts?page=${page}&number=${number}&fields=ID,title,slug,date,excerpt,post_thumbnail,author,categories`,
     {
-      next: { revalidate: 3600 }, // Revalidate every hour
+      next: { revalidate: 10 * 60 }, // Revalidate every 5 mins
     }
   );
 
@@ -209,3 +209,4 @@ export async function getPostBySlug(slug: string): Promise<WordPressPost> {
   console.log(`Successfully fetched post: ${data.title} (ID: ${data.ID})`);
   return data;
 }
+
