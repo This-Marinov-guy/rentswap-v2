@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
 import StructuredData from "@/components/StructuredData";
+import Clarity from "@/components/Clarity";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -147,6 +148,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body style={{ paddingTop: '72px' }}>
         <StructuredData />
+        <Clarity />
         {children}
         <CookieBanner />
       </body>
