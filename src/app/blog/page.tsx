@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getPosts } from "@/lib/wordpress";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogControls from "@/components/blog/BlogControls";
+import BlogPageContent from "@/components/blog/BlogPageContent";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
@@ -27,6 +28,9 @@ export default async function BlogPage({
 
     const { posts, found } = await getPosts(page, itemsPerPage);
     const totalPages = Math.ceil(found / itemsPerPage);
+
+    // Fetch all posts for search functionality (limit to 100 for performance)
+    const { posts: allPosts } = await getPosts(1, 100);
 
     // Calculate the range of posts being displayed
     const startPost = (page - 1) * itemsPerPage + 1;
@@ -92,71 +96,71 @@ export default async function BlogPage({
                     </p>
                 </div>
 
-                <BlogControls
-                    itemsPerPage={itemsPerPage}
-                    totalPosts={found}
-                    startPost={startPost}
-                    endPost={endPost}
-                />
+                <BlogPageContent
+                    allPosts={allPosts}
+                    paginatedPosts={posts}
+                    showPagination={totalPages > 1}
+                    controlsComponent={
+                        <BlogControls
+                            itemsPerPage={itemsPerPage}
+                            totalPosts={found}
+                            startPost={startPost}
+                            endPost={endPost}
+                        />
+                    }
+                    paginationComponent={
+                        <div className={styles.pagination}>
+                            {page > 1 ? (
+                                <Link
+                                    href={buildPageUrl(page - 1)}
+                                    className={styles.paginationButton}
+                                >
+                                    &larr; Previous
+                                </Link>
+                            ) : (
+                                <span className={`${styles.paginationButton} ${styles.disabled}`}>
+                                    &larr; Previous
+                                </span>
+                            )}
 
-                <div className={styles.grid}>
-                    {posts.map((post) => (
-                        <BlogCard key={post.ID} post={post} />
-                    ))}
-                </div>
-
-                {totalPages > 1 && (
-                    <div className={styles.pagination}>
-                        {page > 1 ? (
-                            <Link
-                                href={buildPageUrl(page - 1)}
-                                className={styles.paginationButton}
-                            >
-                                &larr; Previous
-                            </Link>
-                        ) : (
-                            <span className={`${styles.paginationButton} ${styles.disabled}`}>
-                                &larr; Previous
-                            </span>
-                        )}
-
-                        <div className={styles.pageNumbers}>
-                            {pageNumbers.map((pageNum, index) => {
-                                if (pageNum === "...") {
+                            <div className={styles.pageNumbers}>
+                                {pageNumbers.map((pageNum, index) => {
+                                    if (pageNum === "...") {
+                                        return (
+                                            <span key={`ellipsis-${index}`} className={styles.ellipsis}>
+                                                ...
+                                            </span>
+                                        );
+                                    }
                                     return (
-                                        <span key={`ellipsis-${index}`} className={styles.ellipsis}>
-                                            ...
-                                        </span>
+                                        <Link
+                                            key={pageNum}
+                                            href={buildPageUrl(pageNum as number)}
+                                            className={`${styles.pageNumber} ${
+                                                page === pageNum ? styles.activePage : ""
+                                            }`}
+                                        >
+                                            {pageNum}
+                                        </Link>
                                     );
-                                }
-                                return (
-                                    <Link
-                                        key={pageNum}
-                                        href={buildPageUrl(pageNum as number)}
-                                        className={`${styles.pageNumber} ${
-                                            page === pageNum ? styles.activePage : ""
-                                        }`}
-                                    >
-                                        {pageNum}
-                                    </Link>
-                                );
-                            })}
-                        </div>
+                                })}
+                            </div>
 
-                        {page < totalPages ? (
-                            <Link
-                                href={buildPageUrl(page + 1)}
-                                className={styles.paginationButton}
-                            >
-                                Next &rarr;
-                            </Link>
-                        ) : (
-                            <span className={`${styles.paginationButton} ${styles.disabled}`}>
-                                Next &rarr;
-                            </span>
-                        )}
-                    </div>
-                )}
+                            {page < totalPages ? (
+                                <Link
+                                    href={buildPageUrl(page + 1)}
+                                    className={styles.paginationButton}
+                                >
+                                    Next &rarr;
+                                </Link>
+                            ) : (
+                                <span className={`${styles.paginationButton} ${styles.disabled}`}>
+                                    Next &rarr;
+                                </span>
+                            )}
+                        </div>
+                    }
+                />
             </div>
             <Footer />
         </main>

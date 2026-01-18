@@ -1,0 +1,119 @@
+.searchContainer {
+  width: 100%;
+}
+
+.searchWrapper {
+  position: relative;
+  margin-bottom: var(--spacing-lg);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-xl);
+  padding-right: 48px;
+  font-size: var(--text-base);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  background-color: var(--white);
+  color: var(--gray-900);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #fa3c4c;
+  box-shadow: 0 0 0 3px rgba(250, 60, 76, 0.1);
+}
+
+.searchInput::placeholder {
+  color: var(--gray-400);
+}
+
+.clearButton {
+  position: absolute;
+  right: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--gray-500);
+  font-size: var(--text-2xl);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  line-height: 1;
+}
+
+.clearButton:hover {
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+}
+
+.resultsInfo {
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.resultsCount {
+  color: var(--gray-600);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+.noResults {
+  color: var(--gray-500);
+  font-size: var(--text-base);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: var(--spacing-2xl);
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .searchInput {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    padding-right: 40px;
+    font-size: var(--text-sm);
+  }
+
+  .clearButton {
+    width: 28px;
+    height: 28px;
+    font-size: var(--text-xl);
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--gray-500);
+}
