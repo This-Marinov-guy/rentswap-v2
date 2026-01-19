@@ -142,7 +142,7 @@ const Features = () => {
                 <div className={styles.earnStep}>
                   <div className={styles.stepIcon}>3</div>
                   <div className={styles.stepText}>
-                    Help them secure the place
+                    Choose the new tenant
                   </div>
                 </div>
                 <div className={styles.earnStep}>
