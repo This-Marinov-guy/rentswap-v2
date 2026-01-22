@@ -320,9 +320,19 @@ export async function POST(request: NextRequest) {
 
     // Send email notification via QStash (fire-and-forget)
     const baseUrl = getBaseUrl();
+    const notificationUrl = `${baseUrl}/api/background/send-notification`;
     
-    await publishQStashJob(
-      `${baseUrl}/api/background/send-notification`,
+    console.log('[Submit Room Searching] Attempting to queue notification', {
+      baseUrl,
+      notificationUrl,
+      hasQStashToken: !!process.env.QSTASH_TOKEN,
+      APP_ENV: process.env.APP_ENV,
+      NODE_ENV: process.env.NODE_ENV,
+      VERCEL_ENV: process.env.VERCEL_ENV,
+    });
+    
+    const qstashResult = await publishQStashJob(
+      notificationUrl,
       {
         type: "room_searching",
         data: {
@@ -342,6 +352,13 @@ export async function POST(request: NextRequest) {
       'send-notification-room-searching'
     ).catch((error) => {
       console.error("[QStash] Failed to queue notification:", error);
+      return { queued: false, executedSynchronously: false };
+    });
+    
+    console.log('[Submit Room Searching] QStash result', {
+      queued: qstashResult?.queued,
+      messageId: qstashResult && 'messageId' in qstashResult ? qstashResult.messageId : undefined,
+      executedSynchronously: qstashResult?.executedSynchronously,
     });
 
     const successResponse = NextResponse.json(

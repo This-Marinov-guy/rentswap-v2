@@ -361,7 +361,6 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
 
   return (
     <>
-      <ToastProvider />
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.form}>

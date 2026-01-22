@@ -544,7 +544,6 @@ export default function SignUpForm() {
 
   return (
     <>
-      <ToastProvider />
       <div className={styles.formWrapper}>
         <form
           onSubmit={mode === "login" ? handleLogin : handleSubmit}

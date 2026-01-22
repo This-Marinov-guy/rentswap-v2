@@ -3,9 +3,20 @@ import { Client } from "@upstash/qstash";
 let qstashClient: Client | null = null;
 
 export function getQStashClient(): Client | null {
+  // Check if we're in production - support multiple environment variable patterns
+  const isProduction = 
+    process.env.APP_ENV === 'prod' ||
+    process.env.APP_ENV === 'production' ||
+    process.env.NODE_ENV === 'production' ||
+    process.env.VERCEL_ENV === 'production';
+  
   // Disable QStash in development
-  if (process.env.APP_ENV !== 'prod') {
-    console.log('[QStash] Disabled - APP_ENV is not "prod"');
+  if (!isProduction) {
+    console.log('[QStash] Disabled - not in production', {
+      APP_ENV: process.env.APP_ENV,
+      NODE_ENV: process.env.NODE_ENV,
+      VERCEL_ENV: process.env.VERCEL_ENV,
+    });
     return null;
   }
 
@@ -24,7 +35,11 @@ export function getQStashClient(): Client | null {
     qstashClient = new Client({
       token,
     });
-    console.log('[QStash] Client initialized successfully');
+    console.log('[QStash] Client initialized successfully', {
+      APP_ENV: process.env.APP_ENV,
+      NODE_ENV: process.env.NODE_ENV,
+      VERCEL_ENV: process.env.VERCEL_ENV,
+    });
     return qstashClient;
   } catch (error) {
     console.error('[QStash] Failed to initialize QStash client:', error);
@@ -32,14 +47,25 @@ export function getQStashClient(): Client | null {
   }
 }
 
-export async function publishQStashJob(url: string, body: Record<string, unknown>, jobType: string): Promise<void> {
+export async function publishQStashJob(
+  url: string, 
+  body: Record<string, unknown>, 
+  jobType: string
+): Promise<{ queued: boolean; messageId?: string; executedSynchronously?: boolean }> {
   const qstash = getQStashClient();
   const jobId = crypto.randomUUID();
   const timestamp = new Date().toISOString();
 
   if (!qstash) {
-    console.log(`[QStash] Skipping job ${jobType} - QStash disabled`);
-    return;
+    console.log(`[QStash] QStash disabled for ${jobType}, will execute synchronously`, {
+      jobId,
+      url,
+      timestamp,
+      APP_ENV: process.env.APP_ENV,
+      NODE_ENV: process.env.NODE_ENV,
+      VERCEL_ENV: process.env.VERCEL_ENV,
+    });
+    return { queued: false, executedSynchronously: true };
   }
 
   try {
@@ -48,6 +74,7 @@ export async function publishQStashJob(url: string, body: Record<string, unknown
       url,
       timestamp,
       bodyKeys: Object.keys(body),
+      baseUrl: getBaseUrl(),
     });
 
     const result = await qstash.publishJSON({
@@ -61,11 +88,14 @@ export async function publishQStashJob(url: string, body: Record<string, unknown
       url,
       timestamp,
     });
+    
+    return { queued: true, messageId: result.messageId };
   } catch (error) {
     console.error(`[QStash] Failed to queue job: ${jobType}`, {
       jobId,
       url,
       error: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined,
       timestamp,
     });
     throw error;

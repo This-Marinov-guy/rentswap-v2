@@ -9,8 +9,7 @@ interface RoomListingData {
   email?: string;
   phone?: string;
 }
-
-interface RoomSearchingData {
+ interface RoomSearchingData {
   name: string;
   surname: string;
   email: string;

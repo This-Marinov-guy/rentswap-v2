@@ -2,6 +2,9 @@
 
 const nextConfig = {
   reactStrictMode: false,
+  experimental: {
+    instrumentationHook: true,
+  },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },

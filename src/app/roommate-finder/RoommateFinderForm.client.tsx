@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import RoomListingForm from "@/components/RoomListingForm";
 import { COUNTRIES } from "@/utils/defines";
 import styles from "./RoommateFinderForm.module.css";
+import toast from "react-hot-toast";
 
 interface PersonalData {
   name: string;
@@ -144,15 +145,18 @@ export default function RoommateFinderForm() {
       email: true,
       phone: true,
     });
-    return Object.keys(newErrors).length === 0;
+    
+    // Show toast for validation errors
+    if (Object.keys(newErrors).length > 0) {
+      const errorMessages = Object.values(newErrors).filter(Boolean);
+      if (errorMessages.length > 0) {
+        toast.error(errorMessages[0] || "Please fix the errors in the form");
+      }
+      return false;
+    }
+    
+    return true;
   };
-
-  const isPersonalDataValid = 
-    personalData.name.trim() !== "" &&
-    personalData.surname.trim() !== "" &&
-    personalData.email.trim() !== "" &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalData.email) &&
-    personalData.phone.trim() !== "";
 
   return (
     <div className={styles.formContainer}>

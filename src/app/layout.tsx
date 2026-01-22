@@ -4,6 +4,7 @@ import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
 import StructuredData from "@/components/StructuredData";
 import Clarity from "@/components/Clarity";
+import ToastProvider from "@/components/common/ToastProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -150,6 +151,7 @@ export default function RootLayout({
         <StructuredData />
         <Clarity />
         {children}
+        <ToastProvider/>
         <CookieBanner />
       </body>
     </html>
