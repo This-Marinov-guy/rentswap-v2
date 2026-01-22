@@ -112,6 +112,10 @@ export class NotificationService {
                 <div class="value">${data.phone}</div>
               </div>
               ` : ''}
+              <div class="field">
+                <div class="label">Quick Link:</div>
+                <a href="https://www.domakin.nl/account/properties-list" target="_blank">Click here to see it</a>
+              </div>
             </div>
           </div>
         </body>
