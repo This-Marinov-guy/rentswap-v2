@@ -60,7 +60,28 @@ export async function logToAxiom(data: Record<string, unknown>): Promise<void> {
   }
 
   try {
-    await client.ingest(dataset, [data]);
+    // Limit fields to avoid Axiom column limit (max 257 columns)
+    // Only include essential fields and stringify complex objects
+    const limitedData: Record<string, unknown> = {
+      requestId: data.requestId,
+      endpoint: data.endpoint,
+      method: data.method,
+      statusCode: data.statusCode,
+      success: data.success,
+      errorType: data.errorType,
+      error: typeof data.error === 'string' ? data.error.substring(0, 500) : data.error,
+      duration: data.duration,
+      timestamp: data.timestamp,
+      type: data.type,
+      // Include additional fields only if they're simple types
+      ...(data.propertyId && { propertyId: data.propertyId }),
+      ...(data.city && typeof data.city === 'string' && { city: data.city }),
+      ...(data.imageCount !== undefined && { imageCount: data.imageCount }),
+      ...(data.errorFields && typeof data.errorFields === 'string' && { errorFields: data.errorFields }),
+      ...(data.errorCount !== undefined && { errorCount: data.errorCount }),
+    };
+
+    await client.ingest(dataset, [limitedData]);
   } catch (error) {
     console.error('[Axiom] Failed to log data:', error);
   }

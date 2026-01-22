@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { v2 as cloudinary } from "cloudinary";
 import { ValidationService } from "@/services/validation.service";
 import { addCorsHeaders, handleOptionsRequest } from "@/utils/cors";
-import { getQStashClient, getBaseUrl } from "@/lib/qstash";
+import { getBaseUrl, publishQStashJob } from "@/lib/qstash";
 
 // Configure Cloudinary from CLOUDINARY_URL env var
 // Format: cloudinary://api_key:api_secret@cloud_name
@@ -319,32 +319,30 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email notification via QStash (fire-and-forget)
-    const qstash = getQStashClient();
     const baseUrl = getBaseUrl();
     
-    if (qstash) {
-      qstash.publishJSON({
-        url: `${baseUrl}/api/background/send-notification`,
-        body: {
-          type: "room_searching",
-          data: {
-            name,
-            surname,
-            email,
-            phone,
-            city,
-            budget,
-            move_in,
-            period,
-            registration: registration || undefined,
-            accommodationType: accommodationType || undefined,
-            peopleToAccommodate: people || undefined,
-          },
+    await publishQStashJob(
+      `${baseUrl}/api/background/send-notification`,
+      {
+        type: "room_searching",
+        data: {
+          name,
+          surname,
+          email,
+          phone,
+          city,
+          budget,
+          move_in,
+          period,
+          registration: registration || undefined,
+          accommodationType: accommodationType || undefined,
+          peopleToAccommodate: people || undefined,
         },
-      }).catch((error) => {
-        console.error("[QStash] Failed to queue notification:", error);
-      });
-    }
+      },
+      'send-notification-room-searching'
+    ).catch((error) => {
+      console.error("[QStash] Failed to queue notification:", error);
+    });
 
     const successResponse = NextResponse.json(
       {

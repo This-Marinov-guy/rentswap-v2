@@ -6,7 +6,7 @@ import { ValidationService } from "@/services/validation.service";
 import { DatabaseService } from "@/services/database.service";
 import { addCorsHeaders, handleOptionsRequest } from "@/utils/cors";
 import { getAxiomLogger } from "@/lib/axiom";
-import { getQStashClient, getBaseUrl } from "@/lib/qstash";
+import { getBaseUrl, publishQStashJob } from "@/lib/qstash";
 
 export async function OPTIONS() {
   return handleOptionsRequest();
@@ -91,28 +91,28 @@ export async function POST(request: NextRequest) {
       }
 
       // Log validation error to Axiom via QStash
-      const qstash = getQStashClient();
       const baseUrl = getBaseUrl();
+      const errorFields = validation.errors ? Object.keys(validation.errors).join(', ') : 'none';
       
-      if (qstash) {
-        qstash.publishJSON({
-          url: `${baseUrl}/api/background/log-to-axiom`,
-          body: {
-            requestId,
-            endpoint: '/api/submit-room-listing',
-            method: 'POST',
-            statusCode: 400,
-            success: false,
-            errorType: 'validation_error',
-            errors: validation.errors,
-            duration: Date.now() - startTime,
-            timestamp: new Date().toISOString(),
-            type: 'room_listing_api',
-          },
-        }).catch((error) => {
-          console.error("[QStash] Failed to queue Axiom log:", error);
-        });
-      }
+      await publishQStashJob(
+        `${baseUrl}/api/background/log-to-axiom`,
+        {
+          requestId,
+          endpoint: '/api/submit-room-listing',
+          method: 'POST',
+          statusCode: 400,
+          success: false,
+          errorType: 'validation_error',
+          errorFields,
+          errorCount: validation.errors ? Object.keys(validation.errors).length : 0,
+          duration: Date.now() - startTime,
+          timestamp: new Date().toISOString(),
+          type: 'room_listing_api',
+        },
+        'axiom-log-validation-error'
+      ).catch((error) => {
+        console.error("[QStash] Failed to queue Axiom log:", error);
+      });
 
       const response = ApiResponseService.sendInvalidFields(validation.errors!, {});
       return addCorsHeaders(response, request.headers.get('origin'));
@@ -182,7 +182,6 @@ export async function POST(request: NextRequest) {
           imageCount: images.length,
           uploadedCount: uploadedImages.length,
           duration: imageUploadDuration,
-          folder: `properties/${folder}`,
           timestamp: new Date().toISOString(),
           type: 'room_listing_image_upload',
         });
@@ -207,7 +206,6 @@ export async function POST(request: NextRequest) {
           requestId,
           propertyId: createdProperty.id,
           city,
-          address,
           duration: dbDuration,
           timestamp: new Date().toISOString(),
           type: 'room_listing_db_create',
@@ -215,30 +213,29 @@ export async function POST(request: NextRequest) {
       }
 
       // Send notification via QStash (fire-and-forget)
-      const qstash = getQStashClient();
       const baseUrl = getBaseUrl();
       
-      if (qstash) {
-        qstash.publishJSON({
-          url: `${baseUrl}/api/background/send-notification`,
-          body: {
-            type: "room_listing",
-            data: {
-              propertyId: createdProperty.id,
-              city: city || 'N/A',
-              address: address || 'N/A',
-              name,
-              surname,
-              email,
-              phone,
-            },
+      await publishQStashJob(
+        `${baseUrl}/api/background/send-notification`,
+        {
+          type: "room_listing",
+          data: {
+            propertyId: createdProperty.id,
+            city: city || 'N/A',
+            address: address || 'N/A',
+            name,
+            surname,
+            email,
+            phone,
           },
-        }).catch((error) => {
-          console.error("[QStash] Failed to queue notification:", error);
-        });
-      }
+        },
+        'send-notification-room-listing'
+      ).catch((error) => {
+        console.error("[QStash] Failed to queue notification:", error);
+      });
 
       const totalDuration = Date.now() - startTime;
+      // Simplified response data to avoid Axiom column limit
       const responseData = {
         requestId,
         endpoint: '/api/submit-room-listing',
@@ -247,28 +244,31 @@ export async function POST(request: NextRequest) {
         success: true,
         propertyId: createdProperty.id,
         city,
-        address,
         imageCount: images.length,
-        imageUploadDuration,
-        dbDuration,
         totalDuration,
         timestamp: new Date().toISOString(),
         type: 'room_listing_api',
       };
 
       // Log success to Axiom via QStash (fire-and-forget)
-      if (qstash) {
-        qstash.publishJSON({
-          url: `${baseUrl}/api/background/log-to-axiom`,
-          body: responseData,
-        }).catch((error) => {
-          console.error("[QStash] Failed to queue Axiom log:", error);
-        });
-      }
+      await publishQStashJob(
+        `${baseUrl}/api/background/log-to-axiom`,
+        responseData,
+        'axiom-log-success'
+      ).catch((error) => {
+        console.error("[QStash] Failed to queue Axiom log:", error);
+      });
 
-      // Log to logger in background
+      // Log to logger in background (simplified to avoid Axiom column limit)
       if (logger) {
-        logger.info('Room listing created successfully', responseData);
+        logger.info('Room listing created successfully', {
+          requestId,
+          propertyId: createdProperty.id,
+          statusCode: 200,
+          success: true,
+          timestamp: new Date().toISOString(),
+          type: 'room_listing_api',
+        });
       }
 
       const successResponse = ApiResponseService.sendSuccess(
@@ -285,35 +285,31 @@ export async function POST(request: NextRequest) {
           : "Failed to create room listing";
 
       // Log error to Axiom via QStash
-      const qstash = getQStashClient();
       const baseUrl = getBaseUrl();
       
-      if (qstash) {
-        qstash.publishJSON({
-          url: `${baseUrl}/api/background/log-to-axiom`,
-          body: {
-            requestId,
-            endpoint: '/api/submit-room-listing',
-            method: 'POST',
-            statusCode: 500,
-            success: false,
-            errorType: 'property_creation_error',
-            error: errorMessage,
-            errorStack: error instanceof Error ? error.stack : undefined,
-            duration: totalDuration,
-            timestamp: new Date().toISOString(),
-            type: 'room_listing_api',
-          },
-        }).catch((error) => {
-          console.error("[QStash] Failed to queue Axiom log:", error);
-        });
-      }
+      await publishQStashJob(
+        `${baseUrl}/api/background/log-to-axiom`,
+        {
+          requestId,
+          endpoint: '/api/submit-room-listing',
+          method: 'POST',
+          statusCode: 500,
+          success: false,
+          errorType: 'property_creation_error',
+          error: errorMessage.substring(0, 500), // Limit error message length
+          duration: totalDuration,
+          timestamp: new Date().toISOString(),
+          type: 'room_listing_api',
+        },
+        'axiom-log-property-error'
+      ).catch((error) => {
+        console.error("[QStash] Failed to queue Axiom log:", error);
+      });
 
       if (logger) {
         logger.error('Property creation error', {
           requestId,
-          error: errorMessage,
-          errorStack: error instanceof Error ? error.stack : undefined,
+          error: errorMessage.substring(0, 500), // Limit error message length
           duration: totalDuration,
           timestamp: new Date().toISOString(),
           type: 'room_listing_error',
@@ -333,35 +329,31 @@ export async function POST(request: NextRequest) {
       error instanceof Error ? error.message : "Internal server error";
 
     // Log API error to Axiom via QStash
-    const qstash = getQStashClient();
     const baseUrl = getBaseUrl();
     
-    if (qstash) {
-      qstash.publishJSON({
-        url: `${baseUrl}/api/background/log-to-axiom`,
-        body: {
-          requestId,
-          endpoint: '/api/submit-room-listing',
-          method: 'POST',
-          statusCode: 500,
-          success: false,
-          errorType: 'api_error',
-          error: errorMessage,
-          errorStack: error instanceof Error ? error.stack : undefined,
-          duration: totalDuration,
-          timestamp: new Date().toISOString(),
-          type: 'room_listing_api',
-        },
-      }).catch((error) => {
-        console.error("[QStash] Failed to queue Axiom log:", error);
-      });
-    }
+    await publishQStashJob(
+      `${baseUrl}/api/background/log-to-axiom`,
+      {
+        requestId,
+        endpoint: '/api/submit-room-listing',
+        method: 'POST',
+        statusCode: 500,
+        success: false,
+        errorType: 'api_error',
+        error: errorMessage.substring(0, 500), // Limit error message length
+        duration: totalDuration,
+        timestamp: new Date().toISOString(),
+        type: 'room_listing_api',
+      },
+      'axiom-log-api-error'
+    ).catch((error) => {
+      console.error("[QStash] Failed to queue Axiom log:", error);
+    });
 
     if (logger) {
       logger.error('API error', {
         requestId,
-        error: errorMessage,
-        errorStack: error instanceof Error ? error.stack : undefined,
+        error: errorMessage.substring(0, 500), // Limit error message length
         duration: totalDuration,
         timestamp: new Date().toISOString(),
         type: 'room_listing_api_error',
