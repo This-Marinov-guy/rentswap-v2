@@ -242,6 +242,7 @@ ${data.peopleToAccommodate ? `People to Accommodate: ${data.peopleToAccommodate}
       process.env.APP_ENV === "dev" &&
       process.env.MAIL_NOTIFICATIONS_ENABLED !== "1"
     ) {
+      console.log('Notification disabled in development');
       return;
     }
 
@@ -262,7 +263,7 @@ ${data.peopleToAccommodate ? `People to Accommodate: ${data.peopleToAccommodate}
       if (!listingData.propertyId || !listingData.city || !listingData.address) {
         return;
       }
-      
+            
       emailContent = this.formatRoomListingEmail(listingData);
     } else {
       emailContent = this.formatRoomSearchingEmail(data as RoomSearchingData);
