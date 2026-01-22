@@ -322,16 +322,7 @@ export async function POST(request: NextRequest) {
     const baseUrl = getBaseUrl();
     const notificationUrl = `${baseUrl}/api/background/send-notification`;
     
-    console.log('[Submit Room Searching] Attempting to queue notification', {
-      baseUrl,
-      notificationUrl,
-      hasQStashToken: !!process.env.QSTASH_TOKEN,
-      APP_ENV: process.env.APP_ENV,
-      NODE_ENV: process.env.NODE_ENV,
-      VERCEL_ENV: process.env.VERCEL_ENV,
-    });
-    
-    const qstashResult = await publishQStashJob(
+    await publishQStashJob(
       notificationUrl,
       {
         type: "room_searching",
@@ -348,17 +339,9 @@ export async function POST(request: NextRequest) {
           accommodationType: accommodationType || undefined,
           peopleToAccommodate: people || undefined,
         },
-      },
-      'send-notification-room-searching'
-    ).catch((error) => {
-      console.error("[QStash] Failed to queue notification:", error);
-      return { queued: false, executedSynchronously: false };
-    });
-    
-    console.log('[Submit Room Searching] QStash result', {
-      queued: qstashResult?.queued,
-      messageId: qstashResult && 'messageId' in qstashResult ? qstashResult.messageId : undefined,
-      executedSynchronously: qstashResult?.executedSynchronously,
+      }
+    ).catch(() => {
+      // Silently fail - notification is non-critical
     });
 
     const successResponse = NextResponse.json(

@@ -108,10 +108,9 @@ export async function POST(request: NextRequest) {
           duration: Date.now() - startTime,
           timestamp: new Date().toISOString(),
           type: 'room_listing_api',
-        },
-        'axiom-log-validation-error'
-      ).catch((error) => {
-        console.error("[QStash] Failed to queue Axiom log:", error);
+        }
+      ).catch(() => {
+        // Silently fail - logging is non-critical
       });
 
       const response = ApiResponseService.sendInvalidFields(validation.errors!, {});
@@ -216,16 +215,7 @@ export async function POST(request: NextRequest) {
       const baseUrl = getBaseUrl();
       const notificationUrl = `${baseUrl}/api/background/send-notification`;
       
-      console.log('[Submit Room Listing] Attempting to queue notification', {
-        baseUrl,
-        notificationUrl,
-        hasQStashToken: !!process.env.QSTASH_TOKEN,
-        APP_ENV: process.env.APP_ENV,
-        NODE_ENV: process.env.NODE_ENV,
-        VERCEL_ENV: process.env.VERCEL_ENV,
-      });
-      
-      const qstashResult = await publishQStashJob(
+      await publishQStashJob(
         notificationUrl,
         {
           type: "room_listing",
@@ -238,17 +228,9 @@ export async function POST(request: NextRequest) {
             email,
             phone,
           },
-        },
-        'send-notification-room-listing'
-      ).catch((error) => {
-        console.error("[QStash] Failed to queue notification:", error);
-        return { queued: false, executedSynchronously: false };
-      });
-      
-      console.log('[Submit Room Listing] QStash result', {
-        queued: qstashResult?.queued,
-        messageId: qstashResult && 'messageId' in qstashResult ? qstashResult.messageId : undefined,
-        executedSynchronously: qstashResult?.executedSynchronously,
+        }
+      ).catch(() => {
+        // Silently fail - notification is non-critical
       });
 
       const totalDuration = Date.now() - startTime;
@@ -270,10 +252,9 @@ export async function POST(request: NextRequest) {
       // Log success to Axiom via QStash (fire-and-forget)
       await publishQStashJob(
         `${baseUrl}/api/background/log-to-axiom`,
-        responseData,
-        'axiom-log-success'
-      ).catch((error) => {
-        console.error("[QStash] Failed to queue Axiom log:", error);
+        responseData
+      ).catch(() => {
+        // Silently fail - logging is non-critical
       });
 
       // Log to logger in background (simplified to avoid Axiom column limit)
@@ -317,10 +298,9 @@ export async function POST(request: NextRequest) {
           duration: totalDuration,
           timestamp: new Date().toISOString(),
           type: 'room_listing_api',
-        },
-        'axiom-log-property-error'
-      ).catch((error) => {
-        console.error("[QStash] Failed to queue Axiom log:", error);
+        }
+      ).catch(() => {
+        // Silently fail - logging is non-critical
       });
 
       if (logger) {
@@ -333,7 +313,6 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      console.error("Property creation error:", error);
       const errorResponse = ApiResponseService.sendError(
         errorMessage,
         "property:create.error"
@@ -361,10 +340,9 @@ export async function POST(request: NextRequest) {
         duration: totalDuration,
         timestamp: new Date().toISOString(),
         type: 'room_listing_api',
-      },
-      'axiom-log-api-error'
-    ).catch((error) => {
-      console.error("[QStash] Failed to queue Axiom log:", error);
+      }
+    ).catch(() => {
+      // Silently fail - logging is non-critical
     });
 
     if (logger) {
@@ -377,7 +355,6 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    console.error("API error:", error);
     const errorResponse = ApiResponseService.sendError(
       errorMessage,
       "account:authentication.errors.general",
