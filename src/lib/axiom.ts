@@ -73,13 +73,24 @@ export async function logToAxiom(data: Record<string, unknown>): Promise<void> {
       duration: data.duration,
       timestamp: data.timestamp,
       type: data.type,
-      // Include additional fields only if they're simple types
-      ...(data.propertyId && { propertyId: data.propertyId }),
-      ...(data.city && typeof data.city === 'string' && { city: data.city }),
-      ...(data.imageCount !== undefined && { imageCount: data.imageCount }),
-      ...(data.errorFields && typeof data.errorFields === 'string' && { errorFields: data.errorFields }),
-      ...(data.errorCount !== undefined && { errorCount: data.errorCount }),
     };
+
+    // Include additional fields only if they're simple types
+    if (data.propertyId) {
+      limitedData.propertyId = data.propertyId;
+    }
+    if (data.city && typeof data.city === 'string') {
+      limitedData.city = data.city;
+    }
+    if (data.imageCount !== undefined) {
+      limitedData.imageCount = data.imageCount;
+    }
+    if (data.errorFields && typeof data.errorFields === 'string') {
+      limitedData.errorFields = data.errorFields;
+    }
+    if (data.errorCount !== undefined) {
+      limitedData.errorCount = data.errorCount;
+    }
 
     await client.ingest(dataset, [limitedData]);
   } catch (error) {
