@@ -204,9 +204,7 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Send notifications (non-blocking but with better error handling)
-      const notificationStart = Date.now();
-      notificationService
+      await notificationService
         .sendNotification("room_listing", {
           propertyId: createdProperty.id,
           city: city || 'N/A',
@@ -215,43 +213,8 @@ export async function POST(request: NextRequest) {
           surname,
           email,
           phone,
-        })
-        .then(() => {
-          const notificationDuration = Date.now() - notificationStart;
-          console.log("[Room Listing API] Notification sent successfully");
-          
-          if (logger) {
-            logger.info('Notification sent successfully', {
-              requestId,
-              propertyId: createdProperty.id,
-              duration: notificationDuration,
-              timestamp: new Date().toISOString(),
-              type: 'room_listing_notification',
-            });
-          }
-        })
-        .catch((error) => {
-          const notificationDuration = Date.now() - notificationStart;
-          console.error("[Room Listing API] Notification error:", error);
-          
-          if (logger) {
-            logger.error('Notification failed', {
-              requestId,
-              propertyId: createdProperty.id,
-              error: error instanceof Error ? error.message : String(error),
-              errorStack: error instanceof Error ? error.stack : undefined,
-              duration: notificationDuration,
-              timestamp: new Date().toISOString(),
-              type: 'room_listing_notification_error',
-            });
-          }
-
-          if (error instanceof Error) {
-            console.error("[Room Listing API] Error details:", {
-              message: error.message,
-              stack: error.stack,
-            });
-          }
+        }).catch((emailError) => {
+          console.error("Email notification error:", emailError);
         });
 
       const totalDuration = Date.now() - startTime;
