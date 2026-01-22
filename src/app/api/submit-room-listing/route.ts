@@ -4,9 +4,9 @@ import { PropertyService } from "@/services/property.service";
 import { ApiResponseService } from "@/services/api-response.service";
 import { ValidationService } from "@/services/validation.service";
 import { DatabaseService } from "@/services/database.service";
+import { NotificationService } from "@/services/notification.service";
 import { addCorsHeaders, handleOptionsRequest } from "@/utils/cors";
-import { getAxiomLogger } from "@/lib/axiom";
-import { getBaseUrl, publishQStashJob } from "@/lib/qstash";
+import { getAxiomLogger, logToAxiom } from "@/lib/axiom";
 
 export async function OPTIONS() {
   return handleOptionsRequest();
@@ -90,26 +90,22 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Log validation error to Axiom via QStash
-      const baseUrl = getBaseUrl();
+      // Log validation error to Axiom
       const errorFields = validation.errors ? Object.keys(validation.errors).join(', ') : 'none';
       
-      await publishQStashJob(
-        `${baseUrl}/api/background/log-to-axiom`,
-        {
-          requestId,
-          endpoint: '/api/submit-room-listing',
-          method: 'POST',
-          statusCode: 400,
-          success: false,
-          errorType: 'validation_error',
-          errorFields,
-          errorCount: validation.errors ? Object.keys(validation.errors).length : 0,
-          duration: Date.now() - startTime,
-          timestamp: new Date().toISOString(),
-          type: 'room_listing_api',
-        }
-      ).catch(() => {
+      await logToAxiom({
+        requestId,
+        endpoint: '/api/submit-room-listing',
+        method: 'POST',
+        statusCode: 400,
+        success: false,
+        errorType: 'validation_error',
+        errorFields,
+        errorCount: validation.errors ? Object.keys(validation.errors).length : 0,
+        duration: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+        type: 'room_listing_api',
+      }).catch(() => {
         // Silently fail - logging is non-critical
       });
 
@@ -211,23 +207,18 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Send notification via QStash (fire-and-forget)
-      const baseUrl = getBaseUrl();
-      const notificationUrl = `${baseUrl}/api/background/send-notification`;
-      
-      await publishQStashJob(
-        notificationUrl,
+      // Send notification directly
+      const notificationService = new NotificationService();
+      await notificationService.sendNotification(
+        "room_listing",
         {
-          type: "room_listing",
-          data: {
-            propertyId: createdProperty.id,
-            city: city || 'N/A',
-            address: address || 'N/A',
-            name,
-            surname,
-            email,
-            phone,
-          },
+          propertyId: createdProperty.id ?? '-',
+          city: city || 'N/A',
+          address: address || 'N/A',
+          name,
+          surname,
+          email,
+          phone,
         }
       ).catch(() => {
         // Silently fail - notification is non-critical
@@ -249,11 +240,8 @@ export async function POST(request: NextRequest) {
         type: 'room_listing_api',
       };
 
-      // Log success to Axiom via QStash (fire-and-forget)
-      await publishQStashJob(
-        `${baseUrl}/api/background/log-to-axiom`,
-        responseData
-      ).catch(() => {
+      // Log success to Axiom
+      await logToAxiom(responseData).catch(() => {
         // Silently fail - logging is non-critical
       });
 
@@ -282,24 +270,19 @@ export async function POST(request: NextRequest) {
           ? error.message
           : "Failed to create room listing";
 
-      // Log error to Axiom via QStash
-      const baseUrl = getBaseUrl();
-      
-      await publishQStashJob(
-        `${baseUrl}/api/background/log-to-axiom`,
-        {
-          requestId,
-          endpoint: '/api/submit-room-listing',
-          method: 'POST',
-          statusCode: 500,
-          success: false,
-          errorType: 'property_creation_error',
-          error: errorMessage.substring(0, 500), // Limit error message length
-          duration: totalDuration,
-          timestamp: new Date().toISOString(),
-          type: 'room_listing_api',
-        }
-      ).catch(() => {
+      // Log error to Axiom
+      await logToAxiom({
+        requestId,
+        endpoint: '/api/submit-room-listing',
+        method: 'POST',
+        statusCode: 500,
+        success: false,
+        errorType: 'property_creation_error',
+        error: errorMessage.substring(0, 500), // Limit error message length
+        duration: totalDuration,
+        timestamp: new Date().toISOString(),
+        type: 'room_listing_api',
+      }).catch(() => {
         // Silently fail - logging is non-critical
       });
 
@@ -324,24 +307,19 @@ export async function POST(request: NextRequest) {
     const errorMessage =
       error instanceof Error ? error.message : "Internal server error";
 
-    // Log API error to Axiom via QStash
-    const baseUrl = getBaseUrl();
-    
-    await publishQStashJob(
-      `${baseUrl}/api/background/log-to-axiom`,
-      {
-        requestId,
-        endpoint: '/api/submit-room-listing',
-        method: 'POST',
-        statusCode: 500,
-        success: false,
-        errorType: 'api_error',
-        error: errorMessage.substring(0, 500), // Limit error message length
-        duration: totalDuration,
-        timestamp: new Date().toISOString(),
-        type: 'room_listing_api',
-      }
-    ).catch(() => {
+    // Log API error to Axiom
+    await logToAxiom({
+      requestId,
+      endpoint: '/api/submit-room-listing',
+      method: 'POST',
+      statusCode: 500,
+      success: false,
+      errorType: 'api_error',
+      error: errorMessage.substring(0, 500), // Limit error message length
+      duration: totalDuration,
+      timestamp: new Date().toISOString(),
+      type: 'room_listing_api',
+    }).catch(() => {
       // Silently fail - logging is non-critical
     });
 

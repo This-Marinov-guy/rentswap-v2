@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { v2 as cloudinary } from "cloudinary";
 import { ValidationService } from "@/services/validation.service";
+import { NotificationService } from "@/services/notification.service";
 import { addCorsHeaders, handleOptionsRequest } from "@/utils/cors";
-import { getBaseUrl, publishQStashJob } from "@/lib/qstash";
+import { logToAxiom } from "@/lib/axiom";
 
 // Configure Cloudinary from CLOUDINARY_URL env var
 // Format: cloudinary://api_key:api_secret@cloud_name
@@ -58,6 +59,9 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  const requestId = crypto.randomUUID();
+
   try {
     const formData = await request.formData();
 
@@ -98,6 +102,24 @@ export async function POST(request: NextRequest) {
     // Validate data using ValidationService
     const validation = ValidationService.validateRoomSearching(validationData);
     if (!validation.success) {
+      // Log validation error to Axiom
+      const errorFields = validation.errors ? Object.keys(validation.errors).join(', ') : 'none';
+      await logToAxiom({
+        requestId,
+        endpoint: '/api/submit-room-searching',
+        method: 'POST',
+        statusCode: 400,
+        success: false,
+        errorType: 'validation_error',
+        errorFields,
+        errorCount: validation.errors ? Object.keys(validation.errors).length : 0,
+        duration: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+        type: 'room_searching_api',
+      }).catch(() => {
+        // Silently fail - logging is non-critical
+      });
+
       // Convert errors from array format to single message format for compatibility
       const formattedErrors: Record<string, string> = {};
       if (validation.errors) {
@@ -305,6 +327,24 @@ export async function POST(request: NextRequest) {
       } else if (dbError.code === "23505") {
         errorMessage = "A record with this information already exists.";
       }
+
+      // Log database error to Axiom
+      const totalDuration = Date.now() - startTime;
+      await logToAxiom({
+        requestId,
+        endpoint: '/api/submit-room-searching',
+        method: 'POST',
+        statusCode: 500,
+        success: false,
+        errorType: 'database_error',
+        error: errorMessage.substring(0, 500), // Limit error message length
+        errorCode: dbError.code,
+        duration: totalDuration,
+        timestamp: new Date().toISOString(),
+        type: 'room_searching_api',
+      }).catch(() => {
+        // Silently fail - logging is non-critical
+      });
       
       const errorResponse = NextResponse.json(
         {
@@ -318,30 +358,44 @@ export async function POST(request: NextRequest) {
       return addCorsHeaders(errorResponse, request.headers.get('origin'));
     }
 
-    // Send email notification via QStash (fire-and-forget)
-    const baseUrl = getBaseUrl();
-    const notificationUrl = `${baseUrl}/api/background/send-notification`;
-    
-    await publishQStashJob(
-      notificationUrl,
+    // Send email notification directly
+    const notificationService = new NotificationService();
+    await notificationService.sendNotification(
+      "room_searching",
       {
-        type: "room_searching",
-        data: {
-          name,
-          surname,
-          email,
-          phone,
-          city,
-          budget,
-          move_in,
-          period,
-          registration: registration || undefined,
-          accommodationType: accommodationType || undefined,
-          peopleToAccommodate: people || undefined,
-        },
+        name,
+        surname,
+        email,
+        phone,
+        city,
+        budget,
+        move_in,
+        period,
+        registration: registration || undefined,
+        accommodationType: accommodationType || undefined,
+        peopleToAccommodate: people || undefined,
       }
     ).catch(() => {
       // Silently fail - notification is non-critical
+    });
+
+    // Log success to Axiom
+    const totalDuration = Date.now() - startTime;
+    const responseData = {
+      requestId,
+      endpoint: '/api/submit-room-searching',
+      method: 'POST',
+      statusCode: 200,
+      success: true,
+      city,
+      budget: parseInt(budget, 10),
+      duration: totalDuration,
+      timestamp: new Date().toISOString(),
+      type: 'room_searching_api',
+    };
+
+    await logToAxiom(responseData).catch(() => {
+      // Silently fail - logging is non-critical
     });
 
     const successResponse = NextResponse.json(
@@ -355,14 +409,33 @@ export async function POST(request: NextRequest) {
     return addCorsHeaders(successResponse, request.headers.get('origin'));
   } catch (error) {
     console.error("Form submission error:", error);
+    const totalDuration = Date.now() - startTime;
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "An unexpected error occurred. Please try again.";
+
+    // Log API error to Axiom
+    await logToAxiom({
+      requestId,
+      endpoint: '/api/submit-room-searching',
+      method: 'POST',
+      statusCode: 500,
+      success: false,
+      errorType: 'api_error',
+      error: errorMessage.substring(0, 500), // Limit error message length
+      duration: totalDuration,
+      timestamp: new Date().toISOString(),
+      type: 'room_searching_api',
+    }).catch(() => {
+      // Silently fail - logging is non-critical
+    });
+
     const errorResponse = NextResponse.json(
       {
         success: false,
         errors: {
-          general:
-            error instanceof Error
-              ? error.message
-              : "An unexpected error occurred. Please try again.",
+          general: errorMessage,
         },
       },
       { status: 500 }
