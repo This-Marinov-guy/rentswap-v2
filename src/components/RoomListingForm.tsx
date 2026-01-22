@@ -6,6 +6,7 @@ import { resizeImage } from "@/utils/imageResizer";
 import styles from "./RoomListingForm.module.css";
 import toast from "react-hot-toast";
 import ToastProvider from "./common/ToastProvider";
+import confetti from "canvas-confetti";
 
 interface RoomListingFormData {
   city: string;
@@ -58,6 +59,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -295,6 +297,38 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       }
 
       toast.success(result.message || "Room listing submitted successfully!");
+      
+      // Trigger confetti from submit button
+      if (submitButtonRef.current) {
+        const rect = submitButtonRef.current.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { x, y },
+          colors: ['#fa3c4c', '#1d3557', '#f9f9f9', '#ffd700'],
+        });
+
+        // Additional burst after a short delay
+        setTimeout(() => {
+          confetti({
+            particleCount: 50,
+            angle: 60,
+            spread: 55,
+            origin: { x, y },
+            colors: ['#fa3c4c', '#1d3557', '#f9f9f9', '#ffd700'],
+          });
+          confetti({
+            particleCount: 50,
+            angle: 120,
+            spread: 55,
+            origin: { x, y },
+            colors: ['#fa3c4c', '#1d3557', '#f9f9f9', '#ffd700'],
+          });
+        }, 250);
+      }
       
       // Reset form
       setFormData({
@@ -682,6 +716,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
             {/* Submit Button */}
             <div className={styles.formActions}>
               <button
+                ref={submitButtonRef}
                 type="button"
                 onClick={handleSubmit}
                 className={styles.submitButton}
