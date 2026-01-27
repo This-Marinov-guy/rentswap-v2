@@ -35,21 +35,21 @@ const whatsappGroups: WhatsAppGroup[] = [
     link: "https://chat.whatsapp.com/BIekcT4fcJuBMAojBux7Nq",
     city: "Amstelveen",
   },
-  {
-    name: "Amsterdam and more place of Netherlands Rooms, Studios, Flats, Apartments, Houses for rent... (FULL)",
-    link: "https://chat.whatsapp.com/BbMxoqsgHNsEIYjYdSn75L",
-    city: "Amsterdam",
-  },
-  {
-    name: "Housing Amsterdam, Rotterdam and Den Haag All in one (FULL)",
-    link: "https://chat.whatsapp.com/HDya5c9l63ZBSmdUQJL2A6",
-    city: "Amsterdam",
-  },
-  {
-    name: "amsterandom",
-    link: "https://chat.whatsapp.com/DheUC0xKTxqHFlCOpZl8lg",
-    city: "Amsterdam",
-  },
+  // {
+  //   name: "Amsterdam and more place of Netherlands Rooms, Studios, Flats, Apartments, Houses for rent... (FULL)",
+  //   link: "https://chat.whatsapp.com/BbMxoqsgHNsEIYjYdSn75L",
+  //   city: "Amsterdam",
+  // },
+  // {
+  //   name: "Housing Amsterdam, Rotterdam and Den Haag All in one (FULL)",
+  //   link: "https://chat.whatsapp.com/HDya5c9l63ZBSmdUQJL2A6",
+  //   city: "Amsterdam",
+  // },
+  // {
+  //   name: "amsterandom",
+  //   link: "https://chat.whatsapp.com/DheUC0xKTxqHFlCOpZl8lg",
+  //   city: "Amsterdam",
+  // },
   {
     name: "Domakin Amsterdam Listings",
     link: "https://chat.whatsapp.com/GNUYUy5OjQvGp0bTjiuoWZ",
@@ -60,26 +60,26 @@ const whatsappGroups: WhatsAppGroup[] = [
     link: "https://chat.whatsapp.com/FZxLE8aQnDDCXqA1vnofrv",
     city: "Amsterdam",
   },
-  {
-    name: "NL Short Term Housing 1",
-    link: "https://chat.whatsapp.com/GH0aplHIQ3rCeaF0dEmrsW",
-    city: "Amsterdam/Rotterdam",
-  },
-  {
-    name: "NL Short Term Housing 2",
-    link: "https://chat.whatsapp.com/IGDxiZehfPZ7Ltz6MYBCmY",
-    city: "Amsterdam/Rotterdam",
-  },
-  {
-    name: "NL Long Term Housing 2",
-    link: "https://chat.whatsapp.com/IGDxiZehfPZ7Ltz6MYBCmY",
-    city: "Amsterdam/Rotterdam",
-  },
-  {
-    name: "NL Long Term Housing 1",
-    link: "https://chat.whatsapp.com/GH0aplHIQ3rCeaF0dEmrsW",
-    city: "Amsterdam/Rotterdam",
-  },
+  // {
+  //   name: "NL Short Term Housing 1",
+  //   link: "https://chat.whatsapp.com/GH0aplHIQ3rCeaF0dEmrsW",
+  //   city: "Amsterdam/Rotterdam",
+  // },
+  // {
+  //   name: "NL Short Term Housing 2",
+  //   link: "https://chat.whatsapp.com/IGDxiZehfPZ7Ltz6MYBCmY",
+  //   city: "Amsterdam/Rotterdam",
+  // },
+  // {
+  //   name: "NL Long Term Housing 2",
+  //   link: "https://chat.whatsapp.com/IGDxiZehfPZ7Ltz6MYBCmY",
+  //   city: "Amsterdam/Rotterdam",
+  // },
+  // {
+  //   name: "NL Long Term Housing 1",
+  //   link: "https://chat.whatsapp.com/GH0aplHIQ3rCeaF0dEmrsW",
+  //   city: "Amsterdam/Rotterdam",
+  // },
   {
     name: "Arnhem Housing Chat | RentSwap",
     link: "https://chat.whatsapp.com/DzKbWx7Tu87GTI1XiHIVnk",
@@ -110,11 +110,11 @@ const whatsappGroups: WhatsAppGroup[] = [
     link: "https://chat.whatsapp.com/D9S939hdT1EJomWkgEEpLz",
     city: "Eindhoven",
   },
-  {
-    name: "Housing Problems - check group info!",
-    link: "https://chat.whatsapp.com/IZtK3OG7YkpBGwSv54Q2ox",
-    city: "Eindhoven",
-  },
+  // {
+  //   name: "Housing Problems - check group info!",
+  //   link: "https://chat.whatsapp.com/IZtK3OG7YkpBGwSv54Q2ox",
+  //   city: "Eindhoven",
+  // },
   {
     name: "Enschede Housing Chat | RentSwap",
     link: "https://chat.whatsapp.com/Elk3wlL3tiXLXdsfiOaRCs",
@@ -145,11 +145,11 @@ const whatsappGroups: WhatsAppGroup[] = [
     link: "https://chat.whatsapp.com/FxjjXQE1XEKEb1BS6kXjZ7",
     city: "Leeuwarden",
   },
-  {
-    name: "Room4sublet Leiden 2023 - 2024 🏡",
-    link: "https://chat.whatsapp.com/K9sZ6GQUSBxF5SCvitFLsH",
-    city: "Leiden",
-  },
+  // {
+  //   name: "Room4sublet Leiden 2023 - 2024 🏡",
+  //   link: "https://chat.whatsapp.com/K9sZ6GQUSBxF5SCvitFLsH",
+  //   city: "Leiden",
+  // },
   {
     name: "Leiden Housing Chat | RentSwap",
     link: "https://chat.whatsapp.com/GqRJMQqnoFQCoCrFY2hJmv",
@@ -175,41 +175,41 @@ const whatsappGroups: WhatsAppGroup[] = [
     link: "https://chat.whatsapp.com/HNZApUVPVnUJa6uvV33ZGl",
     city: "Nijmegen",
   },
-  {
-    name: "Rotterdam Internationals",
-    link: "https://linktr.ee/InternationalsNL",
-    city: "Rotterdam",
-  },
+  // {
+  //   name: "Rotterdam Internationals",
+  //   link: "https://linktr.ee/InternationalsNL",
+  //   city: "Rotterdam",
+  // },
   {
     name: "Rotterdam Housing Chat | RentSwap",
     link: "https://chat.whatsapp.com/FDH6QC3CkgWDwpiU3tCjJG",
     city: "Rotterdam",
   },
-  {
-    name: "Housing EUR 2022-2023 🏠",
-    link: "https://chat.whatsapp.com/EY0kCO0otb25dHwm5poJL0w",
-    city: "Rotterdam",
-  },
-  {
-    name: "Shared flats Rdam",
-    link: "https://chat.whatsapp.com/KYwY6GmoYTn7oW18JCuGA",
-    city: "Rotterdam",
-  },
+  // {
+  //   name: "Housing EUR 2022-2023 🏠",
+  //   link: "https://chat.whatsapp.com/EY0kCO0otb25dHwm5poJL0w",
+  //   city: "Rotterdam",
+  // },
+  // {
+  //   name: "Shared flats Rdam",
+  //   link: "https://chat.whatsapp.com/KYwY6GmoYTn7oW18JCuGA",
+  //   city: "Rotterdam",
+  // },
   {
     name: "Domakin Rotterdam Listings",
     link: "https://chat.whatsapp.com/KTlHSYxWNisJ3JiEIZZ65J",
     city: "Rotterdam",
   },
-  {
-    name: "rotterdam house hunters",
-    link: "https://chat.whatsapp.com/KO9bl8lGW16Ga745bWftH9",
-    city: "Rotterdam",
-  },
-  {
-    name: "Secondhand Rotterdam 2023",
-    link: "https://chat.whatsapp.com/LcqSvEFtBcGEmvz7r8KBro",
-    city: "Rotterdam",
-  },
+  // {
+  //   name: "rotterdam house hunters",
+  //   link: "https://chat.whatsapp.com/KO9bl8lGW16Ga745bWftH9",
+  //   city: "Rotterdam",
+  // },
+  // {
+  //   name: "Secondhand Rotterdam 2023",
+  //   link: "https://chat.whatsapp.com/LcqSvEFtBcGEmvz7r8KBro",
+  //   city: "Rotterdam",
+  // },
   {
     name: "The Hague Housing Chat | RentSwap",
     link: "https://chat.whatsapp.com/KfNDW2RFdU88b2d5f83tgu",
@@ -220,11 +220,11 @@ const whatsappGroups: WhatsAppGroup[] = [
     link: "https://chat.whatsapp.com/H3C0aipkjqvBkXrujorHnb",
     city: "Tilburg",
   },
-  {
-    name: "Houses, Apartments, Studios and Rooms in Utrecht, Eindhoven, Lelystad,Tilburg,Groningen and others 🏠",
-    link: "https://chat.whatsapp.com/LwG2JnDtZvxBG3R1JZMQc2",
-    city: "Utrecht",
-  },
+  // {
+  //   name: "Houses, Apartments, Studios and Rooms in Utrecht, Eindhoven, Lelystad,Tilburg,Groningen and others 🏠",
+  //   link: "https://chat.whatsapp.com/LwG2JnDtZvxBG3R1JZMQc2",
+  //   city: "Utrecht",
+  // },
   {
     name: "Utrecht Housing Chat | RentSwap",
     link: "https://chat.whatsapp.com/DDMsK5eXbwHBtJ7tOMCQBQ",
