@@ -233,6 +233,11 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       e.preventDefault();
     }
 
+    // Prevent double submission
+    if (isSubmitting || isResizing) {
+      return;
+    }
+
     if (!validateForm()) {
       toast.error("Please fix the errors in the form");
       return;

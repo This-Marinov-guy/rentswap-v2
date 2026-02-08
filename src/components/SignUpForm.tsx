@@ -323,6 +323,12 @@ export default function SignUpForm() {
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
+
+    // Prevent double submission
+    if (isSubmitting) {
+      return;
+    }
+
     setLoginErrors({});
 
     if (!loginData.email.trim()) {
@@ -389,6 +395,11 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // Prevent double submission
+    if (isSubmitting) {
+      return;
+    }
 
     if (!validateForm()) {
       // Show validation errors as toasts
