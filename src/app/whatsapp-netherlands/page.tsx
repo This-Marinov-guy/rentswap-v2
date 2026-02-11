@@ -249,9 +249,9 @@ export default function WhatsAppNetherlandsPage() {
       <main className={styles.page}>
         <div className={styles.container}>
           <div className={styles.header}>
-            <div className={styles.date}>10 May 2025</div>
+            {/* <div className={styles.date}>10 May 2025</div> */}
             <h1 className={styles.title}>
-              WhatsApp Housing Groups in the Netherlands 2025
+              WhatsApp Housing Groups in the Netherlands {new Date().getFullYear()}
             </h1>
           </div>
 
