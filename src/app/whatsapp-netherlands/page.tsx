@@ -24,6 +24,12 @@ interface WhatsAppGroup {
   city: string;
 }
 
+interface StudentJobWebsite {
+  name: string;
+  link: string;
+  city: string;
+}
+
 const whatsappGroups: WhatsAppGroup[] = [
   {
     name: "Almere Housing Chat | RentSwap",
@@ -242,6 +248,44 @@ const whatsappGroups: WhatsAppGroup[] = [
   },
 ];
 
+const studentJobWebsites: StudentJobWebsite[] = [
+  {
+    name: "Student Jobs Amsterdam",
+    link: "https://studentjobsamsterdam.nl",
+    city: "Amsterdam",
+  },
+  {
+    name: "Student Jobs Groningen",
+    link: "https://studentjobsgroningen.nl",
+    city: "Groningen",
+  },
+  {
+    name: "Student Jobs Rotterdam",
+    link: "https://studentjobsrotterdam.nl",
+    city: "Rotterdam",
+  },
+  {
+    name: "Student Jobs Eindhoven",
+    link: "https://studentjobseindhoven.nl",
+    city: "Eindhoven",
+  },
+  {
+    name: "Student Jobs Delft",
+    link: "https://studentjobsdelft.nl",
+    city: "Delft",
+  },
+  {
+    name: "Student Jobs Enschede",
+    link: "https://studentjobsenschede.nl",
+    city: "Enschede",
+  },
+  {
+    name: "Student Jobs Maastricht",
+    link: "https://studentjobmaastricht.nl",
+    city: "Maastricht",
+  },
+];
+
 export default function WhatsAppNetherlandsPage() {
   return (
     <>
@@ -266,6 +310,29 @@ export default function WhatsAppNetherlandsPage() {
               <a href="mailto:info@rentswap.nl">reach out</a>!
             </p>
           </div>
+
+          <section className={styles.studentJobsBanner} aria-label="Student job websites">
+            <h2 className={styles.studentJobsBannerTitle}>
+              Looking for a part-time job in the Netherlands?
+            </h2>
+            <p className={styles.studentJobsBannerSubtitle}>
+              Visit student job sites by city:
+            </p>
+            <ul className={styles.studentJobsCityList}>
+              {studentJobWebsites.map((site) => (
+                <li key={site.link}>
+                  <a
+                    href={site.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.studentJobsBannerLink}
+                  >
+                    {site.city}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
 
           <div className={styles.tableContainer}>
             <table className={styles.table}>

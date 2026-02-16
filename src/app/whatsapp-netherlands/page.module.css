@@ -136,6 +136,69 @@
   text-decoration: underline;
 }
 
+/* Student jobs panel banner */
+.studentJobsBanner {
+  background: linear-gradient(135deg, #fa3c4c 0%, #d92d3d 50%, #c42535 100%);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  margin-bottom: var(--spacing-3xl);
+  color: var(--white);
+  font-family: var(--font-montserrat);
+  box-shadow: var(--shadow-md);
+}
+
+.studentJobsBannerTitle {
+  font-family: var(--font-gordita);
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 900;
+  margin: 0 0 var(--spacing-sm);
+  color: var(--white);
+  text-align: center;
+}
+
+.studentJobsBannerSubtitle {
+  font-size: 0.95rem;
+  margin: 0 0 var(--spacing-lg);
+  opacity: 0.95;
+  color: var(--white);
+  text-align: center;
+}
+
+.studentJobsCityList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-sm) var(--spacing-lg);
+}
+
+.studentJobsCityList li {
+  margin: 0;
+}
+
+.studentJobsBannerLink {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition:
+    background-color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.studentJobsBannerLink:hover {
+  background: rgba(255, 255, 255, 0.35);
+  color: var(--white);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 768px) {
   .page {
     padding: var(--spacing-xl) 0;
@@ -167,10 +230,17 @@
   .tableCell:last-child {
     min-width: 120px;
   }
+
+  .studentJobsBanner {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .studentJobsCityList {
+    gap: var(--spacing-xs) var(--spacing-md);
+  }
+
+  .studentJobsBannerLink {
+    font-size: 0.875rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
 }
-
-
-
-
-
-
