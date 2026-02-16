@@ -313,7 +313,7 @@ export default function WhatsAppNetherlandsPage() {
 
           <section className={styles.studentJobsBanner} aria-label="Student job websites">
             <h2 className={styles.studentJobsBannerTitle}>
-              Looking for a part-time job in the Netherlands?
+              Looking for a part-time / flexible job in the Netherlands?
             </h2>
             <p className={styles.studentJobsBannerSubtitle}>
               Visit student job sites by city:
