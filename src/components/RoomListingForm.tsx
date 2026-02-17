@@ -22,6 +22,7 @@ interface RoomListingFormData {
   address: string;
   size: string;
   rent: string;
+  deposit: string;
   registration: boolean;
   bills: string;
   flatmates: string;
@@ -63,6 +64,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
     address: "",
     size: "",
     rent: "",
+    deposit: "",
     bills: "",
     flatmates: "",
     period: "",
@@ -295,8 +297,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.postcode.trim()) newErrors.postcode = "Postcode is required";
     if (!formData.size.trim()) newErrors.size = "Size is required";
-    if (!formData.rent.trim()) newErrors.rent = "Rent is required";
-    if (!formData.bills.trim()) newErrors.bills = "Bills is required";
+    if (!formData.rent.trim()) newErrors.rent = "Base rent is required";
     if (!formData.flatmates.trim()) newErrors.flatmates = "Flatmates is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
 
@@ -354,6 +355,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       submitData.append("address", formData.address);
       submitData.append("size", formData.size);
       submitData.append("rent", formData.rent);
+      if (formData.deposit.trim()) submitData.append("deposit", formData.deposit);
       submitData.append("registration", formData.registration ? "true" : "false");
       submitData.append("postcode", formData.postcode);
       submitData.append("pets_allowed", formData.pets_allowed ? "true" : "false");
@@ -434,6 +436,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
         address: "",
         size: "",
         rent: "",
+        deposit: "",
         registration: false,
         bills: "",
         flatmates: "",
@@ -574,16 +577,19 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                 <label htmlFor="size" className={styles.label}>
                   Size <span className={styles.required}>*</span>
                 </label>
-                <input
-                  type="text"
-                  id="size"
-                  name="size"
-                  value={formData.size}
-                  onChange={handleChange}
-                  className={`${styles.input} ${errors.size ? styles.inputError : ""
-                    }`}
-                  placeholder="e.g., 70"
-                />
+                <div className={`${styles.inputGroup} ${errors.size ? styles.inputGroupError : ""}`}>
+                  <input
+                    type="number"
+                    id="size"
+                    name="size"
+                    value={formData.size}
+                    onChange={handleChange}
+                    className={styles.inputGroupInput}
+                    placeholder="e.g., 70"
+                    min="0"
+                  />
+                  <span className={styles.inputGroupText} aria-hidden>m²</span>
+                </div>
                 {errors.size && (
                   <span className={styles.error}>{errors.size}</span>
                 )}
@@ -591,22 +597,66 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
 
               <div className={styles.formGroup}>
                 <label htmlFor="rent" className={styles.label}>
-                  Rent (€) <span className={styles.required}>*</span>
+                  Base rent <span className={styles.required}>*</span>
                 </label>
-                <input
-                  type="number"
-                  id="rent"
-                  name="rent"
-                  value={formData.rent}
-                  onChange={handleChange}
-                  className={`${styles.input} ${errors.rent ? styles.inputError : ""
-                    }`}
-                  placeholder="e.g., 1800"
-                  min="0"
-                />
+                <div className={`${styles.inputGroup} ${errors.rent ? styles.inputGroupError : ""}`}>
+                  <input
+                    type="number"
+                    id="rent"
+                    name="rent"
+                    value={formData.rent}
+                    onChange={handleChange}
+                    className={styles.inputGroupInput}
+                    placeholder="e.g., 1800"
+                    min="0"
+                  />
+                  <span className={styles.inputGroupText} aria-hidden>€</span>
+                </div>
                 {errors.rent && (
                   <span className={styles.error}>{errors.rent}</span>
                 )}
+              </div>
+
+              {/* Bills */}
+              <div className={styles.formGroup}>
+                <label htmlFor="bills" className={styles.label}>
+                  Bills <span className={styles.optional}>(optional)</span>
+                </label>
+                <div className={`${styles.inputGroup} ${errors.bills ? styles.inputGroupError : ""}`}>
+                  <input
+                    type="number"
+                    id="bills"
+                    name="bills"
+                    value={formData.bills}
+                    onChange={handleChange}
+                    className={styles.inputGroupInput}
+                    placeholder="e.g., 100"
+                    min="0"
+                  />
+                  <span className={styles.inputGroupText} aria-hidden>€</span>
+                </div>
+                {errors.bills && (
+                  <span className={styles.error}>{errors.bills}</span>
+                )}
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="deposit" className={styles.label}>
+                  Deposit <span className={styles.optional}>(optional)</span>
+                </label>
+                <div className={styles.inputGroup}>
+                  <input
+                    type="number"
+                    id="deposit"
+                    name="deposit"
+                    value={formData.deposit}
+                    onChange={handleChange}
+                    className={styles.inputGroupInput}
+                    placeholder="e.g., 500"
+                    min="0"
+                  />
+                  <span className={styles.inputGroupText} aria-hidden>€</span>
+                </div>
               </div>
             </div>
 
@@ -724,26 +774,6 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                   }
                 />
               </div>
-            </div>
-
-            {/* Bills */}
-            <div className={styles.formGroup}>
-              <label htmlFor="bills" className={styles.label}>
-                Bills <span className={styles.required}>*</span>
-              </label>
-              <input
-                type="text"
-                id="bills"
-                name="bills"
-                value={formData.bills}
-                onChange={handleChange}
-                className={`${styles.input} ${errors.bills ? styles.inputError : ""
-                  }`}
-                placeholder="e.g., All included"
-              />
-              {errors.bills && (
-                <span className={styles.error}>{errors.bills}</span>
-              )}
             </div>
 
             {/* Flatmates */}

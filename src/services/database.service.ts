@@ -7,11 +7,12 @@ interface PropertyData {
   postcode: string;
   pets_allowed: boolean;
   smoking_allowed: boolean;
-  size: string;
+  size: number;
   period: { en: string };
   title: string | { en: string } | null;
   rent: number;
-  bills: { en: string } | null;
+  deposit?: number | null;
+  bills?: number | null;
   flatmates: { en: string } | null;
   registration: boolean;
   description: { en: string } | null;
@@ -110,7 +111,8 @@ export class DatabaseService {
             period: propertyData.period || null,
             title: propertyData.title ?? null,
             rent: propertyData.rent,
-            bills: propertyData.bills || null,
+            deposit: propertyData.deposit ?? null,
+            bills: propertyData.bills ?? null,
             flatmates: propertyData.flatmates || null,
             registration: propertyData.registration,
             description: propertyData.description,

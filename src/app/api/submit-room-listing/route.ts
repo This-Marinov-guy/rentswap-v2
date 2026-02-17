@@ -45,12 +45,17 @@ export async function POST(request: NextRequest) {
     const city = formData.get("city") as string;
     const address = formData.get("address") as string;
     const postcode = formData.get("postcode") as string;
-    const size = formData.get("size") as string;
-    const rent = formData.get("rent") as string;
+    const sizeRaw = formData.get("size") as string;
+    const size = sizeRaw?.trim() ? parseInt(sizeRaw, 10) || 0 : 0;
+    const rentRaw = formData.get("rent") as string;
+    const rent = rentRaw?.trim() ? parseInt(rentRaw, 10) || 0 : 0;
+    const depositRaw = formData.get("deposit") as string | null;
+    const deposit = depositRaw?.trim() ? parseInt(depositRaw, 10) || null : null;
     const registration = formData.get("registration") === "true";
     const pets_allowed = formData.get("pets_allowed") === "true";
     const smoking_allowed = formData.get("smoking_allowed") === "true";
-    const bills = formData.get("bills") as string;
+    const billsRaw = formData.get("bills") as string | null;
+    const bills = billsRaw?.trim() ? parseInt(billsRaw, 10) || null : null;
     const flatmates = formData.get("flatmates") as string;
     const periodForm = formData.get("period") as string | null;
     const description = formData.get("description") as string;
@@ -80,12 +85,12 @@ export async function POST(request: NextRequest) {
       city,
       address,
       postcode,
-      size,
-      rent,
+      size: sizeRaw,
+      rent: rentRaw,
       registration,
       pets_allowed,
       smoking_allowed,
-      bills,
+      bills: billsRaw ?? "",
       flatmates,
       period: periodForValidation,
       description,
@@ -144,11 +149,12 @@ export async function POST(request: NextRequest) {
       postcode: string;
       pets_allowed: boolean;
       smoking_allowed: boolean;
-      size: string;
+      size: number;
       period: { en: string };
       title: string | null;
       rent: number;
-      bills: { en: string } | null;
+      deposit?: number | null;
+      bills?: number | null;
       flatmates: { en: string } | null;
       registration: boolean;
       description: { en: string } | null;
@@ -172,8 +178,9 @@ export async function POST(request: NextRequest) {
       size,
       period: { en: periodEn },
       title,
-      rent: parseInt(rent, 10) || 0,
-      bills: bills ? { en: bills } : null,
+      rent,
+      deposit: deposit ?? null,
+      bills: bills ?? null,
       flatmates: flatmates ? { en: flatmates } : null,
       registration,
       description: { en: description },

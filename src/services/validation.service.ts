@@ -15,7 +15,7 @@ export const roomListingValidationSchema = z.object({
   registration: z.boolean(),
   pets_allowed: z.boolean(),
   smoking_allowed: z.boolean(),
-  bills: z.string().min(1, 'Bills is required'),
+  bills: z.string().optional(),
   flatmates: z.string().min(1, 'Flatmates is required'),
   period: z.string().min(1, 'Period is required'),
   description: z.string().min(1, 'Description is required'),

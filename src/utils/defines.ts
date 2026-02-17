@@ -304,20 +304,23 @@ export const FURNISHED_TYPES = [
 
 export const AMENITIES_LIST: readonly string[] = [
   "Air Conditioning",
-  "Heating",
-  "Kitchen Appliances",
+  'Washing Machine',
+  'Dishwasher',
+  'Microwave',
+  'Stove',
+  'Oven',
+  'Bike Space',
   "Garage",
   "Parking",
   "Storage Space",
   "Garden",
   "Disabled Access",
-  "Wifi",
-  "Barbeque",
-  "Laundry",
+  "Wi-fi",
+  "BBQ",
 ];
 
 export const SHARED_SPACE_LIST: readonly string[] = [
-  "Bedroom",
+  "Balcony",
   "Kitchen",
   "Bathroom",
   "Toilet",
