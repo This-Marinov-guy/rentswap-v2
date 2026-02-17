@@ -760,7 +760,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                 onChange={handleChange}
                 className={`${styles.input} ${errors.flatmates ? styles.inputError : ""
                   }`}
-                placeholder="e.g., 2"
+                placeholder="e.g. 2 males and 1 female"
               />
               {errors.flatmates && (
                 <span className={styles.error}>{errors.flatmates}</span>

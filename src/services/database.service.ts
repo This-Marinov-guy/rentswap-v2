@@ -1,22 +1,31 @@
 import { createClient } from '@supabase/supabase-js';
 
 interface PropertyData {
+  property_id?: string;
   city: string;
   address: string;
   postcode: string;
   pets_allowed: boolean;
   smoking_allowed: boolean;
   size: string;
-  period: string | { en: string; bg: string; gr: string };
-  rent: string;
-  bills: string | { en: string; bg: string; gr: string };
-  flatmates: string | { en: string; bg: string; gr: string };
+  period: { en: string };
+  title: string | { en: string } | null;
+  rent: number;
+  bills: { en: string } | null;
+  flatmates: { en: string } | null;
   registration: boolean;
-  description: string | { en: string; bg: string; gr: string };
-  title?: string | { en: string; bg: string; gr: string };
-  folder?: string;
+  description: string;
+  folder: string;
   images?: string;
   payment_link?: string | null;
+  type: number | null;
+  furnished_type: number | null;
+  shared_space: string | null;
+  bathrooms: number | null;
+  toilets: number | null;
+  amenities: string | null;
+  available_from: string | null;
+  available_to: string | null;
 }
 
 interface PersonalData {
@@ -99,15 +108,23 @@ export class DatabaseService {
             smoking_allowed: propertyData.smoking_allowed,
             size: propertyData.size,
             period: propertyData.period || null,
-            rent: parseFloat(propertyData.rent) || 0,
+            title: propertyData.title ?? null,
+            rent: propertyData.rent,
             bills: propertyData.bills || null,
             flatmates: propertyData.flatmates || null,
             registration: propertyData.registration,
             description: propertyData.description,
-            title: propertyData.title || null,
             folder: propertyData.folder || null,
             images: propertyData.images || null,
             payment_link: propertyData.payment_link || null,
+            type: propertyData.type,
+            furnished_type: propertyData.furnished_type,
+            shared_space: propertyData.shared_space,
+            bathrooms: propertyData.bathrooms,
+            toilets: propertyData.toilets,
+            amenities: propertyData.amenities,
+            available_from: propertyData.available_from,
+            available_to: propertyData.available_to,
           },
         ])
         .select()
