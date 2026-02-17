@@ -1,12 +1,21 @@
 "use client";
 
-import { useState, useRef, FormEvent } from "react";
-import { CITIES } from "@/utils/defines";
+import { useState, useRef, FormEvent, useMemo } from "react";
+import {
+  CITIES,
+  PROPERTY_TYPES,
+  FURNISHED_TYPES,
+  AMENITIES_LIST,
+  SHARED_SPACE_LIST,
+  getTranslatedEnum,
+} from "@/utils/defines";
 import { resizeImage } from "@/utils/imageResizer";
+import DatePicker from "./DatePicker";
 import styles from "./RoomListingForm.module.css";
 import toast from "react-hot-toast";
-import ToastProvider from "./common/ToastProvider";
 import confetti from "canvas-confetti";
+
+const t = (key: string) => key;
 
 interface RoomListingFormData {
   city: string;
@@ -22,6 +31,18 @@ interface RoomListingFormData {
   postcode: string;
   pets_allowed: boolean;
   smoking_allowed: boolean;
+  type: number;
+  furnishedType: number;
+  bathrooms: number;
+  toilets: number;
+  availableFrom: string;
+  availableTo: string;
+  amenities: number[];
+  sharedSpace: number[];
+  note: string;
+  referralCode: string;
+  termsContact: boolean;
+  termsLegals: boolean;
 }
 
 interface PersonalData {
@@ -51,6 +72,18 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
     registration: true,
     pets_allowed: false,
     smoking_allowed: false,
+    type: 1,
+    furnishedType: 1,
+    bathrooms: 1,
+    toilets: 1,
+    availableFrom: "",
+    availableTo: "",
+    amenities: [],
+    sharedSpace: [],
+    note: "",
+    referralCode: "",
+    termsContact: false,
+    termsLegals: false,
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof RoomListingFormData, string>>>({});
@@ -61,13 +94,61 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+  const propertyTypeOptions = useMemo(
+    () =>
+      PROPERTY_TYPES.map(({ value, text }) => ({
+        value,
+        text: getTranslatedEnum(t, `property.type.${value}`, text),
+      })),
+    []
+  );
+  const furnishedTypeOptions = useMemo(
+    () =>
+      FURNISHED_TYPES.map(({ value, text }) => ({
+        value,
+        text: getTranslatedEnum(t, `property.furnished_type.${value}`, text),
+      })),
+    []
+  );
+  const amenitiesOptions = useMemo(
+    () =>
+      [...AMENITIES_LIST].map((label, id) => ({ id, label })).sort((a, b) => a.label.localeCompare(b.label)),
+    []
+  );
+  const sharedSpaceOptions = useMemo(
+    () => SHARED_SPACE_LIST.map((label, id) => ({ id, label })),
+    []
+  );
+
+  const toggleAmenity = (id: number) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      amenities: prev.amenities.includes(id)
+        ? prev.amenities.filter((x) => x !== id).sort((a, b) => a - b)
+        : [...prev.amenities, id].sort((a, b) => a - b),
     }));
-    // Clear error for this field
+  };
+  const toggleSharedSpace = (id: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      sharedSpace: prev.sharedSpace.includes(id)
+        ? prev.sharedSpace.filter((x) => x !== id).sort((a, b) => a - b)
+        : [...prev.sharedSpace, id].sort((a, b) => a - b),
+    }));
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    const numKeys: (keyof RoomListingFormData)[] = ["type", "furnishedType", "bathrooms", "toilets"];
+    const nextValue = numKeys.includes(name as keyof RoomListingFormData)
+      ? (name === "bathrooms" || name === "toilets"
+        ? Math.max(1, Math.floor(Number(value)) || 1)
+        : Number(value) || 1)
+      : value;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: nextValue,
+    }));
     if (errors[name as keyof RoomListingFormData]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -219,10 +300,11 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
     if (!formData.flatmates.trim()) newErrors.flatmates = "Flatmates is required";
     if (!formData.period.trim()) newErrors.period = "Period is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
-    
+
     // Images validation
     if (formData.images.length < 3) newErrors.images = "At least 3 images are required";
     if (formData.images.length > 10) newErrors.images = "Maximum 10 images allowed";
+    if (!formData.termsLegals) newErrors.termsLegals = "You must accept the terms";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -278,7 +360,19 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       submitData.append("pets_allowed", formData.pets_allowed ? "true" : "false");
       submitData.append("smoking_allowed", formData.smoking_allowed ? "true" : "false");
 
-      // Add JSON fields
+      submitData.append("type", String(formData.type));
+      submitData.append("furnished_type", String(formData.furnishedType));
+      submitData.append("bathrooms", String(formData.bathrooms));
+      submitData.append("toilets", String(formData.toilets));
+      if (formData.availableFrom) submitData.append("available_from", formData.availableFrom);
+      if (formData.availableTo) submitData.append("available_to", formData.availableTo);
+      formData.amenities.forEach((id) => submitData.append("amenities[]", String(id)));
+      formData.sharedSpace.forEach((id) => submitData.append("shared_space[]", String(id)));
+      if (formData.note.trim()) submitData.append("note", formData.note);
+      if (formData.referralCode.trim()) submitData.append("referral_code", formData.referralCode);
+      submitData.append("terms_contact", formData.termsContact ? "true" : "false");
+      submitData.append("terms_legals", formData.termsLegals ? "true" : "false");
+
       if (formData.bills.trim()) submitData.append("bills", formData.bills);
       if (formData.flatmates.trim()) submitData.append("flatmates", formData.flatmates);
       if (formData.period.trim()) submitData.append("period", formData.period);
@@ -302,7 +396,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       }
 
       toast.success(result.message || "Room listing submitted successfully!");
-      
+
       // Trigger confetti from submit button
       if (submitButtonRef.current) {
         const rect = submitButtonRef.current.getBoundingClientRect();
@@ -334,7 +428,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
           });
         }, 250);
       }
-      
+
       // Reset form
       setFormData({
         city: "",
@@ -350,8 +444,20 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
         postcode: "",
         pets_allowed: false,
         smoking_allowed: false,
+        type: 1,
+        furnishedType: 1,
+        bathrooms: 1,
+        toilets: 1,
+        availableFrom: "",
+        availableTo: "",
+        amenities: [],
+        sharedSpace: [],
+        note: "",
+        referralCode: "",
+        termsContact: false,
+        termsLegals: false,
       });
-      
+
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -369,30 +475,56 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.form}>
-            {/* City */}
-            <div className={styles.formGroup}>
-              <label htmlFor="city" className={styles.label}>
-                City <span className={styles.required}>*</span>
-              </label>
-              <select
-                id="city"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                className={`${styles.input} ${styles.select} ${
-                  errors.city ? styles.inputError : ""
-                }`}
-              >
-                <option value="">Select a city</option>
-                {CITIES.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
-              {errors.city && (
-                <span className={styles.error}>{errors.city}</span>
-              )}
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label htmlFor="type" className={styles.label}>Property type</label>
+                <select
+                  id="type"
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  className={`${styles.input} ${styles.select}`}
+                >
+                  {propertyTypeOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.text}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label htmlFor="city" className={styles.label}>
+                  City <span className={styles.required}>*</span>
+                </label>
+                <select
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className={`${styles.input} ${styles.select} ${errors.city ? styles.inputError : ""}`}
+                >
+                  <option value="">Select a city</option>
+                  {CITIES.map((city) => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
+                {errors.city && <span className={styles.error}>{errors.city}</span>}
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="furnishedType" className={styles.label}>Furnished</label>
+                <select
+                  id="furnishedType"
+                  name="furnishedType"
+                  value={formData.furnishedType}
+                  onChange={handleChange}
+                  className={`${styles.input} ${styles.select}`}
+                >
+                  {furnishedTypeOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.text}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Address and Postcode Row */}
@@ -407,11 +539,11 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  className={`${styles.input} ${
-                    errors.address ? styles.inputError : ""
-                  }`}
+                  className={`${styles.input} ${errors.address ? styles.inputError : ""
+                    }`}
                   placeholder="e.g., Randweg 118A"
                 />
+                <small className={styles.hint}>Precise address will not be shared to the public</small>
                 {errors.address && (
                   <span className={styles.error}>{errors.address}</span>
                 )}
@@ -427,11 +559,10 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                   name="postcode"
                   value={formData.postcode}
                   onChange={handleChange}
-                  className={`${styles.input} ${
-                    errors.postcode ? styles.inputError : ""
-                  }`}
+                  className={`${styles.input} ${errors.postcode ? styles.inputError : ""}`}
                   placeholder="e.g., 1234 AB"
                 />
+                <small className={styles.hint}>Postcode will not be shared to the public</small>
                 {errors.postcode && (
                   <span className={styles.error}>{errors.postcode}</span>
                 )}
@@ -450,9 +581,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                   name="size"
                   value={formData.size}
                   onChange={handleChange}
-                  className={`${styles.input} ${
-                    errors.size ? styles.inputError : ""
-                  }`}
+                  className={`${styles.input} ${errors.size ? styles.inputError : ""
+                    }`}
                   placeholder="e.g., 70"
                 />
                 {errors.size && (
@@ -470,9 +600,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                   name="rent"
                   value={formData.rent}
                   onChange={handleChange}
-                  className={`${styles.input} ${
-                    errors.rent ? styles.inputError : ""
-                  }`}
+                  className={`${styles.input} ${errors.rent ? styles.inputError : ""
+                    }`}
                   placeholder="e.g., 1800"
                   min="0"
                 />
@@ -482,78 +611,119 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
               </div>
             </div>
 
-            {/* Registration Toggle */}
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Registration Required</label>
-              <div className={styles.toggleGroup}>
-                <button
-                  type="button"
-                  className={`${styles.toggleButton} ${
-                    formData.registration ? styles.toggleActive : ""
-                  }`}
-                  onClick={() => handleToggle("registration")}
-                >
-                  Yes
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.toggleButton} ${
-                    !formData.registration ? styles.toggleActive : ""
-                  }`}
-                  onClick={() => handleToggle("registration")}
-                >
-                  No
-                </button>
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label htmlFor="bathrooms" className={styles.label}>Bathrooms</label>
+                <input
+                  type="number"
+                  id="bathrooms"
+                  name="bathrooms"
+                  min={1}
+                  value={formData.bathrooms}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="toilets" className={styles.label}>Toilets</label>
+                <input
+                  type="number"
+                  id="toilets"
+                  name="toilets"
+                  min={1}
+                  value={formData.toilets}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
               </div>
             </div>
 
-            {/* Pets Allowed Toggle */}
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Pets Allowed</label>
-              <div className={styles.toggleGroup}>
-                <button
-                  type="button"
-                  className={`${styles.toggleButton} ${
-                    formData.pets_allowed ? styles.toggleActive : ""
-                  }`}
-                  onClick={() => handleToggle("pets_allowed")}
-                >
-                  Yes
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.toggleButton} ${
-                    !formData.pets_allowed ? styles.toggleActive : ""
-                  }`}
-                  onClick={() => handleToggle("pets_allowed")}
-                >
-                  No
-                </button>
+            <div className={styles.switchesRow}>
+              <div className={styles.switchItem}>
+                <label htmlFor="registration-switch" className={styles.switchLabel}>
+                  Registration required
+                </label>
+                <div className={styles.switchControl}>
+                  <input
+                    type="checkbox"
+                    id="registration-switch"
+                    role="switch"
+                    checked={formData.registration}
+                    onChange={() => handleToggle("registration")}
+                    className={styles.switchInput}
+                  />
+                  <span className={styles.switchStatus}>
+                    {formData.registration ? "Yes" : "No"}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.switchItem}>
+                <label htmlFor="pets-allowed-switch" className={styles.switchLabel}>
+                  Pets allowed
+                </label>
+                <div className={styles.switchControl}>
+                  <input
+                    type="checkbox"
+                    id="pets-allowed-switch"
+                    role="switch"
+                    checked={formData.pets_allowed}
+                    onChange={() => handleToggle("pets_allowed")}
+                    className={styles.switchInput}
+                  />
+                  <span className={styles.switchStatus}>
+                    {formData.pets_allowed ? "Yes" : "No"}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.switchItem}>
+                <label htmlFor="smoking-allowed-switch" className={styles.switchLabel}>
+                  Smoking allowed
+                </label>
+                <div className={styles.switchControl}>
+                  <input
+                    type="checkbox"
+                    id="smoking-allowed-switch"
+                    role="switch"
+                    checked={formData.smoking_allowed}
+                    onChange={() => handleToggle("smoking_allowed")}
+                    className={styles.switchInput}
+                  />
+                  <span className={styles.switchStatus}>
+                    {formData.smoking_allowed ? "Yes" : "No"}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Smoking Allowed Toggle */}
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Smoking Allowed</label>
-              <div className={styles.toggleGroup}>
-                <button
-                  type="button"
-                  className={`${styles.toggleButton} ${
-                    formData.smoking_allowed ? styles.toggleActive : ""
-                  }`}
-                  onClick={() => handleToggle("smoking_allowed")}
-                >
-                  Yes
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.toggleButton} ${
-                    !formData.smoking_allowed ? styles.toggleActive : ""
-                  }`}
-                  onClick={() => handleToggle("smoking_allowed")}
-                >
-                  No
-                </button>
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <DatePicker
+                  id="availableFrom"
+                  name="availableFrom"
+                  label="Available from"
+                  value={formData.availableFrom}
+                  onChange={(value) =>
+                    setFormData((prev) => ({ ...prev, availableFrom: value }))
+                  }
+                  placeholder="Select start date"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <DatePicker
+                  id="availableTo"
+                  name="availableTo"
+                  label="Available to"
+                  value={formData.availableTo}
+                  onChange={(value) =>
+                    setFormData((prev) => ({ ...prev, availableTo: value }))
+                  }
+                  placeholder="Select end date"
+                  minDate={
+                    formData.availableFrom
+                      ? new Date(formData.availableFrom + "T12:00:00")
+                      : undefined
+                  }
+                />
               </div>
             </div>
 
@@ -568,9 +738,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                 name="bills"
                 value={formData.bills}
                 onChange={handleChange}
-                className={`${styles.input} ${
-                  errors.bills ? styles.inputError : ""
-                }`}
+                className={`${styles.input} ${errors.bills ? styles.inputError : ""
+                  }`}
                 placeholder="e.g., All included"
               />
               {errors.bills && (
@@ -589,9 +758,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                 name="flatmates"
                 value={formData.flatmates}
                 onChange={handleChange}
-                className={`${styles.input} ${
-                  errors.flatmates ? styles.inputError : ""
-                }`}
+                className={`${styles.input} ${errors.flatmates ? styles.inputError : ""
+                  }`}
                 placeholder="e.g., 2"
               />
               {errors.flatmates && (
@@ -599,25 +767,42 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
               )}
             </div>
 
-            {/* Period */}
-            <div className={styles.formGroup}>
-              <label htmlFor="period" className={styles.label}>
-                Period <span className={styles.required}>*</span>
-              </label>
-              <input
-                type="text"
-                id="period"
-                name="period"
-                value={formData.period}
-                onChange={handleChange}
-                className={`${styles.input} ${
-                  errors.period ? styles.inputError : ""
-                }`}
-                placeholder="e.g., July-December"
-              />
-              {errors.period && (
-                <span className={styles.error}>{errors.period}</span>
-              )}
+            <div className={`${styles.formGroup} ${errors.amenities ? styles.checkboxGroupError : ""}`}>
+              <label className={styles.label}>Amenities</label>
+              <small className={styles.hint}>Select all that apply</small>
+              <div className={styles.checkboxGrid}>
+                {amenitiesOptions.map(({ id, label }) => (
+                  <label key={id} className={styles.checkboxCard}>
+                    <input
+                      type="checkbox"
+                      checked={formData.amenities.includes(id)}
+                      onChange={() => toggleAmenity(id)}
+                      className={styles.checkboxInput}
+                    />
+                    <span className={styles.checkboxCardLabel}>{label}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.amenities && <span className={styles.error}>{errors.amenities}</span>}
+            </div>
+
+            <div className={`${styles.formGroup} ${errors.sharedSpace ? styles.checkboxGroupError : ""}`}>
+              <label className={styles.label}>Shared space</label>
+              <small className={styles.hint}>Select all that apply</small>
+              <div className={styles.checkboxGrid}>
+                {sharedSpaceOptions.map(({ id, label }) => (
+                  <label key={id} className={styles.checkboxCard}>
+                    <input
+                      type="checkbox"
+                      checked={formData.sharedSpace.includes(id)}
+                      onChange={() => toggleSharedSpace(id)}
+                      className={styles.checkboxInput}
+                    />
+                    <span className={styles.checkboxCardLabel}>{label}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.sharedSpace && <span className={styles.error}>{errors.sharedSpace}</span>}
             </div>
 
             {/* Description */}
@@ -631,15 +816,43 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                className={`${styles.input} ${
-                  errors.description ? styles.inputError : ""
-                }`}
+                className={`${styles.input} ${errors.description ? styles.inputError : ""
+                  }`}
                 placeholder="e.g., Spacious living room and fully furnished"
               />
+              <small className={styles.hint}>Describe the property</small>
               {errors.description && (
                 <span className={styles.error}>{errors.description}</span>
               )}
             </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="referralCode" className={styles.label}>Referral code</label>
+              <input
+                type="text"
+                id="referralCode"
+                name="referralCode"
+                value={formData.referralCode}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="note" className={styles.label}>Note</label>
+              <textarea
+                id="note"
+                name="note"
+                rows={2}
+                value={formData.note}
+                onChange={handleChange}
+                className={styles.input}
+                placeholder="Optional note"
+              />
+            </div>
+
+            <h3 className={styles.subsectionTitle}>Property images</h3>
+            <small className={styles.hint}>* Min 3, max 10. JPG, PNG, WebP, HEIC, or video.</small>
 
             {/* Images */}
             <div className={styles.formGroup}>
@@ -648,9 +861,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
               </label>
               <div
                 ref={dropZoneRef}
-                className={`${styles.dropZone} ${
-                  isDragging ? styles.dropZoneActive : ""
-                }`}
+                className={`${styles.dropZone} ${isDragging ? styles.dropZoneActive : ""
+                  }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -717,6 +929,36 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
               )}
             </div>
 
+            <div className={styles.formGroup}>
+              <label className={styles.termsRow}>
+                <input
+                  type="checkbox"
+                  checked={formData.termsContact}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, termsContact: e.target.checked }))}
+                  className={styles.checkboxInput}
+                />
+                <span>I agree to be contacted about this listing.</span>
+              </label>
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.termsRow}>
+                <input
+                  type="checkbox"
+                  checked={formData.termsLegals}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, termsLegals: e.target.checked }))}
+                  className={styles.checkboxInput}
+                />
+                <span>
+                  I accept the{" "}
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" className={styles.termsLink}>
+                    terms and policy
+                  </a>
+                  . <span className={styles.required}>*</span>
+                </span>
+              </label>
+              {errors.termsLegals && <span className={styles.error}>{errors.termsLegals}</span>}
+            </div>
+
             {/* Submit Button */}
             <div className={styles.formActions}>
               <button
@@ -729,8 +971,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                 {isSubmitting
                   ? "Submitting..."
                   : isResizing
-                  ? "Processing images..."
-                  : "Submit Listing"}
+                    ? "Processing images..."
+                    : "Submit Listing"}
               </button>
             </div>
           </div>

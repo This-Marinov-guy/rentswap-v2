@@ -273,3 +273,92 @@ export const CITIES = [
   "Venlo",
 ];
 
+// Property type: 0 unused, 1–4 used
+export const PROPERTY_TYPE_LABELS: readonly (string | undefined)[] = [
+  undefined, // 0 unused
+  "Room in a shared apartment",
+  "Studio",
+  "Entire place",
+  "Student house",
+];
+
+export const FURNISHED_TYPE_LABELS: readonly (string | undefined)[] = [
+  undefined, // 0 unused
+  "Fully furnished",
+  "Semi-furnished",
+  "None",
+];
+
+export const PROPERTY_TYPES = [
+  { value: 1, text: "Room in a shared apartment" },
+  { value: 2, text: "Studio" },
+  { value: 3, text: "Entire place" },
+  { value: 4, text: "Student house" },
+];
+
+export const FURNISHED_TYPES = [
+  { value: 1, text: "Fully furnished" },
+  { value: 2, text: "Semi-furnished" },
+  { value: 3, text: "None" },
+];
+
+export const AMENITIES_LIST: readonly string[] = [
+  "A/C & Heating",
+  "Garages",
+  "Swimming Pool",
+  "Parking",
+  "Lake View",
+  "Garden",
+  "Disabled Access",
+  "Pet Friendly",
+  "Ceiling Height",
+  "Outdoor Shower",
+  "Refrigerator",
+  "Fireplace",
+  "Wifi",
+  "TV Cable",
+  "Barbeque",
+  "Laundry",
+  "Dryer",
+  "Lawn",
+  "Elevator",
+];
+
+export const SHARED_SPACE_LIST: readonly string[] = [
+  "Bedroom",
+  "Kitchen",
+  "Bathroom",
+  "Toilet",
+  "Storage space",
+  "Living room",
+];
+
+export function getPropertyTypeLabelKey(value: number): string {
+  return `property.type.${value}`;
+}
+
+export function getFurnishedTypeLabelKey(value: number): string {
+  return `property.furnished_type.${value}`;
+}
+
+export function getAmenityLabel(index: number): string {
+  return AMENITIES_LIST[index] ?? "";
+}
+
+export function getAmenityLabelKey(index: number): string {
+  return `property.amenity.${index}`;
+}
+
+export function getSharedSpaceLabel(index: number): string {
+  return SHARED_SPACE_LIST[index] ?? "";
+}
+
+export function getSharedSpaceLabelKey(index: number): string {
+  return `property.shared_space.${index}`;
+}
+
+/** Use when no i18n: returns fallback text. Can be replaced with t(key) when translations exist. */
+export function getTranslatedEnum(_t: (key: string) => string, _key: string, fallback: string): string {
+  return fallback;
+}
+

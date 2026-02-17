@@ -5,9 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import styles from "@/app/sign-up/page.module.css";
 import RoomListingForm from "./RoomListingForm";
-import { DayPicker } from "react-day-picker";
-import { format } from "date-fns";
-import "react-day-picker/dist/style.css";
+import DatePicker from "./DatePicker";
 import { COUNTRIES, CITIES } from "@/utils/defines";
 import toast from "react-hot-toast";
 import ToastProvider from "./common/ToastProvider";
@@ -100,13 +98,6 @@ export default function SignUpForm() {
   const [countrySearchQuery, setCountrySearchQuery] = useState("");
   const countryDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Date picker state
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const datePickerRef = useRef<HTMLDivElement>(null);
-  const selectedDate = formData.moveInDate
-    ? new Date(formData.moveInDate)
-    : undefined;
-
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -116,12 +107,6 @@ export default function SignUpForm() {
       ) {
         setIsCountryDropdownOpen(false);
         setCountrySearchQuery("");
-      }
-      if (
-        datePickerRef.current &&
-        !datePickerRef.current.contains(event.target as Node)
-      ) {
-        setIsDatePickerOpen(false);
       }
     };
 
@@ -954,64 +939,24 @@ export default function SignUpForm() {
                   </div>
 
                   <div className={styles.formGroup}>
-                    <label htmlFor="moveInDate" className={styles.label}>
-                      Move in date <span className={styles.required}>*</span>
-                    </label>
-                    <div
-                      ref={datePickerRef}
-                      className={styles.datePickerWrapper}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-                        className={`${styles.datePickerInput} ${
-                          errors.moveInDate ? styles.inputError : ""
-                        }`}
-                      >
-                        {selectedDate
-                          ? format(selectedDate, "yyyy-MM-dd")
-                          : "Select move-in date"}
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          className={styles.calendarIcon}
-                        >
-                          <path
-                            d="M12 2.5H4C2.62 2.5 1.5 3.62 1.5 5v7c0 1.38 1.12 2.5 2.5 2.5h8c1.38 0 2.5-1.12 2.5-2.5V5c0-1.38-1.12-2.5-2.5-2.5zM4 4h8c.55 0 1 .45 1 1v1H3V5c0-.55.45-1 1-1zm8 8H4c-.55 0-1-.45-1-1V7.5h10V11c0 .55-.45 1-1 1z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </button>
-                      {isDatePickerOpen && (
-                        <div className={styles.datePickerPopup}>
-                          <DayPicker
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={(date) => {
-                              if (date) {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  moveInDate: format(date, "yyyy-MM-dd"),
-                                }));
-                                setIsDatePickerOpen(false);
-                                if (errors.moveInDate) {
-                                  setErrors((prev) => ({
-                                    ...prev,
-                                    moveInDate: "",
-                                  }));
-                                }
-                              }
-                            }}
-                            className={styles.dayPicker}
-                          />
-                        </div>
-                      )}
-                    </div>
-                    {errors.moveInDate && (
-                      <span className={styles.error}>{errors.moveInDate}</span>
-                    )}
+                    <DatePicker
+                      id="moveInDate"
+                      name="moveInDate"
+                      label={
+                        <>
+                          Move in date <span className={styles.required}>*</span>
+                        </>
+                      }
+                      value={formData.moveInDate}
+                      onChange={(value) => {
+                        setFormData((prev) => ({ ...prev, moveInDate: value }));
+                        if (errors.moveInDate) {
+                          setErrors((prev) => ({ ...prev, moveInDate: "" }));
+                        }
+                      }}
+                      placeholder="Select move-in date"
+                      error={errors.moveInDate}
+                    />
                   </div>
 
                   <div className={styles.formGroup}>

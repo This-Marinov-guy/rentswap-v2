@@ -94,6 +94,7 @@
 
 .signUpButton:hover {
   background-color: #FF5A8A;
+  color: var(--white);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }

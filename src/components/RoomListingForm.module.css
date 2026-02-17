@@ -45,6 +45,34 @@
   gap: var(--spacing-lg);
 }
 
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0 0 var(--spacing-md);
+  padding-bottom: var(--spacing-xs);
+}
+
+.sectionNote {
+  font-size: 0.95rem;
+  color: var(--gray-600);
+  margin: 0 0 var(--spacing-lg);
+}
+
+.subsectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin: var(--spacing-lg) 0 var(--spacing-sm);
+}
+
+.hint {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  margin-top: var(--spacing-xs);
+}
+
 .formGroup {
   display: flex;
   flex-direction: column;
@@ -131,34 +159,158 @@
   margin-top: var(--spacing-xs);
 }
 
-.toggleGroup {
+/* Switch row (registration, pets, smoking) */
+.switchesRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+}
+
+.switchItem {
+  padding: var(--spacing-md);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.switchItem:hover {
+  border-color: rgba(250, 60, 76, 0.3);
+  box-shadow: 0 2px 8px rgba(250, 60, 76, 0.08);
+}
+
+.switchLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  margin-bottom: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.switchControl {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.switchInput {
+  width: 3rem;
+  height: 1.5rem;
+  accent-color: #fa3c4c;
+  cursor: pointer;
+  border: none !important;
+  outline: none;
+  box-shadow: none;
+}
+.switchInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.switchStatus {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+/* Checkbox grid (amenities, shared space) */
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.checkboxCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    background var(--transition-base);
+  min-height: 48px;
+  text-align: center;
+}
+
+.checkboxCard:hover {
+  border-color: var(--primary-blue);
+  background: #fa3c4c;
+}
+
+.checkboxInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  outline: none;
+  box-shadow: none;
+}
+.checkboxInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.checkboxCard:has(.checkboxInput:checked) {
+  border-color: var(--primary-blue);
+  background: #fa3c4c;
+}
+
+.checkboxCardLabel {
+  font-size: 0.8rem;
+  color: var(--gray-800);
+  font-weight: 500;
+}
+
+.checkboxGroupError {
+  padding: var(--spacing-sm);
+  border: 1px solid var(--error-red);
+  border-radius: var(--radius-md);
+}
+
+/* Terms row: inline checkbox + label */
+.termsRow {
   display: flex;
   gap: var(--spacing-sm);
-}
-
-.toggleButton {
-  flex: 1;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: 2px solid var(--gray-300);
-  border-radius: var(--radius-md);
-  background: var(--white);
+  align-items: flex-start;
+  font-size: 0.95rem;
   color: var(--gray-700);
-  font-size: var(--text-sm);
-  font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-base);
-  min-height: 40px;
 }
 
-.toggleButton:hover {
-  border-color: var(--primary-blue);
-  background: var(--gray-50);
+.termsRow .checkboxInput {
+  position: static;
+  opacity: 1;
+  width: auto;
+  height: auto;
+  margin-top: 0.2em;
+  accent-color: #fa3c4c;
+  outline: none;
+  box-shadow: none;
+}
+.termsRow .checkboxInput:focus {
+  outline: none;
+  box-shadow: none;
 }
 
-.toggleButton.toggleActive {
-  background: var(--primary-blue);
-  color: var(--white);
-  border-color: var(--primary-blue);
+.termsLink {
+  color: var(--primary-blue);
+  text-decoration: underline;
+}
+
+.termsLink:hover {
+  color: var(--style2-bg);
 }
 
 .fileInput {
@@ -270,7 +422,7 @@
 }
 
 .removeImageButton:hover {
-  background: #D92B3B;
+  background: #d92b3b;
 }
 
 .imageCount {
@@ -329,4 +481,3 @@
     gap: var(--spacing-md);
   }
 }
-
