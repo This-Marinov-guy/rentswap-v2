@@ -276,10 +276,10 @@ export const CITIES = [
 // Property type: 0 unused, 1–4 used
 export const PROPERTY_TYPE_LABELS: readonly (string | undefined)[] = [
   undefined, // 0 unused
-  "Room in a shared apartment",
+  "Room in a shared property",
   "Studio",
-  "Entire place",
-  "Student house",
+  "Apartment",
+  "House",
 ];
 
 export const FURNISHED_TYPE_LABELS: readonly (string | undefined)[] = [
@@ -303,25 +303,17 @@ export const FURNISHED_TYPES = [
 ];
 
 export const AMENITIES_LIST: readonly string[] = [
-  "A/C & Heating",
-  "Garages",
-  "Swimming Pool",
+  "Air Conditioning",
+  "Heating",
+  "Kitchen Appliances",
+  "Garage",
   "Parking",
-  "Lake View",
+  "Storage Space",
   "Garden",
   "Disabled Access",
-  "Pet Friendly",
-  "Ceiling Height",
-  "Outdoor Shower",
-  "Refrigerator",
-  "Fireplace",
   "Wifi",
-  "TV Cable",
   "Barbeque",
   "Laundry",
-  "Dryer",
-  "Lawn",
-  "Elevator",
 ];
 
 export const SHARED_SPACE_LIST: readonly string[] = [
