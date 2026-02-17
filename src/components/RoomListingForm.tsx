@@ -298,7 +298,6 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
     if (!formData.rent.trim()) newErrors.rent = "Rent is required";
     if (!formData.bills.trim()) newErrors.bills = "Bills is required";
     if (!formData.flatmates.trim()) newErrors.flatmates = "Flatmates is required";
-    if (!formData.period.trim()) newErrors.period = "Period is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
 
     // Images validation

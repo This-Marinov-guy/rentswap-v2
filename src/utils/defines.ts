@@ -290,7 +290,7 @@ export const FURNISHED_TYPE_LABELS: readonly (string | undefined)[] = [
 ];
 
 export const PROPERTY_TYPES = [
-  { value: 1, text: "Room in a shared apartment" },
+  { value: 1, text: "Room in a shared property" },
   { value: 2, text: "Studio" },
   { value: 3, text: "Entire place" },
   { value: 4, text: "Student house" },

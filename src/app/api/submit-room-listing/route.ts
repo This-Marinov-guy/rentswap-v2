@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
       bills: { en: string } | null;
       flatmates: { en: string } | null;
       registration: boolean;
-      description: string;
+      description: { en: string } | null;
       folder: string;
       images?: string;
       payment_link?: string | null;
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
       bills: bills ? { en: bills } : null,
       flatmates: flatmates ? { en: flatmates } : null,
       registration,
-      description,
+      description: { en: description },
       folder,
       type,
       furnished_type,

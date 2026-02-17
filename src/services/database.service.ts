@@ -14,7 +14,7 @@ interface PropertyData {
   bills: { en: string } | null;
   flatmates: { en: string } | null;
   registration: boolean;
-  description: string;
+  description: { en: string } | null;
   folder: string;
   images?: string;
   payment_link?: string | null;
