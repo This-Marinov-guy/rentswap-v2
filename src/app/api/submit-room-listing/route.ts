@@ -90,6 +90,7 @@ export async function POST(request: NextRequest) {
       registration,
       pets_allowed,
       smoking_allowed,
+      deposit: depositRaw ?? "",
       bills: billsRaw ?? "",
       flatmates,
       period: periodForValidation,

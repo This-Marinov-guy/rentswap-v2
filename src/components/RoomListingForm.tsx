@@ -5,8 +5,8 @@ import {
   CITIES,
   PROPERTY_TYPES,
   FURNISHED_TYPES,
-  AMENITIES_LIST,
-  SHARED_SPACE_LIST,
+  AMENITIES_OPTIONS,
+  SHARED_SPACE_OPTIONS,
   getTranslatedEnum,
 } from "@/utils/defines";
 import { resizeImage } from "@/utils/imageResizer";
@@ -112,15 +112,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       })),
     []
   );
-  const amenitiesOptions = useMemo(
-    () =>
-      [...AMENITIES_LIST].map((label, id) => ({ id, label })).sort((a, b) => a.label.localeCompare(b.label)),
-    []
-  );
-  const sharedSpaceOptions = useMemo(
-    () => SHARED_SPACE_LIST.map((label, id) => ({ id, label })),
-    []
-  );
+  const amenitiesOptions = useMemo(() => [...AMENITIES_OPTIONS], []);
+  const sharedSpaceOptions = useMemo(() => [...SHARED_SPACE_OPTIONS], []);
 
   const toggleAmenity = (id: number) => {
     setFormData((prev) => ({
@@ -298,6 +291,8 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
     if (!formData.postcode.trim()) newErrors.postcode = "Postcode is required";
     if (!formData.size.trim()) newErrors.size = "Size is required";
     if (!formData.rent.trim()) newErrors.rent = "Base rent is required";
+    if (!formData.deposit.trim()) newErrors.deposit = "Deposit is required";
+    if (!formData.bills.trim()) newErrors.bills = "Bills is required";
     if (!formData.flatmates.trim()) newErrors.flatmates = "Flatmates is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
 
@@ -355,7 +350,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       submitData.append("address", formData.address);
       submitData.append("size", formData.size);
       submitData.append("rent", formData.rent);
-      if (formData.deposit.trim()) submitData.append("deposit", formData.deposit);
+      submitData.append("deposit", formData.deposit);
       submitData.append("registration", formData.registration ? "true" : "false");
       submitData.append("postcode", formData.postcode);
       submitData.append("pets_allowed", formData.pets_allowed ? "true" : "false");
@@ -374,7 +369,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
       submitData.append("terms_contact", formData.termsContact ? "true" : "false");
       submitData.append("terms_legals", formData.termsLegals ? "true" : "false");
 
-      if (formData.bills.trim()) submitData.append("bills", formData.bills);
+      submitData.append("bills", formData.bills);
       if (formData.flatmates.trim()) submitData.append("flatmates", formData.flatmates);
       if (formData.period.trim()) submitData.append("period", formData.period);
       if (formData.description.trim()) submitData.append("description", formData.description);
@@ -620,7 +615,7 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
               {/* Bills */}
               <div className={styles.formGroup}>
                 <label htmlFor="bills" className={styles.label}>
-                  Bills <span className={styles.optional}>(optional)</span>
+                  Bills <span className={styles.required}>*</span>
                 </label>
                 <div className={`${styles.inputGroup} ${errors.bills ? styles.inputGroupError : ""}`}>
                   <input
@@ -642,9 +637,9 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
 
               <div className={styles.formGroup}>
                 <label htmlFor="deposit" className={styles.label}>
-                  Deposit <span className={styles.optional}>(optional)</span>
+                  Deposit <span className={styles.required}>*</span>
                 </label>
-                <div className={styles.inputGroup}>
+                <div className={`${styles.inputGroup} ${errors.deposit ? styles.inputGroupError : ""}`}>
                   <input
                     type="number"
                     id="deposit"
@@ -657,6 +652,9 @@ export default function RoomListingForm({ personalData, onValidatePersonalData }
                   />
                   <span className={styles.inputGroupText} aria-hidden>€</span>
                 </div>
+                {errors.deposit && (
+                  <span className={styles.error}>{errors.deposit}</span>
+                )}
               </div>
             </div>
 

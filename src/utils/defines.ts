@@ -302,31 +302,43 @@ export const FURNISHED_TYPES = [
   { value: 3, text: "None" },
 ];
 
-export const AMENITIES_LIST: readonly string[] = [
-  "Air Conditioning",
-  'Washing Machine',
-  'Dishwasher',
-  'Microwave',
-  'Stove',
-  'Oven',
-  'Bike Space',
-  "Garage",
-  "Parking",
-  "Storage Space",
-  "Garden",
-  "Disabled Access",
-  "Wi-fi",
-  "BBQ",
-];
+export const SHARED_SPACE: Record<number, { text: string; order: number }> = {
+  1: { text: "Balcony", order: 1 },
+  2: { text: "Kitchen", order: 2 },
+  3: { text: "Bathroom", order: 3 },
+  4: { text: "Toilet", order: 4 },
+  5: { text: "Storage space", order: 5 },
+  6: { text: "Living room", order: 6 },
+};
 
-export const SHARED_SPACE_LIST: readonly string[] = [
-  "Balcony",
-  "Kitchen",
-  "Bathroom",
-  "Toilet",
-  "Storage space",
-  "Living room",
-];
+export const AMENITIES: Record<number, { text: string; order: number }> = {
+  1: { text: "Air Conditioning", order: 1 },
+  2: { text: "Washing Machine", order: 2 },
+  16: { text: "Dryer", order: 3 }, // placed after washing machine without changing existing ids
+  3: { text: "Dishwasher", order: 4 },
+  4: { text: "Microwave", order: 5 },
+  5: { text: "Stove", order: 6 },
+  6: { text: "Oven", order: 7 },
+  7: { text: "Bike Space", order: 8 },
+  8: { text: "Garage", order: 9 },
+  9: { text: "Parking", order: 10 },
+  10: { text: "Storage Space", order: 11 },
+  11: { text: "Garden", order: 12 },
+  12: { text: "Disabled Access", order: 13 },
+  13: { text: "Wi-fi", order: 14 },
+  14: { text: "BBQ", order: 15 },
+  15: { text: "Balcony", order: 16 },
+};
+
+/** Options for forms, sorted by order */
+export const SHARED_SPACE_OPTIONS = Object.entries(SHARED_SPACE)
+  .sort((a, b) => a[1].order - b[1].order)
+  .map(([id, v]) => ({ id: Number(id), label: v.text }));
+
+/** Options for forms, sorted by order */
+export const AMENITIES_OPTIONS = Object.entries(AMENITIES)
+  .sort((a, b) => a[1].order - b[1].order)
+  .map(([id, v]) => ({ id: Number(id), label: v.text }));
 
 export function getPropertyTypeLabelKey(value: number): string {
   return `property.type.${value}`;
@@ -336,20 +348,20 @@ export function getFurnishedTypeLabelKey(value: number): string {
   return `property.furnished_type.${value}`;
 }
 
-export function getAmenityLabel(index: number): string {
-  return AMENITIES_LIST[index] ?? "";
+export function getAmenityLabel(id: number): string {
+  return AMENITIES[id]?.text ?? "";
 }
 
-export function getAmenityLabelKey(index: number): string {
-  return `property.amenity.${index}`;
+export function getAmenityLabelKey(id: number): string {
+  return `property.amenity.${id}`;
 }
 
-export function getSharedSpaceLabel(index: number): string {
-  return SHARED_SPACE_LIST[index] ?? "";
+export function getSharedSpaceLabel(id: number): string {
+  return SHARED_SPACE[id]?.text ?? "";
 }
 
-export function getSharedSpaceLabelKey(index: number): string {
-  return `property.shared_space.${index}`;
+export function getSharedSpaceLabelKey(id: number): string {
+  return `property.shared_space.${id}`;
 }
 
 /** Use when no i18n: returns fallback text. Can be replaced with t(key) when translations exist. */
