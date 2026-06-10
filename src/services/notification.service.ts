@@ -68,11 +68,13 @@ export class NotificationService {
             .field { margin-bottom: 15px; }
             .label { font-weight: bold; color: #1d3557; }
             .value { margin-top: 5px; }
+            .automation-label { display: inline-block; background-color: #e8f0fe; color: #1a73e8; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
+              <div class="automation-label">Automation</div>
               <h1>New Room Listing</h1>
             </div>
             <div class="content">
@@ -152,11 +154,13 @@ ${data.phone ? `Phone: ${data.phone}` : ''}
             .field { margin-bottom: 15px; }
             .label { font-weight: bold; color: #1d3557; }
             .value { margin-top: 5px; }
+            .automation-label { display: inline-block; background-color: #e8f0fe; color: #1a73e8; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
+              <div class="automation-label">Automation</div>
               <h1>New Rental Search Submission</h1>
             </div>
             <div class="content">
