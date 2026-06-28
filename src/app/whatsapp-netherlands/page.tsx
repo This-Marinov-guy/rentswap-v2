@@ -63,7 +63,7 @@ const whatsappGroups: WhatsAppGroup[] = [
   },
   {
     name: "Amsterdam Housing Chat | RentSwap",
-    link: "https://chat.whatsapp.com/FZxLE8aQnDDCXqA1vnofrv",
+    link: "https://chat.whatsapp.com/FUVAtRisVaFIKeJf1VmGN8",
     city: "Amsterdam",
   },
   // {
