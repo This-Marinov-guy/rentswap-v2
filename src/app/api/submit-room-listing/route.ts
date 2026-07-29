@@ -4,7 +4,6 @@ import { PropertyService } from "@/services/property.service";
 import { ApiResponseService } from "@/services/api-response.service";
 import { ValidationService } from "@/services/validation.service";
 import { DatabaseService } from "@/services/database.service";
-import { NotificationService } from "@/services/notification.service";
 import { addCorsHeaders, handleOptionsRequest } from "@/utils/cors";
 import { getAxiomLogger, logToAxiom } from "@/lib/axiom";
 
@@ -257,23 +256,6 @@ export async function POST(request: NextRequest) {
           type: 'room_listing_db_create',
         });
       }
-
-      // Send notification directly
-      const notificationService = new NotificationService();
-      await notificationService.sendNotification(
-        "room_listing",
-        {
-          propertyId: createdProperty.id ?? '-',
-          city: city || 'N/A',
-          address: address || 'N/A',
-          name,
-          surname,
-          email,
-          phone,
-        }
-      ).catch(() => {
-        // Silently fail - notification is non-critical
-      });
 
       const totalDuration = Date.now() - startTime;
       // Simplified response data to avoid Axiom column limit

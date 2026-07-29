@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 interface PropertyData {
@@ -139,6 +140,53 @@ export class DatabaseService {
         throw new Error(`Database error creating property_data: ${propertyDataError.message}`);
       }
 
+      // Insert the existing Laravel workflow directly into the shared jobs
+      // table. The Domakin queue worker consumes this payload without any API
+      // request from RentSwap; the workflow then fans out its child jobs.
+      const propertyIdNumber = Number(propertyId);
+      if (!Number.isSafeInteger(propertyIdNumber)) {
+        throw new Error(`Invalid property ID for workflow queue: ${propertyId}`);
+      }
+
+      const now = Math.floor(Date.now() / 1000);
+      const workflowCommand = `O:41:"App\\Jobs\\HandlePropertyCreatedWorkflowJob":2:{s:10:"propertyId";i:${propertyIdNumber};s:25:"sendSubmittedListingEmail";b:0;}`;
+      const workflowPayload = JSON.stringify({
+        uuid: randomUUID(),
+        displayName: 'App\\Jobs\\HandlePropertyCreatedWorkflowJob',
+        job: 'Illuminate\\Queue\\CallQueuedHandler@call',
+        maxTries: 3,
+        maxExceptions: null,
+        failOnTimeout: false,
+        backoff: '60',
+        timeout: null,
+        retryUntil: null,
+        data: {
+          commandName: 'App\\Jobs\\HandlePropertyCreatedWorkflowJob',
+          command: workflowCommand,
+        },
+      });
+
+      const { error: workflowError } = await this.supabase
+        .from('jobs')
+        .insert([
+          {
+            queue: 'default',
+            short_description: `Property-created workflow for property #${propertyIdNumber}`,
+            payload: workflowPayload,
+            attempts: 0,
+            reserved_at: null,
+            available_at: now,
+            created_at: now,
+          },
+        ]);
+
+      if (workflowError) {
+        await this.supabase.from('property_data').delete().eq('property_id', propertyId);
+        await this.supabase.from('personal_data').delete().eq('property_id', propertyId);
+        await this.supabase.from('properties').delete().eq('id', propertyId);
+        throw new Error(`Database error queuing Laravel workflow: ${workflowError.message}`);
+      }
+
       // Return the property with related data
       return {
         ...property,
@@ -151,4 +199,3 @@ export class DatabaseService {
     }
   }
 }
-
