@@ -358,26 +358,27 @@ export async function POST(request: NextRequest) {
       return addCorsHeaders(errorResponse, request.headers.get('origin'));
     }
 
+    // NOTE: no need of internal notification
     // Send email notification directly
-    const notificationService = new NotificationService();
-    await notificationService.sendNotification(
-      "room_searching",
-      {
-        name,
-        surname,
-        email,
-        phone,
-        city,
-        budget,
-        move_in,
-        period,
-        registration: registration || undefined,
-        accommodationType: accommodationType || undefined,
-        peopleToAccommodate: people || undefined,
-      }
-    ).catch(() => {
-      // Silently fail - notification is non-critical
-    });
+    // const notificationService = new NotificationService();
+    // await notificationService.sendNotification(
+    //   "room_searching",
+    //   {
+    //     name,
+    //     surname,
+    //     email,
+    //     phone,
+    //     city,
+    //     budget,
+    //     move_in,
+    //     period,
+    //     registration: registration || undefined,
+    //     accommodationType: accommodationType || undefined,
+    //     peopleToAccommodate: people || undefined,
+    //   }
+    // ).catch(() => {
+    //   // Silently fail - notification is non-critical
+    // });
 
     // Log success to Axiom
     const totalDuration = Date.now() - startTime;
