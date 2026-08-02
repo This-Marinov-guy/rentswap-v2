@@ -181,6 +181,11 @@ const whatsappGroups: WhatsAppGroup[] = [
     link: "https://chat.whatsapp.com/HNZApUVPVnUJa6uvV33ZGl",
     city: "Nijmegen",
   },
+  {
+    name: "Join this chat only if you are a bot or scammer | No Humans",
+    link: "https://chat.whatsapp.com/J6bFxapc3IdLWYy0XbiV0F",
+    city: "Netherlands",
+  },
   // {
   //   name: "Rotterdam Internationals",
   //   link: "https://linktr.ee/InternationalsNL",
