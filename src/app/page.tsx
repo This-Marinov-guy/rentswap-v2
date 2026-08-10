@@ -3,12 +3,16 @@ import Hero from '@/components/Hero';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import Features from '@/components/Features';
 import Footer from '@/components/Footer';
-import { Metadata } from 'next';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: "RentSwap - Find your next home without the competition",
-  description: "Connect with tenants who are moving out and secure your perfect rental home in the Netherlands. No competition, fair algorithm, success-based pricing.",
-};
+export const metadata = createPageMetadata({
+  title: "RentSwap — Find Your Next Home Without the Competition",
+  socialTitle: "RentSwap — Find Your Next Home Without the Competition",
+  description:
+    "Connect with tenants who are moving out and secure your next rental home in the Netherlands. No application race, fair matching, and success-based pricing.",
+  path: "/",
+  absoluteTitle: true,
+});
 
 export default function Home() {
   return (

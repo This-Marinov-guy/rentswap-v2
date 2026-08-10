@@ -1,20 +1,14 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
-import { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | RentSwap",
-  description: "Learn how RentSwap collects, uses, and protects your personal information in compliance with GDPR and Dutch data protection laws.",
-  openGraph: {
-    title: "Privacy Policy | RentSwap",
-    description: "Learn how RentSwap collects, uses, and protects your personal information in compliance with GDPR and Dutch data protection laws.",
-    url: "https://rentswap.nl/privacy-policy",
-    siteName: "RentSwap",
-    locale: "en_US",
-    type: "website",
-  },
-};
+export const metadata = createPageMetadata({
+  title: "Privacy Policy",
+  description:
+    "Learn how RentSwap collects, uses, stores, and protects personal information under the GDPR and Dutch data protection requirements.",
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   return (
@@ -117,7 +111,7 @@ export default function PrivacyPolicyPage() {
             <ul>
               <li><strong>Access:</strong> Request a copy of your personal data</li>
               <li><strong>Rectification:</strong> Correct inaccurate or incomplete data</li>
-              <li><strong>Erasure:</strong> Request deletion of your data ("right to be forgotten")</li>
+              <li><strong>Erasure:</strong> Request deletion of your data (&quot;right to be forgotten&quot;)</li>
               <li><strong>Restriction:</strong> Limit how we use your data</li>
               <li><strong>Portability:</strong> Receive your data in a structured, machine-readable format</li>
               <li><strong>Objection:</strong> Object to processing of your data for certain purposes</li>
@@ -167,7 +161,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className={styles.section}>
-            <h2>10. Children's Privacy</h2>
+            <h2>10. Children&apos;s Privacy</h2>
             <p>
               RentSwap is not intended for users under 18 years of age. We do not knowingly collect personal information from children. If we become aware that we have collected data from a child, we will take steps to delete it promptly.
             </p>

@@ -173,8 +173,7 @@ export default function HeaderClient() {
               <button
                 className={`${styles.navLink} ${styles.dropdownTrigger} ${
                   pathname === "/faq" ||
-                  pathname === "/application-guide" ||
-                  pathname === "/whatsapp-netherlands" ||
+                  pathname.startsWith("/whatsapp-netherlands") ||
                   pathname === "/roommate-finder"
                     ? styles.active
                     : ""
@@ -208,18 +207,18 @@ export default function HeaderClient() {
                     FAQ
                   </Link>
                   <Link
-                    href="/whatsapp-netherlands"
+                    href="/whatsapp-netherlands/housing"
                     className={styles.dropdownItem}
                     onClick={() => setIsResourcesDropdownOpen(false)}
                   >
                     Housing WhatsApp Groups
                   </Link>
                   <Link
-                    href="/application-guide"
+                    href="/whatsapp-netherlands/jobs"
                     className={styles.dropdownItem}
                     onClick={() => setIsResourcesDropdownOpen(false)}
                   >
-                    Rental Application Guide
+                    Jobs WhatsApp Groups
                   </Link>
                   <Link
                     href="/roommate-finder"
@@ -353,7 +352,7 @@ export default function HeaderClient() {
                       FAQ
                     </Link>
                     <Link
-                      href="/whatsapp-netherlands"
+                      href="/whatsapp-netherlands/housing"
                       className={styles.mobileDropdownItem}
                       onClick={() => {
                         setIsResourcesDropdownOpen(false);
@@ -361,6 +360,16 @@ export default function HeaderClient() {
                       }}
                     >
                       Housing WhatsApp Groups
+                    </Link>
+                    <Link
+                      href="/whatsapp-netherlands/jobs"
+                      className={styles.mobileDropdownItem}
+                      onClick={() => {
+                        setIsResourcesDropdownOpen(false);
+                        toggleMobileMenu();
+                      }}
+                    >
+                      Jobs WhatsApp Groups
                     </Link>
                     <a
                       href="#"
@@ -373,16 +382,6 @@ export default function HeaderClient() {
                     >
                       How to Avoid Housing Scams
                     </a>
-                    <Link
-                      href="/application-guide"
-                      className={styles.mobileDropdownItem}
-                      onClick={() => {
-                        setIsResourcesDropdownOpen(false);
-                        toggleMobileMenu();
-                      }}
-                    >
-                      Rental Application Guide
-                    </Link>
                     <Link
                       href="/roommate-finder"
                       className={styles.mobileDropdownItem}

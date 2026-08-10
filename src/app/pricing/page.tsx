@@ -4,21 +4,14 @@ import Image from "next/image";
 import Highlight from "@/components/common/Highlight";
 import Button from "@/components/common/Button";
 import styles from "./page.module.css";
-import { Metadata } from "next";
-import Link from "next/link";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Pricing | RentSwap",
-  description: "Fair success-based pricing. Pay nothing unless you successfully sign a rental contract. No upfront costs, no hidden fees.",
-  openGraph: {
-    title: "Pricing | RentSwap",
-    description: "Fair success-based pricing. Pay nothing unless you successfully sign a rental contract.",
-    url: "https://rentswap.nl/pricing",
-    siteName: "RentSwap",
-    locale: "en_US",
-    type: "website",
-  },
-};
+export const metadata = createPageMetadata({
+  title: "Rental Finder Pricing",
+  description:
+    "See RentSwap's success-based pricing for finding a rental home in the Netherlands. No subscription or upfront fee—you pay only after signing a contract.",
+  path: "/pricing",
+});
 
 const benefits = [
   "Exclusive Access to Unlisted Rentals",
@@ -34,13 +27,13 @@ export default function PricingPage() {
       <main className={styles.page}>
         <section className={styles.hero}>
           <p className={styles.kicker}>Pricing</p>
-          <h3>
+          <h1>
             Pay{" "}
             <Highlight variant="style2" size="small">
               NOTHING
             </Highlight>{" "}
             unless you accept an offer and the landlord approves you!
-          </h3>
+          </h1>
         </section>
 
         <section className={styles.card}>
@@ -54,7 +47,7 @@ export default function PricingPage() {
             />
             <div>
               <p className={styles.subTitle}>Our Success Fee</p>
-              <p className={styles.title}>1 Month's Rent (+21% VAT)</p>
+              <p className={styles.title}>1 Month&apos;s Rent (+21% VAT)</p>
             </div>
           </div>
 
@@ -90,4 +83,3 @@ export default function PricingPage() {
     </>
   );
 }
-

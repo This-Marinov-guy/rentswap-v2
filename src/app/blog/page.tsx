@@ -1,18 +1,18 @@
-import { Metadata } from "next";
 import Link from "next/link";
 import { getPosts } from "@/lib/wordpress";
-import BlogCard from "@/components/blog/BlogCard";
 import BlogControls from "@/components/blog/BlogControls";
 import BlogPageContent from "@/components/blog/BlogPageContent";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-    title: "RentSwap Blog - Tips for Tenants and Landlords",
+export const metadata = createPageMetadata({
+    title: "Renting in the Netherlands: Tips and Guides",
     description:
-        "Read the latest news, tips, and guides about renting in the Netherlands. Find out how to swap your rental home easily.",
-};
+        "Practical guides about renting, housing, moving, student life, and local services in cities across the Netherlands.",
+    path: "/blog",
+});
 
 export default async function BlogPage({
     searchParams,
@@ -26,11 +26,13 @@ export default async function BlogPage({
     // Validate perPage is one of the allowed values
     const itemsPerPage = [3, 6, 9].includes(perPage) ? perPage : 6;
 
-    const { posts, found } = await getPosts(page, itemsPerPage);
+    const [paginatedResult, allPostsResult] = await Promise.all([
+        getPosts(page, itemsPerPage),
+        getPosts(1, 100),
+    ]);
+    const { posts, found } = paginatedResult;
+    const { posts: allPosts } = allPostsResult;
     const totalPages = Math.ceil(found / itemsPerPage);
-
-    // Fetch all posts for search functionality (limit to 100 for performance)
-    const { posts: allPosts } = await getPosts(1, 100);
 
     // Calculate the range of posts being displayed
     const startPost = (page - 1) * itemsPerPage + 1;
@@ -166,5 +168,3 @@ export default async function BlogPage({
         </main>
     );
 }
-
-

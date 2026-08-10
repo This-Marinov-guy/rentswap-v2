@@ -1,24 +1,16 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
-import { Metadata } from "next";
 import { Suspense } from "react";
 import RoommateFinderForm from "./RoommateFinderForm.client";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Roommate Finder | RentSwap",
+export const metadata = createPageMetadata({
+  title: "Find a Roommate in the Netherlands",
   description:
-    "Find the perfect roommate for your rental. Share your room details and get matched with compatible roommates in the Netherlands.",
-  openGraph: {
-    title: "Roommate Finder | RentSwap",
-    description:
-      "Find the perfect roommate for your rental. Share your room details and get matched with compatible roommates.",
-    url: "https://rentswap.nl/roommate-finder",
-    siteName: "RentSwap",
-    locale: "en_US",
-    type: "website",
-  },
-};
+    "List your available room and get matched with compatible roommate candidates in the Netherlands. RentSwap's roommate matching service is free.",
+  path: "/roommate-finder",
+});
 
 export default function RoommateFinderPage() {
   return (

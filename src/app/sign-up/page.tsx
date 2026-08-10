@@ -3,21 +3,15 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import SignUpForm from "@/components/SignUpForm";
 import styles from "./page.module.css";
-import { Metadata } from "next";
 import { Suspense } from "react";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Sign Up | RentSwap",
-  description: "Create your free RentSwap account to find exclusive rental opportunities in the Netherlands. No upfront costs, fair matching, and secure process.",
-  openGraph: {
-    title: "Sign Up | RentSwap",
-    description: "Create your free RentSwap account to find exclusive rental opportunities in the Netherlands.",
-    url: "https://rentswap.nl/sign-up",
-    siteName: "RentSwap",
-    locale: "en_US",
-    type: "website",
-  },
-};
+export const metadata = createPageMetadata({
+  title: "Create Your Free Rental Search Profile",
+  description:
+    "Create a free RentSwap profile to find rental opportunities in the Netherlands through fair matching, with no subscription or upfront fee.",
+  path: "/sign-up",
+});
 
 export default function SignUpPage() {
   return (

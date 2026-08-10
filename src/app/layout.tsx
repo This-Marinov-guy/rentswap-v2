@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -70,7 +70,6 @@ export const metadata: Metadata = {
       { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
     ],
   },
-  themeColor: "#fa3c4c",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -78,10 +77,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://rentswap.nl",
-    languages: {
-      "en-US": "https://rentswap.nl",
-      "nl-NL": "https://rentswap.nl",
-    },
   },
   openGraph: {
     type: "website",
@@ -92,10 +87,10 @@ export const metadata: Metadata = {
     description: "Connect with tenants who are moving out and secure your perfect rental home in the Netherlands. No competition, fair algorithm, success-based pricing.",
     images: [
       {
-        url: "https://rentswap.nl/android-chrome-512x512.png",
-        width: 512,
-        height: 512,
-        alt: "RentSwap Logo",
+        url: "https://rentswap.nl/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "RentSwap — Find your next home in the Netherlands",
         type: "image/png",
       },
     ],
@@ -106,9 +101,9 @@ export const metadata: Metadata = {
     description: "Connect with tenants who are moving out and secure your perfect rental home in the Netherlands.",
     images: [
       {
-        url: "https://rentswap.nl/android-chrome-512x512.png",
-        width: 512,
-        height: 512,
+        url: "https://rentswap.nl/opengraph-image",
+        width: 1200,
+        height: 630,
         alt: "RentSwap - Find your next home without the competition",
       },
     ],
@@ -134,11 +129,13 @@ export const metadata: Metadata = {
   },
   category: "Real Estate",
   classification: "Housing Platform",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#fa3c4c",
 };
 
 export default function RootLayout({
@@ -161,4 +158,3 @@ export default function RootLayout({
     </html>
   );
 }
-

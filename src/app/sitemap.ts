@@ -3,72 +3,68 @@ import { getPosts, WordPressPost } from '@/lib/wordpress';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://rentswap.nl';
+  const siteUpdatedAt = new Date('2026-08-10');
+  const legalUpdatedAt = new Date('2025-11-28');
 
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: siteUpdatedAt,
       changeFrequency: 'daily',
       priority: 1,
     },
     {
       url: `${baseUrl}/pricing`,
-      lastModified: new Date(),
+      lastModified: siteUpdatedAt,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/sign-up`,
-      lastModified: new Date(),
+      lastModified: siteUpdatedAt,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
+      lastModified: siteUpdatedAt,
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/blog-1`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/faq`,
-      lastModified: new Date(),
+      lastModified: siteUpdatedAt,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/application-guide`,
-      lastModified: new Date(),
+      url: `${baseUrl}/whatsapp-netherlands/housing`,
+      lastModified: siteUpdatedAt,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/whatsapp-netherlands`,
-      lastModified: new Date(),
+      url: `${baseUrl}/whatsapp-netherlands/jobs`,
+      lastModified: siteUpdatedAt,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/roommate-finder`,
-      lastModified: new Date(),
+      lastModified: siteUpdatedAt,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/terms-conditions`,
-      lastModified: new Date(),
+      lastModified: legalUpdatedAt,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
       url: `${baseUrl}/privacy-policy`,
-      lastModified: new Date(),
+      lastModified: legalUpdatedAt,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
@@ -89,26 +85,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       page++;
     }
 
-    // Generate blog post routes (both /blog/[slug] and /post/[slug])
-    const blogRoutes: MetadataRoute.Sitemap = allPosts.flatMap((post) => {
+    // Generate only the canonical blog post routes.
+    const blogRoutes: MetadataRoute.Sitemap = allPosts.map((post) => {
       // Validate and parse the date
       const modifiedDate = post.modified ? new Date(post.modified) : new Date();
       const isValidDate = !isNaN(modifiedDate.getTime());
 
-      return [
-        {
-          url: `${baseUrl}/blog/${post.slug}`,
-          lastModified: isValidDate ? modifiedDate : new Date(),
-          changeFrequency: 'weekly' as const,
-          priority: 0.7,
-        },
-        {
-          url: `${baseUrl}/post/${post.slug}`,
-          lastModified: isValidDate ? modifiedDate : new Date(),
-          changeFrequency: 'weekly' as const,
-          priority: 0.7,
-        },
-      ];
+      return {
+        url: `${baseUrl}/blog/${post.slug}`,
+        lastModified: isValidDate ? modifiedDate : siteUpdatedAt,
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      };
     });
 
     return [...staticRoutes, ...blogRoutes];

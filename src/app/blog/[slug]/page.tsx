@@ -1,10 +1,12 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPosts } from "@/lib/wordpress";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
 import Button from "@/components/common/Button";
+import JsonLd from "@/components/JsonLd";
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo";
 
 // Generate static params for the first 20 posts
 export async function generateStaticParams() {
@@ -38,10 +40,10 @@ export async function generateMetadata({
       .map((cat) => cat.name)
       .filter((name) => name !== "Uncategorized");
     const tags = Object.values(post.tags || {}).map((tag) => tag.name);
-    const keywords = [...categories, ...tags, "rentswap", "rental", "housing", "netherlands"].join(", ");
+    const keywords = [...categories, ...tags, "rentswap", "rental", "housing", "netherlands"];
     
     // Get featured image or post thumbnail
-    const imageUrl = post.post_thumbnail?.URL || post.featured_image || "https://rentswap.nl/android-chrome-512x512.png";
+    const imageUrl = post.post_thumbnail?.URL || post.featured_image || DEFAULT_SOCIAL_IMAGE;
     const imageWidth = post.post_thumbnail?.width || 1200;
     const imageHeight = post.post_thumbnail?.height || 630;
     
@@ -56,7 +58,7 @@ export async function generateMetadata({
     const authorName = post.author?.name || "RentSwap";
     
     return {
-      title: `${cleanTitle} - RentSwap Blog`,
+      title: cleanTitle,
       description,
       keywords,
       authors: [{ name: authorName }],
@@ -122,7 +124,7 @@ export async function generateMetadata({
   } catch (error) {
     console.error("Error generating metadata for blog post:", error);
     return {
-      title: "Blog Post Not Found - RentSwap",
+      title: "Blog Post Not Found",
       description: "The blog post you're looking for could not be found.",
     };
   }
@@ -185,7 +187,7 @@ export default async function BlogPostPage({
   // Prepare structured data for Article
   const cleanTitle = post.title.replace(/<[^>]*>/g, "").trim();
   const cleanExcerpt = post.excerpt.replace(/<[^>]*>/g, "").trim();
-  const imageUrl = post.post_thumbnail?.URL || post.featured_image || "https://rentswap.nl/android-chrome-512x512.png";
+  const imageUrl = post.post_thumbnail?.URL || post.featured_image || DEFAULT_SOCIAL_IMAGE;
   const authorName = post.author?.name || "RentSwap";
   const categories = Object.values(post.categories || {})
     .map((cat) => cat.name)
@@ -255,15 +257,7 @@ export default async function BlogPostPage({
   return (
     <main>
       <Header />
-      {/* Article Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd data={[articleSchema, breadcrumbSchema]} />
       <div className={styles.container}>
         <Button variant="secondary" href="/blog" className={styles.backLink}>
           &larr; Back to Blog

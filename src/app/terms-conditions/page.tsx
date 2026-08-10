@@ -1,20 +1,14 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
-import { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Terms and Conditions | RentSwap",
-  description: "Read our Terms and Conditions to understand the rules and regulations governing the use of RentSwap's platform and services.",
-  openGraph: {
-    title: "Terms and Conditions | RentSwap",
-    description: "Read our Terms and Conditions to understand the rules and regulations governing the use of RentSwap's platform and services.",
-    url: "https://rentswap.nl/terms-conditions",
-    siteName: "RentSwap",
-    locale: "en_US",
-    type: "website",
-  },
-};
+export const metadata = createPageMetadata({
+  title: "Terms and Conditions",
+  description:
+    "Read the terms governing RentSwap accounts, rental matching, pricing, payments, user responsibilities, and platform use in the Netherlands.",
+  path: "/terms-conditions",
+});
 
 export default function TermsConditionsPage() {
   return (
@@ -28,7 +22,7 @@ export default function TermsConditionsPage() {
           <section className={styles.section}>
             <h2>1. Introduction</h2>
             <p>
-              Welcome to RentSwap. These Terms and Conditions ("Terms") govern your use of our platform and services. By accessing or using RentSwap, you agree to be bound by these Terms.
+              Welcome to RentSwap. These Terms and Conditions (&quot;Terms&quot;) govern your use of our platform and services. By accessing or using RentSwap, you agree to be bound by these Terms.
             </p>
           </section>
 
@@ -74,7 +68,7 @@ export default function TermsConditionsPage() {
             <ul>
               <li>Registration and browsing are completely free</li>
               <li>No upfront costs or subscription fees</li>
-              <li>A success fee of one month's rent plus 21% VAT is charged only when you successfully sign a rental contract through our platform</li>
+              <li>A success fee of one month&apos;s rent plus 21% VAT is charged only when you successfully sign a rental contract through our platform</li>
               <li>Payment is due within 14 days of contract signing</li>
               <li>All fees are clearly communicated before any commitment</li>
             </ul>
