@@ -1,3 +1,5 @@
+import { logIntegration } from "@/lib/axiom";
+
 export interface WordPressPost {
   ID: number;
   site_ID: number;
@@ -167,20 +169,34 @@ export async function getPosts(
     throw new Error("WORDPRESS_BLOG_ID is not defined");
   }
 
-  const res = await fetch(
-    `${BASE_URL}/${WORDPRESS_BLOG_ID}/posts?page=${page}&number=${number}&fields=ID,title,slug,date,excerpt,post_thumbnail,author,categories`,
-    {
-      next: { revalidate: 10 * 60 }, // Revalidate every 5 mins
+  const startedAt = Date.now();
+  try {
+    const res = await fetch(
+      `${BASE_URL}/${WORDPRESS_BLOG_ID}/posts?page=${page}&number=${number}&fields=ID,title,slug,date,excerpt,post_thumbnail,author,categories`,
+      {
+        next: { revalidate: 10 * 60 },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`WordPress returned ${res.status}`);
     }
-  );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch posts");
+    const data = await res.json();
+    void logIntegration('wordpress', 'list_posts', {
+      duration: Date.now() - startedAt,
+      statusCode: res.status,
+      success: true,
+    });
+    return data;
+  } catch (error) {
+    void logIntegration('wordpress', 'list_posts', {
+      duration: Date.now() - startedAt,
+      success: false,
+      message: error instanceof Error ? error.message : 'WordPress request failed',
+    });
+    throw error;
   }
-
-  const data = await res.json();  
-
-  return data;
 }
 
 export async function getPostBySlug(slug: string): Promise<WordPressPost> {
@@ -191,22 +207,29 @@ export async function getPostBySlug(slug: string): Promise<WordPressPost> {
   const url = `${BASE_URL}/${WORDPRESS_BLOG_ID}/posts/slug:${slug}`;
   console.log(`Fetching post by slug: ${slug} from ${url}`);
 
-  const res = await fetch(url, {
-    next: { revalidate: 3600 },
-  });
+  const startedAt = Date.now();
+  try {
+    const res = await fetch(url, {
+      next: { revalidate: 3600 },
+    });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error(
-      `Failed to fetch post by slug "${slug}":`,
-      res.status,
-      errorText
-    );
-    throw new Error(`Failed to fetch post: ${res.status} ${res.statusText}`);
+    if (!res.ok) {
+      throw new Error(`WordPress returned ${res.status}`);
+    }
+
+    const data = await res.json();
+    void logIntegration('wordpress', 'get_post', {
+      duration: Date.now() - startedAt,
+      statusCode: res.status,
+      success: true,
+    });
+    return data;
+  } catch (error) {
+    void logIntegration('wordpress', 'get_post', {
+      duration: Date.now() - startedAt,
+      success: false,
+      message: error instanceof Error ? error.message : 'WordPress request failed',
+    });
+    throw error;
   }
-
-  const data = await res.json();
-  console.log(`Successfully fetched post: ${data.title} (ID: ${data.ID})`);
-  return data;
 }
-

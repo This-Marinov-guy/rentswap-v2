@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAxiomLogger, logToAxiom } from '@/lib/axiom';
+import { logToAxiom } from '@/lib/axiom';
 
 export async function middleware(request: NextRequest) {
   const startTime = Date.now();
-  const logger = getAxiomLogger();
   const requestId = crypto.randomUUID();
   const isGetRequest = request.method === 'GET';
 
@@ -22,9 +21,7 @@ export async function middleware(request: NextRequest) {
   };
 
   // Log request (only to console for GET requests, to Axiom for others)
-  if (logger && !isGetRequest) {
-    logger.info('Incoming request', requestInfo);
-    // Log to Axiom directly for non-GET requests
+  if (!isGetRequest) {
     await logToAxiom(requestInfo);
   }
 
@@ -51,10 +48,9 @@ export async function middleware(request: NextRequest) {
   };
 
   // Only log to Axiom for non-GET requests
-  if (logger && !isGetRequest) {
+  if (!isGetRequest) {
     // Use setTimeout to log after response is sent
     setTimeout(() => {
-      logger?.info('Outgoing response', responseInfo);
       logToAxiom(responseInfo).catch(err => {
         console.error('[Middleware] Failed to log response to Axiom:', err);
       });
@@ -77,4 +73,3 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)',
   ],
 };
-

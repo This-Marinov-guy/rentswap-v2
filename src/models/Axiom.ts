@@ -17,8 +17,15 @@ export const LOG_LEVELS = {
   ERROR: "error",
 } as const;
 
+/** Logical Axiom destinations used across the Domakin ecosystem. */
+export const AXIOM_DATASETS = {
+  PLATFORM: "platform",
+  INTEGRATIONS: "integrations",
+} as const;
+
 export type LogType = (typeof LOG_TYPES)[keyof typeof LOG_TYPES];
 export type LogLevel = (typeof LOG_LEVELS)[keyof typeof LOG_LEVELS];
+export type AxiomDataset = (typeof AXIOM_DATASETS)[keyof typeof AXIOM_DATASETS];
 
 /**
  * Standard Axiom log entry shape.
@@ -33,6 +40,7 @@ export interface AxiomLogEntry {
   analytics: Record<string, unknown> | null;
   message?: string | null;
   level?: LogLevel;
+  axiom_dataset: AxiomDataset;
   [key: string]: unknown;
 }
 
@@ -42,6 +50,7 @@ export interface BuildLogEntryPayload {
   analytics?: Record<string, unknown> | null;
   message?: string | null;
   level?: LogLevel;
+  dataset?: AxiomDataset;
   extra?: Record<string, unknown>;
 }
 
@@ -63,6 +72,7 @@ export function buildLogEntry(
     analytics: payload.analytics ?? null,
     message: payload.message ?? null,
     level: payload.level ?? LOG_LEVELS.INFO,
+    axiom_dataset: payload.dataset ?? AXIOM_DATASETS.PLATFORM,
   };
   if (payload.extra && typeof payload.extra === "object") {
     Object.assign(entry, payload.extra);

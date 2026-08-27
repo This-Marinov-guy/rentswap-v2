@@ -35,3 +35,19 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # rentswap-v2
+
+## Axiom routing
+
+RentSwap writes client and API request logs to `platform`. Calls to external
+providers such as Stripe, Cloudinary, WordPress, SMTP, and QStash belong in
+`integrations`.
+
+```dotenv
+AXIOM_LOGGING_ENABLED=1
+AXIOM_TOKEN=
+AXIOM_PLATFORM_DATASET=platform
+AXIOM_INTEGRATIONS_DATASET=integrations
+```
+
+The former generic `AXIOM_DATASET` variable is intentionally not used because
+it cannot distinguish platform traffic from external-provider traffic.

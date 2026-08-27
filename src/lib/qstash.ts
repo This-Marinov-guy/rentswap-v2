@@ -1,4 +1,5 @@
 import { Client } from "@upstash/qstash";
+import { logIntegration } from "@/lib/axiom";
 
 let qstashClient: Client | null = null;
 
@@ -45,14 +46,25 @@ export async function publishQStashJob(
     return { queued: false, executedSynchronously: true };
   }
 
+  const startedAt = Date.now();
+
   try {
     const result = await qstash.publishJSON({
       url,
       body,
     });
     
+    void logIntegration('upstash_qstash', 'publish_job', {
+      duration: Date.now() - startedAt,
+      success: true,
+    });
     return { queued: true, messageId: result.messageId };
-  } catch {
+  } catch (error) {
+    void logIntegration('upstash_qstash', 'publish_job', {
+      duration: Date.now() - startedAt,
+      success: false,
+      message: error instanceof Error ? error.message : 'QStash publish failed',
+    });
     throw new Error('Failed to publish QStash job');
   }
 }

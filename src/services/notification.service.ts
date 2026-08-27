@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { logIntegration } from '@/lib/axiom';
 
 interface RoomListingData {
   propertyId: string;
@@ -277,6 +278,8 @@ ${data.peopleToAccommodate ? `People to Accommodate: ${data.peopleToAccommodate}
       emailContent = this.formatRoomSearchingEmail(data as RoomSearchingData);
     }
 
+    const startedAt = Date.now();
+
     try {
       await this.transporter.sendMail({
         from: fromAddress,
@@ -285,8 +288,19 @@ ${data.peopleToAccommodate ? `People to Accommodate: ${data.peopleToAccommodate}
         html: emailContent.html,
         text: emailContent.text,
       });
+      void logIntegration('google_workspace_smtp', 'send_notification', {
+        duration: Date.now() - startedAt,
+        success: true,
+        analytics: { notificationType: type },
+      });
     } catch (error) {
       console.log('Error sending email', error);
+      void logIntegration('google_workspace_smtp', 'send_notification', {
+        duration: Date.now() - startedAt,
+        success: false,
+        message: error instanceof Error ? error.message : 'SMTP delivery failed',
+        analytics: { notificationType: type },
+      });
       throw error;
       // Don't throw - email failures shouldn't break the request
     }

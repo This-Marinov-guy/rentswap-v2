@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { logIntegration } from '@/lib/axiom';
 
 export class PaymentLinkService {
   private stripe: Stripe | null = null;
@@ -20,6 +21,8 @@ export class PaymentLinkService {
       console.warn('Stripe not configured, skipping payment link creation');
       return null;
     }
+
+    const startedAt = Date.now();
 
     try {
       const amountEurRounded = Math.ceil(amountEur);
@@ -52,11 +55,20 @@ export class PaymentLinkService {
         ],
       });
 
+      void logIntegration('stripe', 'create_property_fee_link', {
+        duration: Date.now() - startedAt,
+        success: true,
+      });
+
       return paymentLink.url;
     } catch (error: any) {
       console.error('Failed to create Stripe payment link:', error.message);
+      void logIntegration('stripe', 'create_property_fee_link', {
+        duration: Date.now() - startedAt,
+        success: false,
+        message: error instanceof Error ? error.message : 'Stripe request failed',
+      });
       return null;
     }
   }
 }
-

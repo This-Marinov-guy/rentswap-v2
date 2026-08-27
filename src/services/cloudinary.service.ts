@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
+import { logIntegration } from '@/lib/axiom';
 
 export class CloudinaryService {
   private cloudinary: typeof cloudinary;
@@ -46,11 +47,13 @@ export class CloudinaryService {
       }
     }
 
+    const startedAt = Date.now();
+
     try {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
-      return new Promise((resolve, reject) => {
+      const url = await new Promise<string>((resolve, reject) => {
         const uploadStream = this.cloudinary.uploader.upload_stream(
           options,
           (error, result) => {
@@ -64,7 +67,21 @@ export class CloudinaryService {
 
         uploadStream.end(buffer);
       });
+
+      void logIntegration('cloudinary', 'upload_image', {
+        duration: Date.now() - startedAt,
+        success: true,
+        analytics: { fileSize: file.size },
+      });
+
+      return url;
     } catch (error: any) {
+      void logIntegration('cloudinary', 'upload_image', {
+        duration: Date.now() - startedAt,
+        success: false,
+        message: error instanceof Error ? error.message : 'Cloudinary upload failed',
+        analytics: { fileSize: file.size },
+      });
       throw new Error(`File upload failed: ${error.message}`);
     }
   }
@@ -90,4 +107,3 @@ export class CloudinaryService {
     return results;
   }
 }
-
