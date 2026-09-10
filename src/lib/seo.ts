@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const SITE_NAME = "RentSwap";
-export const SITE_URL = "https://rentswap.nl";
+export const SITE_URL = "https://www.rentswap.nl";
 export const DEFAULT_SOCIAL_IMAGE = `${SITE_URL}/opengraph-image`;
 
 interface PageMetadataOptions {

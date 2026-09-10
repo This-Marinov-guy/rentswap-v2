@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getPosts, WordPressPost } from '@/lib/wordpress';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://rentswap.nl';
+  const baseUrl = 'https://www.rentswap.nl';
   const siteUpdatedAt = new Date('2026-08-10');
   const legalUpdatedAt = new Date('2025-11-28');
 

@@ -6,13 +6,20 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
 import { createPageMetadata } from "@/lib/seo";
+import { blogPagination } from "@/lib/blog-seo";
 
-export const metadata = createPageMetadata({
-    title: "Renting in the Netherlands: Tips and Guides",
-    description:
-        "Practical guides about renting, housing, moving, student life, and local services in cities across the Netherlands.",
-    path: "/blog",
-});
+export async function generateMetadata({ searchParams }: {
+    searchParams: Promise<{ page?: string; perPage?: string }>;
+}) {
+    const { page, perPage, path } = blogPagination(await searchParams);
+    return createPageMetadata({
+        title: page > 1 ? `Housing Guides in the Netherlands — Page ${page}` : "Renting in the Netherlands: Tips and Guides",
+        description: page > 1 || perPage !== 6
+            ? `Page ${page} of RentSwap's housing guides, showing up to ${perPage} articles per page. Read practical advice about renting, moving, and student life in the Netherlands.`
+            : "Practical guides about renting, housing, moving, student life, and local services in cities across the Netherlands.",
+        path,
+    });
+}
 
 export default async function BlogPage({
     searchParams,
@@ -20,11 +27,7 @@ export default async function BlogPage({
     searchParams: Promise<{ page?: string; perPage?: string }>;
 }) {
     const params = await searchParams;
-    const page = params.page ? parseInt(params.page) : 1;
-    const perPage = params.perPage ? parseInt(params.perPage) : 6;
-
-    // Validate perPage is one of the allowed values
-    const itemsPerPage = [3, 6, 9].includes(perPage) ? perPage : 6;
+    const { page, perPage: itemsPerPage } = blogPagination(params);
 
     const [paginatedResult, allPostsResult] = await Promise.all([
         getPosts(page, itemsPerPage),

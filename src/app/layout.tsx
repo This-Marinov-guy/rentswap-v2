@@ -14,7 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rentswap.nl"),
+  metadataBase: new URL("https://www.rentswap.nl"),
   title: {
     default: "RentSwap - Find your next home without the competition",
     template: "%s | RentSwap",
@@ -76,18 +76,18 @@ export const metadata: Metadata = {
     title: "RentSwap",
   },
   alternates: {
-    canonical: "https://rentswap.nl",
+    canonical: "https://www.rentswap.nl",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://rentswap.nl",
+    url: "https://www.rentswap.nl",
     siteName: "RentSwap",
     title: "RentSwap - Find your next home without the competition",
     description: "Connect with tenants who are moving out and secure your perfect rental home in the Netherlands. No competition, fair algorithm, success-based pricing.",
     images: [
       {
-        url: "https://rentswap.nl/opengraph-image",
+        url: "https://www.rentswap.nl/opengraph-image",
         width: 1200,
         height: 630,
         alt: "RentSwap — Find your next home in the Netherlands",
@@ -101,7 +101,7 @@ export const metadata: Metadata = {
     description: "Connect with tenants who are moving out and secure your perfect rental home in the Netherlands.",
     images: [
       {
-        url: "https://rentswap.nl/opengraph-image",
+        url: "https://www.rentswap.nl/opengraph-image",
         width: 1200,
         height: 630,
         alt: "RentSwap - Find your next home without the competition",
