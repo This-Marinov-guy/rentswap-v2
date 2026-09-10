@@ -7,6 +7,7 @@ import styles from "./page.module.css";
 import Button from "@/components/common/Button";
 import JsonLd from "@/components/JsonLd";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo";
+import { blogDescription, blogSearchTitle, metadataText } from "@/lib/blog-seo";
 
 // Generate static params for the first 20 posts
 export async function generateStaticParams() {
@@ -31,9 +32,8 @@ export async function generateMetadata({
     const post = await getPostBySlug(slug);
     
     // Clean title and description
-    const cleanTitle = post.title.replace(/<[^>]*>/g, "").trim();
-    const cleanExcerpt = post.excerpt.replace(/<[^>]*>/g, "").trim();
-    const description = cleanExcerpt.slice(0, 160) || `${cleanTitle} - RentSwap Blog`;
+    const cleanTitle = metadataText(post.title);
+    const description = blogDescription(post.excerpt, post.title);
     
     // Get category and tags for keywords
     const categories = Object.values(post.categories || {})
@@ -48,7 +48,7 @@ export async function generateMetadata({
     const imageHeight = post.post_thumbnail?.height || 630;
     
     // Build canonical URL
-    const canonicalUrl = `https://rentswap.nl/blog/${slug}`;
+    const canonicalUrl = `https://www.rentswap.nl/blog/${slug}`;
     
     // Format dates
     const publishedTime = new Date(post.date).toISOString();
@@ -58,7 +58,7 @@ export async function generateMetadata({
     const authorName = post.author?.name || "RentSwap";
     
     return {
-      title: cleanTitle,
+      title: blogSearchTitle(slug, post.title),
       description,
       keywords,
       authors: [{ name: authorName }],
@@ -69,7 +69,7 @@ export async function generateMetadata({
         address: false,
         telephone: false,
       },
-      metadataBase: new URL("https://rentswap.nl"),
+      metadataBase: new URL("https://www.rentswap.nl"),
       alternates: {
         canonical: canonicalUrl,
       },
@@ -205,19 +205,19 @@ export default async function BlogPostPage({
     author: {
       "@type": "Person",
       name: authorName,
-      url: post.author?.profile_URL || "https://rentswap.nl",
+      url: post.author?.profile_URL || "https://www.rentswap.nl",
     },
     publisher: {
       "@type": "Organization",
       name: "RentSwap",
       logo: {
         "@type": "ImageObject",
-        url: "https://rentswap.nl/android-chrome-512x512.png",
+        url: "https://www.rentswap.nl/android-chrome-512x512.png",
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://rentswap.nl/blog/${post.slug}`,
+      "@id": `https://www.rentswap.nl/blog/${post.slug}`,
     },
     ...(categories.length > 0 && {
       articleSection: categories[0],
@@ -237,19 +237,19 @@ export default async function BlogPostPage({
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://rentswap.nl",
+        item: "https://www.rentswap.nl",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Blog",
-        item: "https://rentswap.nl/blog",
+        item: "https://www.rentswap.nl/blog",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: cleanTitle,
-        item: `https://rentswap.nl/blog/${post.slug}`,
+        item: `https://www.rentswap.nl/blog/${post.slug}`,
       },
     ],
   };

@@ -6,12 +6,12 @@ export default function StructuredData() {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://rentswap.nl/#organization",
+        "@id": "https://www.rentswap.nl/#organization",
         name: "RentSwap",
-        url: "https://rentswap.nl",
+        url: "https://www.rentswap.nl",
         logo: {
           "@type": "ImageObject",
-          url: "https://rentswap.nl/android-chrome-512x512.png",
+          url: "https://www.rentswap.nl/android-chrome-512x512.png",
           width: 512,
           height: 512,
         },
@@ -25,13 +25,13 @@ export default function StructuredData() {
       },
       {
         "@type": "WebSite",
-        "@id": "https://rentswap.nl/#website",
+        "@id": "https://www.rentswap.nl/#website",
         name: "RentSwap",
-        url: "https://rentswap.nl",
+        url: "https://www.rentswap.nl",
         description:
           "Find rental homes, roommates, and housing resources across the Netherlands.",
         publisher: {
-          "@id": "https://rentswap.nl/#organization",
+          "@id": "https://www.rentswap.nl/#organization",
         },
       },
     ],
